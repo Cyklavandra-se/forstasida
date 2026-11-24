@@ -8,7 +8,7 @@ ett per språk (WPML). Ersätter den handbyggda prototypen "Ny förstasida" (pag
 - **Shortcode `[cv_forstasida]`** renderar hela förstasidan för sidans WPML-språk:
   hero med AI-sökning, tre rutor, faktarad, aktuella guidade resor, populära resor på egen
   hand, nyheter, senaste blogginläggen och bandet "Följ oss".
-- **Inställningar → Förstasida**, en flik per aktivt språk. Svenska standardvärden =
+- **Cykla&Vandra → Förstasida**, en flik per aktivt språk. Svenska standardvärden =
   prototypens texter och resor.
 - **Språkregel:** guidade resor (rutan, sektionen) visas bara på svenska och norska.
   Styrs av "Visa guidade resor" per språk.
@@ -33,7 +33,7 @@ Kräver pluginen **cyklavandra-ai-sok** för sökrutan i heron (utan den visas h
    (vid uppdatering: "Ersätt nuvarande").
 3. Lägg `[cv_forstasida]` i en Avada-textmodul (eller kodblock) på en sida med mallen
    "100% Width", i en container utan inre marginaler (som prototypen).
-4. Ställ in texter, bilder och resor under **Inställningar → Förstasida**.
+4. Ställ in texter, bilder och resor under **Cykla&Vandra → Förstasida**.
 
 Shortcode-attribut: `lang="sv"` visar ett visst språks inställningar (för test).
 
@@ -42,6 +42,7 @@ Shortcode-attribut: `lang="sv"` visar ett visst språks inställningar (för tes
 | Fil | Innehåll |
 |---|---|
 | `cyklavandra-forstasida.php` | Huvudfil, konstanter |
+| `cyklavandra-meny.php` | Gemensam meny Cykla&Vandra – kopieras oförändrad från `bokningsformular` |
 | `includes/lang.php` | WPML-hjälpare (språk, översatta sidor och taggar) |
 | `includes/settings.php` | Standardvärden per språk, läsning, tvättning och sparning |
 | `includes/trips.php` | Resekort, automatisk metarad, automatiska nyheter, sökning |
@@ -51,6 +52,7 @@ Shortcode-attribut: `lang="sv"` visar ett visst språks inställningar (för tes
 | `templates/forstasida.php` | HTML-mallen (samma klasser `cvfs-*` som prototypen) |
 | `assets/forstasida.css` / `forstasida.js` | Prototypens CSS och JS |
 | `assets/admin.css` / `admin.js` | Resväljare, bildväljare |
+| `assets/icon.svg`, `icon-*.png` | Ikon (översikten och uppdateringar) |
 
 ## Ny version
 
@@ -64,5 +66,6 @@ Shortcode-attribut: `lang="sv"` visar ett visst språks inställningar (för tes
 
 ## Versioner
 
+- **0.3.0** – Inställningarna ligger under menyn Cykla&Vandra → Förstasida (samma meny som Bokningsformulär, AI-sök och Kanalpublicering), med ett kort och en ikon på översiktssidan.
 - **0.2.0** – Antal dagar och pris läses automatiskt ur resesidans faktaruta (Längd/Pris, även på norska). Inställningen "Pris från resesidan" per sektion (av för nyheterna, som i prototypen). Samma resa kan inte väljas två gånger i en sektion.
-- **0.1.0** – Första versionen: shortcoden `[cv_forstasida]` med prototypens utseende, inställningar per språk (Inställningar → Förstasida), resväljare, språkregeln för guidade resor, egen rendering av blogginläggen och uppdateringar från GitHub.
+- **0.1.0** – Första versionen: shortcoden `[cv_forstasida]` med prototypens utseende, inställningar per språk (Cykla&Vandra → Förstasida), resväljare, språkregeln för guidade resor, egen rendering av blogginläggen och uppdateringar från GitHub.

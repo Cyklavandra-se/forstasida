@@ -21,7 +21,7 @@ release-flöde som där.
 ## Mål
 
 1. Shortcode **`[cv_forstasida]`** som renderar hela förstasidan för aktuellt WPML-språk.
-2. Admin: **Inställningar → Förstasida**, en flik per aktivt WPML-språk.
+2. Admin: **Cykla&Vandra → Förstasida**, en flik per aktivt WPML-språk.
 3. Svenska versionen ska se ut **exakt som prototypen** (se nedan) innan vi går vidare.
 4. Därefter norska (samma upplägg), sedan engelska m.fl.
 
@@ -148,7 +148,7 @@ Som AI-sök: pusha till `main` → GitHub Release med tagg `vX.Y.Z` → workflow
 `cyklavandra-forstasida.zip` → Pär installerar via Tillägg → Ladda upp → "Ersätt nuvarande".
 Påminn om att ladda ner pluginens zip, inte "Source code (zip)".
 
-## Läge (0.2.0)
+## Läge (0.3.0)
 
 Första uppgiften är gjord. Arkitektur:
 
@@ -168,7 +168,10 @@ Första uppgiften är gjord. Arkitektur:
 - `assets/forstasida.css` – del 1 = prototypens CSS oförändrad (en regel per rad, ordningen
   spelar roll), del 2 = pluginens tillägg (20 px under heron som prototypens `<p>` gav, och
   bloggkorten).
-- Admin: Inställningar → Förstasida (`options-general.php?page=cvfs&lang=xx`), sparas via
+- `cyklavandra-meny.php` – gemensam adminmeny Cykla&Vandra (klass `Cyklavandra_Meny`), kopierad
+  **oförändrad** från `Cyklavandra-se/bokningsformular`. Ändra den aldrig här. Kort på
+  översikten via filtret `cyklavandra_verktyg`, ikon `assets/icon.svg`.
+- Admin: Cykla&Vandra → Förstasida (`admin.php?page=cvfs&lang=xx`), sparas via
   `admin-post.php?action=cvfs_save`, resväljaren söker via AJAX `cvfs_search_trips`.
 
 Verifierat lokalt: min utdata inlagd i live-sidans Avada-HTML ger exakt samma positioner och

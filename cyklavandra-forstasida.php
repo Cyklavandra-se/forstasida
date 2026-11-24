@@ -1,8 +1,8 @@
 <?php
 /**
  * Plugin Name: Cykla & Vandra – Förstasida
- * Description: Bygger förstasidan på cyklavandra.se från inställningar per språk (WPML). Använd shortcoden [cv_forstasida] på startsidan. Inställningar → Förstasida.
- * Version:     0.2.0
+ * Description: Bygger förstasidan på cyklavandra.se från inställningar per språk (WPML). Använd shortcoden [cv_forstasida] på startsidan. Cykla&Vandra → Förstasida.
+ * Version:     0.3.0
  * Author:      Cykla & Vandra
  * Text Domain: cvfs
  * Requires PHP: 7.4
@@ -25,11 +25,12 @@ if ( defined( 'CVFS_VERSION' ) ) {
 	return;
 }
 
-define( 'CVFS_VERSION', '0.2.0' );
+define( 'CVFS_VERSION', '0.3.0' );
 define( 'CVFS_FILE', __FILE__ );
 define( 'CVFS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'CVFS_URL', plugin_dir_url( __FILE__ ) );
 
+require_once CVFS_DIR . 'cyklavandra-meny.php';
 require_once CVFS_DIR . 'includes/lang.php';
 require_once CVFS_DIR . 'includes/settings.php';
 require_once CVFS_DIR . 'includes/trips.php';

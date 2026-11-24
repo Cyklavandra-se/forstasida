@@ -1,6 +1,6 @@
 <?php
 /**
- * Admin: Inställningar → Förstasida, en flik per aktivt WPML-språk.
+ * Admin: Cykla&Vandra → Förstasida, en flik per aktivt WPML-språk.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -10,16 +10,31 @@ if ( ! defined( 'ABSPATH' ) ) {
 add_action(
 	'admin_menu',
 	function () {
-		$hook = add_options_page( 'Förstasida', 'Förstasida', 'manage_options', 'cvfs', 'cvfs_admin_page' );
+		$hook = add_submenu_page( Cyklavandra_Meny::SLUG, 'Förstasida', 'Förstasida', 'manage_options', 'cvfs', 'cvfs_admin_page' );
 		add_action( 'admin_print_scripts-' . $hook, 'cvfs_admin_assets' );
 		add_action( 'admin_print_styles-' . $hook, 'cvfs_admin_assets' );
+	}
+);
+
+// Kort på översiktssidan Cykla&Vandra.
+add_filter(
+	'cyklavandra_verktyg',
+	function ( $verktyg ) {
+		$verktyg[] = array(
+			'titel'       => 'Förstasida',
+			'beskrivning' => 'Förstasidan per språk: hero med AI-sök, rutor, utvalda resor, nyheter, blogginlägg och band.',
+			'url'         => admin_url( 'admin.php?page=cvfs' ),
+			'version'     => CVFS_VERSION,
+			'ikon'        => CVFS_URL . 'assets/icon.svg',
+		);
+		return $verktyg;
 	}
 );
 
 add_filter(
 	'plugin_action_links_' . plugin_basename( CVFS_FILE ),
 	function ( $links ) {
-		array_unshift( $links, '<a href="' . esc_url( admin_url( 'options-general.php?page=cvfs' ) ) . '">Inställningar</a>' );
+		array_unshift( $links, '<a href="' . esc_url( admin_url( 'admin.php?page=cvfs' ) ) . '">Inställningar</a>' );
 		return $links;
 	}
 );
@@ -74,7 +89,7 @@ add_action(
 			$msg = 'saved';
 		}
 		do_action( 'cvfs_saved', $lang );
-		wp_safe_redirect( admin_url( 'options-general.php?page=cvfs&lang=' . $lang . '&cvfs_msg=' . $msg ) );
+		wp_safe_redirect( admin_url( 'admin.php?page=cvfs&lang=' . $lang . '&cvfs_msg=' . $msg ) );
 		exit;
 	}
 );
@@ -247,7 +262,7 @@ function cvfs_admin_page() {
 
 		<nav class="nav-tab-wrapper">
 			<?php foreach ( $langs as $code => $name ) : ?>
-				<a class="nav-tab <?php echo $code === $lang ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url( admin_url( 'options-general.php?page=cvfs&lang=' . $code ) ); ?>">
+				<a class="nav-tab <?php echo $code === $lang ? 'nav-tab-active' : ''; ?>" href="<?php echo esc_url( admin_url( 'admin.php?page=cvfs&lang=' . $code ) ); ?>">
 					<?php echo esc_html( $name ); ?>
 					<?php if ( empty( $saved[ $code ] ) ) : ?><span class="cvfs-badge" title="Inte sparad – standardvärden visas">standard</span><?php endif; ?>
 				</a>

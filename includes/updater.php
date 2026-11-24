@@ -142,6 +142,12 @@ function cvfs_updater_item( $release ) {
 		'url'          => $release['url'],
 		'package'      => $release['package'],
 		'requires_php' => '7.4',
+		// Från GitHub så att ikonen syns redan innan versionen med ikonen är installerad.
+		// (PNG, eftersom GitHub serverar SVG som text.)
+		'icons'        => array(
+			'1x' => 'https://raw.githubusercontent.com/' . CVFS_GITHUB_REPO . '/main/assets/icon-128x128.png',
+			'2x' => 'https://raw.githubusercontent.com/' . CVFS_GITHUB_REPO . '/main/assets/icon-256x256.png',
+		),
 		'banners'      => array(),
 		'tested'       => '',
 	);
