@@ -1,0 +1,450 @@
+<?php
+/**
+ * Inställningar per språk: standardvärden, läsning och sparning.
+ *
+ * Allt ligger i optionen cvfs_settings som array( 'sv' => array(...), 'no' => array(...) ).
+ * Nycklarna är WPML:s språkkoder. Saknade fält fylls alltid i från standardvärdena,
+ * så nya inställningar fungerar direkt efter en uppdatering.
+ */
+
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
+define( 'CVFS_OPTION', 'cvfs_settings' );
+
+/** Bas-URL för standardvärdena (sajtens egen adress, så att de fungerar även lokalt). */
+function cvfs_u( $path ) {
+	// get_option i stället för home_url(), så att WPML inte lägger till språkprefix.
+	return untrailingslashit( (string) get_option( 'home' ) ) . $path;
+}
+
+function cvfs_up( $path ) {
+	return content_url( 'uploads/' . $path );
+}
+
+/** Ett resekort i standardvärdena. Tomma fält hämtas automatiskt från sidan. */
+function cvfs_trip( $id, $title = '', $meta = '', $price = '' ) {
+	return array(
+		'id'    => (int) $id,
+		'title' => $title,
+		'meta'  => $meta,
+		'price' => $price,
+		'image' => '',
+	);
+}
+
+/**
+ * Standardvärden. Svenska = texterna i prototypen (sidan "Ny förstasida", page 36205).
+ * Andra språk startar med samma upplägg, men utan svenska kortrubriker/priser och –
+ * utom norska – utan guidade resor.
+ */
+function cvfs_defaults( $lang = 'sv' ) {
+	$d = array(
+		'show_guided' => 1,
+
+		'hero'        => array(
+			'title'       => 'Var vill du cykla eller vandra?',
+			'lead'        => 'Beskriv din drömresa med egna ord – vi hittar resorna som passar.',
+			'images'      => array(
+				cvfs_up( '2020/12/12924658334_3daa5efc52_k.jpg' ),
+				cvfs_up( '2020/12/44334843835_2e38fdab86_k.jpg' ),
+				cvfs_up( '2024/09/PXL_20240826_093340787.jpg' ),
+				cvfs_up( '2025/10/eurobike_radreisen_donauradweg_weingarten_radgruppe-21.jpg' ),
+			),
+			'placeholder' => 'T.ex. lätt cykling med vinprovning i september, två par',
+			'button'      => 'Hitta resor',
+		),
+
+		'paths'       => array(
+			'guided' => array(
+				'title'     => 'Guidade resor',
+				'text'      => 'Svensk guide, trevligt sällskap och fasta avresedatum. Vi tar hand om allt.',
+				'link_text' => 'Se alla guidade resor →',
+				'url'       => cvfs_u( '/vandra/guidade/' ),
+			),
+			'bike'   => array(
+				'title'     => 'Cykla på egen hand',
+				'text'      => 'Längs floder, vingårdar och kuster i din egen takt. Vi bokar hotell och flyttar bagaget.',
+				'link_text' => 'Se alla cykelresor →',
+				'url'       => cvfs_u( '/cykla/cykla-pa-egen-hand/' ),
+			),
+			'hike'   => array(
+				'title'     => 'Vandra på egen hand',
+				'text'      => 'Kustleder och bergsstigar med navigeringsapp, bagagetransport och support under resan.',
+				'link_text' => 'Se alla vandringsresor →',
+				'url'       => cvfs_u( '/vandra/pa-egen-hand/' ),
+			),
+		),
+
+		'facts'       => array(
+			array(
+				'title' => 'Cykel- och vandringsresor sedan 2009',
+				'sub'   => 'Erfarenhet av cykel- och vandringsresor',
+			),
+			array(
+				'title' => 'Tusentals nöjda resenärer',
+				'sub'   => 'Från ett tjugotal länder',
+			),
+			array(
+				'title' => 'Support under resan',
+				'sub'   => 'På alla resor på egen hand',
+			),
+			array(
+				'title' => 'Bagagetransport och app',
+				'sub'   => 'Ingår i alla resor på egen hand',
+			),
+		),
+
+		'guided'      => array(
+			'title'     => 'Aktuella guidade resor',
+			'link_text' => 'Alla guidade resor →',
+			'url'       => cvfs_u( '/vandra/guidade/' ),
+			'trips'     => array(
+				cvfs_trip( 1821, 'Vandra i Andorra – magiska Pyrenéerna', 'Guidad vandring · 8 dagar', '21 950 kr' ),
+				cvfs_trip( 19019, 'Vandringsparadiset La Gomera', 'Guidad vandring · 8 dagar', '25 950 kr' ),
+				cvfs_trip( 9772, 'Rioja & San Sebastián', 'Guidad vandring · 8 dagar', '29 750 kr' ),
+				cvfs_trip( 2468, 'Piemonte & Ligurien', 'Guidad vandring · 7 dagar', '23 800 kr' ),
+				cvfs_trip( 3370, 'Korfu, Paxos och Albanien', 'Guidad vandring · 8 dagar', '25 700 kr' ),
+			),
+		),
+
+		'popular'     => array(
+			'title'     => 'Populära resor på egen hand',
+			'link_text' => 'Alla resor på egen hand →',
+			'url'       => cvfs_u( '/sjalvguidade/' ),
+			'trips'     => array(
+				cvfs_trip( 18881, 'Costa Bravas pärlor – kustvandring', 'Vandring · 5 dagar · Nivå 1', '725 €' ),
+				cvfs_trip( 22059, 'Canal du Midi – Toulouse till Medelhavet', 'Cykling · 7 dagar · Nivå 1', '1 185 €' ),
+				cvfs_trip( 16884, 'Vincykling längs Mosel', 'Cykling · 6 dagar · Nivå 1', '905 €' ),
+				cvfs_trip( 3877, 'San Sebastián – kustvandring längs pilgrimsleden', 'Vandring · 5 dagar · Nivå 2', '805 €' ),
+				cvfs_trip( 33232, 'Donau i lugn takt – Wachau och Wien', 'Cykling · 5 dagar · Nivå 1', '795 €' ),
+			),
+		),
+
+		'news'        => array(
+			'title'     => 'Nyheter för säsongen 2027',
+			'link_text' => 'Se alla nyheter →',
+			'url'       => cvfs_u( '/information/hitta-resa/destinationer/nyheter/' ),
+			// manual = korten nedan; auto = sidor med taggen nedan + självguidad, nyast först.
+			'mode'      => 'manual',
+			'tag'       => '2027',
+			'count'     => 4,
+			'label'     => 'Nyhet 2027',
+			'trips'     => array(
+				cvfs_trip( 35210, 'Madeira runt på cykel', 'Cykling · Nyhet 2027' ),
+				cvfs_trip( 35098, 'Cykla på Lanzarote – vulkanernas ö', 'Cykling · Nyhet 2027' ),
+				cvfs_trip( 34196, 'Mallorca – Tramuntana till fots', 'Vandring · Nyhet 2027' ),
+				cvfs_trip( 34064, 'Mellan Alperna och Provence – Vercors', 'Vandring · Nyhet 2027' ),
+			),
+		),
+
+		'blog'        => array(
+			'show'        => 1,
+			'title'       => 'Nyhetsbrev',
+			'link_text'   => 'Alla inlägg →',
+			'url'         => cvfs_u( '/category/nyheter/' ),
+			'category'    => 'nyheter',
+			'count'       => 3,
+			'words'       => 17,
+			'date_format' => 'j F Y',
+		),
+
+		'band'        => array(
+			'title'   => 'Följ oss och få inspiration!',
+			'text'    => 'Bilder, tips och nyheter från våra resor.',
+			'buttons' => array(
+				array(
+					'text'    => 'Nyhetsbrev',
+					'url'     => cvfs_u( '/information/nyhetsbrev/' ),
+					'new_tab' => 0,
+				),
+				array(
+					'text'    => 'Instagram',
+					'url'     => 'https://www.instagram.com/cyklavandra.se',
+					'new_tab' => 1,
+				),
+				array(
+					'text'    => 'Facebook',
+					'url'     => 'https://www.facebook.com/cyklavandra/',
+					'new_tab' => 1,
+				),
+			),
+			'images'  => array(
+				array(
+					'url' => cvfs_up( '2026/11/Algarve-latt-vandring-1024x538.jpg' ),
+					'alt' => 'Algarve',
+				),
+				array(
+					'url' => cvfs_up( '2026/11/Julia-alperna-1024x538.jpg' ),
+					'alt' => 'Julianska alperna',
+				),
+				array(
+					'url' => cvfs_up( '2026/10/Skotska-Hoglanderna-1024x538.jpg' ),
+					'alt' => 'Skotska högländerna',
+				),
+				array(
+					'url' => cvfs_up( '2026/10/Balaton-1024x538.jpg' ),
+					'alt' => 'Balaton',
+				),
+			),
+		),
+
+		// Ord som används när kortens metarad byggs automatiskt (tomt fält "Metarad").
+		'labels'      => cvfs_default_labels( $lang ),
+	);
+
+	if ( 'sv' !== $lang ) {
+		// Kortrubriker, metarader och priser i standardvärdena är svenska – hämta i stället
+		// titeln från den översatta sidan och bygg metaraden automatiskt.
+		foreach ( array( 'guided', 'popular', 'news' ) as $sec ) {
+			foreach ( $d[ $sec ]['trips'] as $i => $t ) {
+				$d[ $sec ]['trips'][ $i ] = cvfs_trip( $t['id'] );
+			}
+		}
+	}
+
+	// Språkregeln: guidade resor bara på svenska och norska (guidningen sker på svenska).
+	$d['show_guided'] = in_array( cvfs_norm_lang( $lang ), array( 'sv', 'nb' ), true ) ? 1 : 0;
+
+	return apply_filters( 'cvfs_defaults', $d, $lang );
+}
+
+/** Ord i automatiska metarader, per språk. */
+function cvfs_default_labels( $lang ) {
+	$all = array(
+		'sv' => array(
+			'from'        => 'från',
+			'hike'        => 'Vandring',
+			'bike'        => 'Cykling',
+			'guided_hike' => 'Guidad vandring',
+			'guided_bike' => 'Guidad cykling',
+			'level'       => 'Nivå',
+		),
+		'nb' => array(
+			'from'        => 'fra',
+			'hike'        => 'Fottur',
+			'bike'        => 'Sykkeltur',
+			'guided_hike' => 'Guidet fottur',
+			'guided_bike' => 'Guidet sykkeltur',
+			'level'       => 'Nivå',
+		),
+		'da' => array(
+			'from'        => 'fra',
+			'hike'        => 'Vandring',
+			'bike'        => 'Cykling',
+			'guided_hike' => 'Guidet vandring',
+			'guided_bike' => 'Guidet cykling',
+			'level'       => 'Niveau',
+		),
+		'de' => array(
+			'from'        => 'ab',
+			'hike'        => 'Wandern',
+			'bike'        => 'Radfahren',
+			'guided_hike' => 'Geführte Wanderung',
+			'guided_bike' => 'Geführte Radtour',
+			'level'       => 'Stufe',
+		),
+		'en' => array(
+			'from'        => 'from',
+			'hike'        => 'Walking',
+			'bike'        => 'Cycling',
+			'guided_hike' => 'Guided walking',
+			'guided_bike' => 'Guided cycling',
+			'level'       => 'Level',
+		),
+	);
+	$l = cvfs_norm_lang( $lang );
+	return $all[ $l ] ?? $all['en'];
+}
+
+/** True om arrayen är en lista (0, 1, 2 …) och inte en associativ array. */
+function cvfs_is_list( $a ) {
+	return is_array( $a ) && ( array() === $a || array_keys( $a ) === range( 0, count( $a ) - 1 ) );
+}
+
+/**
+ * Lägg sparade värden över standardvärdena. Associativa arrayer slås ihop rekursivt,
+ * listor (bilder, resor, faktarad …) ersätts helt.
+ */
+function cvfs_merge( $defaults, $saved ) {
+	if ( ! is_array( $saved ) ) {
+		return $defaults;
+	}
+	$out = $defaults;
+	foreach ( $defaults as $k => $v ) {
+		if ( ! array_key_exists( $k, $saved ) ) {
+			continue;
+		}
+		if ( is_array( $v ) && ! cvfs_is_list( $v ) ) {
+			$out[ $k ] = cvfs_merge( $v, $saved[ $k ] );
+		} elseif ( is_array( $v ) ) {
+			$out[ $k ] = is_array( $saved[ $k ] ) ? array_values( $saved[ $k ] ) : $v;
+		} else {
+			$out[ $k ] = is_array( $saved[ $k ] ) ? $v : $saved[ $k ];
+		}
+	}
+	return $out;
+}
+
+/** Alla inställningar för ett språk (sparade + standardvärden). */
+function cvfs_get( $lang = null ) {
+	$lang = $lang ? $lang : cvfs_current_lang();
+	$all  = get_option( CVFS_OPTION, array() );
+	$saved = is_array( $all ) && isset( $all[ $lang ] ) ? $all[ $lang ] : array();
+	return cvfs_merge( cvfs_defaults( $lang ), $saved );
+}
+
+/** Spara ett språk (redan tvättat). */
+function cvfs_save( $lang, $settings ) {
+	$all = get_option( CVFS_OPTION, array() );
+	if ( ! is_array( $all ) ) {
+		$all = array();
+	}
+	$all[ $lang ] = $settings;
+	update_option( CVFS_OPTION, $all, false );
+}
+
+/** Återställ ett språk till standardvärdena. */
+function cvfs_reset( $lang ) {
+	$all = get_option( CVFS_OPTION, array() );
+	if ( is_array( $all ) && isset( $all[ $lang ] ) ) {
+		unset( $all[ $lang ] );
+		update_option( CVFS_OPTION, $all, false );
+	}
+}
+
+/* -------------------------------------------------------------------------
+ * Tvättning av formulärdata
+ * ---------------------------------------------------------------------- */
+
+function cvfs_clean_text( $v ) {
+	return sanitize_text_field( wp_unslash( (string) $v ) );
+}
+
+function cvfs_clean_url( $v ) {
+	return esc_url_raw( trim( wp_unslash( (string) $v ) ) );
+}
+
+function cvfs_clean_trips( $rows ) {
+	$out  = array();
+	$seen = array();
+	if ( ! is_array( $rows ) ) {
+		return $out;
+	}
+	foreach ( $rows as $r ) {
+		$id = isset( $r['id'] ) ? absint( $r['id'] ) : 0;
+		if ( ! $id || isset( $seen[ $id ] ) ) {
+			continue;
+		}
+		$seen[ $id ] = true;
+		$out[] = array(
+			'id'    => $id,
+			'title' => cvfs_clean_text( $r['title'] ?? '' ),
+			'meta'  => cvfs_clean_text( $r['meta'] ?? '' ),
+			'price' => cvfs_clean_text( $r['price'] ?? '' ),
+			'image' => cvfs_clean_url( $r['image'] ?? '' ),
+		);
+	}
+	return $out;
+}
+
+/**
+ * Formulär (en språkflik) → inställningar. Okända fält ignoreras.
+ *
+ * @param array $in   $_POST['cvfs'].
+ * @param string $lang Språkkod.
+ */
+function cvfs_sanitize( $in, $lang ) {
+	$d   = cvfs_defaults( $lang );
+	$in  = is_array( $in ) ? $in : array();
+	$out = array();
+
+	$out['show_guided'] = empty( $in['show_guided'] ) ? 0 : 1;
+
+	$h           = $in['hero'] ?? array();
+	$out['hero'] = array(
+		'title'       => cvfs_clean_text( $h['title'] ?? '' ),
+		'lead'        => cvfs_clean_text( $h['lead'] ?? '' ),
+		'images'      => array_values( array_filter( array_map( 'cvfs_clean_url', (array) ( $h['images'] ?? array() ) ) ) ),
+		'placeholder' => cvfs_clean_text( $h['placeholder'] ?? '' ),
+		'button'      => cvfs_clean_text( $h['button'] ?? '' ),
+	);
+
+	$out['paths'] = array();
+	foreach ( array_keys( $d['paths'] ) as $k ) {
+		$p                  = $in['paths'][ $k ] ?? array();
+		$out['paths'][ $k ] = array(
+			'title'     => cvfs_clean_text( $p['title'] ?? '' ),
+			'text'      => cvfs_clean_text( $p['text'] ?? '' ),
+			'link_text' => cvfs_clean_text( $p['link_text'] ?? '' ),
+			'url'       => cvfs_clean_url( $p['url'] ?? '' ),
+		);
+	}
+
+	$out['facts'] = array();
+	for ( $i = 0; $i < 4; $i++ ) {
+		$f              = $in['facts'][ $i ] ?? array();
+		$out['facts'][] = array(
+			'title' => cvfs_clean_text( $f['title'] ?? '' ),
+			'sub'   => cvfs_clean_text( $f['sub'] ?? '' ),
+		);
+	}
+
+	foreach ( array( 'guided', 'popular', 'news' ) as $sec ) {
+		$s           = $in[ $sec ] ?? array();
+		$out[ $sec ] = array(
+			'title'     => cvfs_clean_text( $s['title'] ?? '' ),
+			'link_text' => cvfs_clean_text( $s['link_text'] ?? '' ),
+			'url'       => cvfs_clean_url( $s['url'] ?? '' ),
+			'trips'     => cvfs_clean_trips( $s['trips'] ?? array() ),
+		);
+	}
+	$n                    = $in['news'] ?? array();
+	$out['news']['mode']  = ( isset( $n['mode'] ) && 'auto' === $n['mode'] ) ? 'auto' : 'manual';
+	$out['news']['tag']   = sanitize_title( wp_unslash( (string) ( $n['tag'] ?? '' ) ) );
+	$out['news']['count'] = max( 1, min( 12, absint( $n['count'] ?? 4 ) ) );
+	$out['news']['label'] = cvfs_clean_text( $n['label'] ?? '' );
+
+	$b           = $in['blog'] ?? array();
+	$out['blog'] = array(
+		'show'        => empty( $b['show'] ) ? 0 : 1,
+		'title'       => cvfs_clean_text( $b['title'] ?? '' ),
+		'link_text'   => cvfs_clean_text( $b['link_text'] ?? '' ),
+		'url'         => cvfs_clean_url( $b['url'] ?? '' ),
+		'category'    => sanitize_title( wp_unslash( (string) ( $b['category'] ?? '' ) ) ),
+		'count'       => max( 1, min( 12, absint( $b['count'] ?? 3 ) ) ),
+		'words'       => max( 5, min( 100, absint( $b['words'] ?? 17 ) ) ),
+		'date_format' => cvfs_clean_text( $b['date_format'] ?? 'j F Y' ),
+	);
+
+	$bd          = $in['band'] ?? array();
+	$out['band'] = array(
+		'title'   => cvfs_clean_text( $bd['title'] ?? '' ),
+		'text'    => cvfs_clean_text( $bd['text'] ?? '' ),
+		'buttons' => array(),
+		'images'  => array(),
+	);
+	for ( $i = 0; $i < 3; $i++ ) {
+		$x                        = $bd['buttons'][ $i ] ?? array();
+		$out['band']['buttons'][] = array(
+			'text'    => cvfs_clean_text( $x['text'] ?? '' ),
+			'url'     => cvfs_clean_url( $x['url'] ?? '' ),
+			'new_tab' => empty( $x['new_tab'] ) ? 0 : 1,
+		);
+	}
+	for ( $i = 0; $i < 4; $i++ ) {
+		$x                       = $bd['images'][ $i ] ?? array();
+		$out['band']['images'][] = array(
+			'url' => cvfs_clean_url( $x['url'] ?? '' ),
+			'alt' => cvfs_clean_text( $x['alt'] ?? '' ),
+		);
+	}
+
+	$out['labels'] = array();
+	foreach ( array_keys( $d['labels'] ) as $k ) {
+		$out['labels'][ $k ] = cvfs_clean_text( $in['labels'][ $k ] ?? '' );
+	}
+
+	return $out;
+}

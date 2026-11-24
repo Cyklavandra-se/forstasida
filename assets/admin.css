@@ -1,0 +1,35 @@
+/* Förstasida – admin */
+.cvfs-admin h2 { margin-top: 2em; padding-top: 1em; border-top: 1px solid #dcdcde; }
+.cvfs-admin h3 { margin: 1.2em 0 0; }
+.cvfs-badge { display: inline-block; margin-left: 6px; padding: 0 6px; border-radius: 8px; background: #f0f0f1; color: #646970; font-size: 11px; font-weight: 400; vertical-align: middle; }
+.cvfs-muted { color: #646970; }
+
+.cvfs-trip-list { margin: 0 0 10px; max-width: 980px; }
+.cvfs-trip { display: flex; align-items: flex-start; gap: 10px; background: #fff; border: 1px solid #dcdcde; border-radius: 6px; padding: 8px 10px; margin: 0 0 6px; }
+.cvfs-handle { cursor: move; color: #8c8f94; margin-top: 4px; }
+.cvfs-thumb { flex: 0 0 72px; width: 72px; height: 48px; background: #f0f0f1; border-radius: 4px; overflow: hidden; }
+.cvfs-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cvfs-trip-main { flex: 1 1 auto; min-width: 0; }
+.cvfs-trip-page { margin-bottom: 6px; }
+.cvfs-trip-page a { font-weight: 600; text-decoration: none; }
+.cvfs-trip-auto { color: #646970; margin-left: 6px; }
+.cvfs-trip-fields { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; }
+.cvfs-trip-fields label { display: inline-flex; gap: 4px; align-items: center; color: #50575e; }
+.cvfs-trip-fields input { width: 200px; }
+.cvfs-trip-fields input.cvfs-short { width: 110px; }
+.cvfs-remove { color: #b32d2e !important; font-size: 16px; line-height: 1; text-decoration: none; padding: 4px !important; }
+
+.cvfs-trip-add { position: relative; max-width: 980px; }
+.cvfs-trip-results { margin: 4px 0 0; max-height: 260px; overflow: auto; background: #fff; border: 1px solid #dcdcde; border-radius: 4px; }
+.cvfs-trip-results:empty { display: none; }
+.cvfs-trip-results li { margin: 0; padding: 6px 10px; border-bottom: 1px solid #f0f0f1; }
+.cvfs-result { cursor: pointer; }
+.cvfs-result:hover { background: #f0f6fc; }
+.cvfs-result.cvfs-added { opacity: .55; }
+
+.cvfs-imgs { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 8px; }
+.cvfs-img-item { position: relative; margin: 0; width: 160px; height: 90px; border-radius: 4px; overflow: hidden; cursor: move; background: #f0f0f1; }
+.cvfs-img-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.cvfs-img-item .cvfs-remove { position: absolute; top: 4px; right: 4px; background: #fff; border-radius: 50%; width: 22px; height: 22px; padding: 0 !important; }
+
+.cvfs-one { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }

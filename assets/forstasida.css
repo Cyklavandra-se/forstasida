@@ -1,0 +1,167 @@
+/*
+ * Cykla & Vandra – Förstasida
+ *
+ * Del 1: prototypens CSS (sidan "Ny förstasida", page 36205), oförändrad men en regel per rad.
+ * Regler längre ner skriver över tidigare – det är så prototypen växte fram, och ordningen
+ * avgör utseendet. Städa först när den nya förstasidan är godkänd.
+ */
+.cvfs{color:#1C2620}
+.cvfs a{text-decoration:none}
+.cvfs-wrap{max-width:1200px;margin:0 auto;padding:0 24px;box-sizing:border-box}
+.cvfs-hero{background:linear-gradient(rgba(15,35,25,.55),rgba(15,35,25,.55)),url(https://cyklavandra.se/wp-content/uploads/2020/12/13781665835_9659471189_k-1-e1607614459569.jpg) center/cover no-repeat;min-height:600px;display:flex;align-items:center}
+.cvfs-hero-in{max-width:880px;margin:0 auto;padding:80px 24px;text-align:center;color:#fff}
+.cvfs-hero h1{color:#fff!important;font-size:52px;line-height:1.1;margin:0 0 16px}
+.cvfs-hero p.cvfs-lead{color:#E4EEE8;font-size:20px;line-height:1.5;margin:0 0 28px}
+.cvfs-paths{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;padding:64px 0 16px}
+.cvfs-path{border-radius:20px;padding:32px;display:flex;flex-direction:column;gap:10px;color:#1C2620!important}
+.cvfs-path h2{margin:0;font-size:32px;color:#1C2620}
+.cvfs-path p{margin:0;font-size:17px;line-height:1.5;color:#3A463F}
+.cvfs-kick{font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.cvfs-g{background:#EEF3EF}
+.cvfs-g .cvfs-kick,.cvfs-g .cvfs-more{color:#1F4D3A}
+.cvfs-s{background:#FBEFE4}
+.cvfs-s .cvfs-kick,.cvfs-s .cvfs-more{color:#8A4413}
+.cvfs-more{font-weight:600;margin-top:6px}
+.cvfs-sec{padding:56px 0 16px}
+.cvfs-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:24px}
+.cvfs-head h2{margin:4px 0 0;font-size:32px}
+.cvfs-head a{font-weight:600;color:#1F4D3A}
+.cvfs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:20px}
+.cvfs-grid4{grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.cvfs-card{border:1px solid #E3E6E1;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;background:#fff;color:#1C2620!important;transition:box-shadow .2s}
+.cvfs-card:hover{box-shadow:0 6px 20px rgba(0,0,0,.12)}
+.cvfs-card img{width:100%;height:160px;object-fit:cover;display:block;margin:0}
+.cvfs-card-b{padding:16px;display:flex;flex-direction:column;gap:6px}
+.cvfs-meta{font-size:13px;color:#4A554E}
+.cvfs-card h3{margin:0;font-size:18px;line-height:1.3;color:#1C2620}
+.cvfs-price{font-size:15px;font-weight:600;color:#1F4D3A}
+.cvfs-band{background:#F4F6F3;margin-top:48px;padding:8px 0 56px}
+.cvfs-trust{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px;padding:56px 0 72px}
+.cvfs-trust h3{margin:0 0 8px;font-size:20px}
+.cvfs-trust p{margin:0;color:#3A463F;line-height:1.5}
+@media(max-width:700px){
+	.cvfs-hero h1{font-size:36px}
+	.cvfs-hero{min-height:520px}
+}
+.cvfs-path,.cvfs-card{position:relative}
+.cvfs-stretch{color:inherit!important}
+.cvfs-stretch::after{content:'';position:absolute;inset:0;z-index:1}
+.cvfs-path h2 a,.cvfs-card h3 a{color:#1C2620!important}
+.cvfs-img{margin:0;line-height:0}
+.cvfs-path:hover,.cvfs-card:hover{box-shadow:0 6px 20px rgba(0,0,0,.12)}
+.cvfs-path{transition:box-shadow .2s}
+.cvfs-hero .cvai-chip{background:rgba(255,255,255,.12)!important;border:1px solid rgba(255,255,255,.6)!important;color:#fff!important}
+.cvfs-hero .cvai-chip *{color:#fff!important}
+.cvfs-hero .cvai-chip:hover{background:rgba(255,255,255,.25)!important}
+.cvfs-hero .cvai-out,.cvfs-hero .cvai-status{text-align:left}
+.cvfs-hero .cvai-status,.cvfs-hero .cvai-status *{color:#fff!important}
+.cvfs-hero .cvai-out:not(:empty){background:rgba(255,255,255,.97);border-radius:16px;padding:20px;margin-top:16px;color:#1C2620}
+.cvfs-v{background:#EAF1F6}
+.cvfs-v .cvfs-kick,.cvfs-v .cvfs-more{color:#2C5A78}
+.cvfs-social{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:24px;background:#1F4D3A;border-radius:20px;padding:32px 40px;margin-top:56px}
+.cvfs-social h2{color:#fff!important;margin:4px 0 6px;font-size:28px}
+.cvfs-social p{margin:0;color:#E4EEE8}
+.cvfs-social .cvfs-kick{color:#CFE0D6}
+.cvfs-soc-btns{display:flex;flex-wrap:wrap;gap:12px}
+.cvfs-soc-btns p{margin:0}
+.cvfs-btn{display:inline-block;background:#fff;color:#1F4D3A!important;font-weight:600;font-size:16px;border-radius:12px;padding:14px 26px;min-height:44px;box-sizing:border-box}
+.cvfs-btn:hover{background:#E4EEE8}
+.cvfs-social{background:#F6E6D6}
+.cvfs-social h2{color:#1C2620!important}
+.cvfs-social p{color:#3A463F}
+.cvfs-social .cvfs-kick{color:#8A4413}
+.cvfs-social-txt{flex:1 1 320px}
+.cvfs-soc-btns{margin-top:16px}
+.cvfs-btn{background:#1C2620;color:#fff!important}
+.cvfs-btn:hover{background:#3A463F}
+.cvfs-ig{display:flex;gap:10px}
+.cvfs-ig p{margin:0}
+.cvfs-igi{line-height:0}
+.cvfs-igi img{width:110px;height:110px;object-fit:cover;border-radius:8px;display:block;margin:0}
+@media(max-width:700px){
+	.cvfs-igi img{width:72px;height:72px}
+}
+.cvfs-blog .fusion-post-wrapper{position:relative;border:1px solid #E3E6E1!important;border-radius:16px!important;overflow:hidden;background:#fff!important;transition:box-shadow .2s}
+.cvfs-blog .fusion-post-wrapper:hover{box-shadow:0 6px 20px rgba(0,0,0,.12)}
+.cvfs-blog .fusion-image-wrapper img{height:160px!important;width:100%!important;object-fit:cover}
+.cvfs-blog .fusion-rollover{display:none!important}
+.cvfs-blog .fusion-post-content-wrapper{padding:16px!important}
+.cvfs-blog .fusion-post-content{display:flex;flex-direction:column}
+.cvfs-blog .fusion-single-line-meta{order:-1;font-size:13px!important;color:#4A554E!important;margin:0 0 6px!important}
+.cvfs-blog .fusion-inline-sep,.cvfs-blog .fusion-content-sep{display:none!important}
+.cvfs-blog h2.blog-shortcode-post-title{font-size:18px!important;line-height:1.3!important;margin:0 0 8px!important}
+.cvfs-blog h2.blog-shortcode-post-title a{color:#1C2620!important}
+.cvfs-blog h2.blog-shortcode-post-title a::after{content:"";position:absolute;inset:0;z-index:1}
+.cvfs-blog .fusion-post-content-container p{font-size:15px;line-height:1.5;color:#3A463F;margin:0}
+.cvfs-wrap.cvfs-sec{padding-left:24px;padding-right:24px}
+@media(min-width:1000px){
+	.cvfs>.cvfs-head,.cvfs-blog{margin-left:24px!important;margin-right:24px!important}
+}
+.cvfs-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px 24px;border-top:1px solid #E3E6E1;border-bottom:1px solid #E3E6E1;padding:20px 0;margin-top:24px}
+.cvfs-fact{position:relative;padding-left:22px}
+.cvfs-fact::before{content:"";position:absolute;left:0;top:6px;width:10px;height:10px;border-radius:50%;background:#2C5A45}
+.cvfs-fact-t{font-weight:600;font-size:16px;color:#1C2620}
+.cvfs-fact-s{font-size:14px;color:#4A554E;margin-top:2px}
+.cvfs-hero{position:relative;background:#F4F6F3!important}
+.cvfs-hero::before{content:"";position:absolute;left:0;right:0;top:0;height:600px;background:var(--cvfs-hero-img,url(https://cyklavandra.se/wp-content/uploads/2020/12/12924658334_3daa5efc52_k.jpg)) center/cover no-repeat;z-index:0}
+.cvfs-hero-in{position:relative;z-index:1}
+@media(max-width:700px){
+	.cvfs-hero::before{height:520px}
+}
+.cvfs-hero::before{height:var(--cvfs-hero-h,600px);transition:height .45s ease}
+@media(max-width:700px){
+	.cvfs-hero::before{height:var(--cvfs-hero-h,520px)}
+}
+.cvfs-hero .cvai-out:not(:empty){background:#fff!important}
+.cvfs-hero.cvfs-has-res .cvai-chips{display:none!important}
+.cvfs-hero.cvfs-has-res .cvai-out{margin-top:48px!important;box-shadow:0 2px 12px rgba(0,0,0,.06)}
+.cvfs-hero h1,.cvfs-hero p.cvfs-lead{text-shadow:0 2px 14px rgba(0,0,0,.55),0 1px 3px rgba(0,0,0,.45)}
+.cvfs-hero .cvai-chip{background:rgba(0,0,0,.38)!important;border-color:rgba(255,255,255,.7)!important}
+.cvfs-hero .cvai-chip:hover{background:rgba(0,0,0,.55)!important}
+.cvfs-fact{padding-left:0!important}
+.cvfs-fact::before{display:none!important}
+.cvfs-hero .cvai-chip{background:rgba(0,0,0,.5)!important}
+.cvfs-social{margin-bottom:72px!important}
+.cvfs-hero .cvai-chip{background:rgba(255,255,255,.92)!important;border:1px solid rgba(255,255,255,.7)!important;color:#1C2620!important}
+.cvfs-hero .cvai-chip *{color:#1C2620!important}
+.cvfs-hero .cvai-chip:hover{background:rgba(255,255,255,1)!important}
+.cvfs-hero p.cvfs-lead{display:inline-block;background:rgba(0,0,0,.28);box-shadow:0 0 28px 8px rgba(0,0,0,.28);border-radius:12px;padding:4px 14px}
+@media(max-width:700px){
+	.cvfs-hero .cvai-chips{display:flex!important;flex-wrap:nowrap!important;grid-template-columns:none!important;overflow-x:auto;gap:8px!important;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;scrollbar-width:none;margin-left:-24px!important;margin-right:-24px!important;padding:2px 24px 8px!important}
+	.cvfs-hero .cvai-chips::-webkit-scrollbar{display:none}
+	.cvfs-hero .cvai-chip{flex:0 0 auto!important;width:auto!important;max-width:78vw!important;border-radius:999px!important;padding:8px 14px!important;scroll-snap-align:start;min-height:0!important}
+	.cvfs-hero .cvai-chip-t{display:block!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;-webkit-line-clamp:unset!important;font-size:14px!important}
+}
+.cvfs-hero-in{min-width:0;width:100%;box-sizing:border-box}
+.cvfs-hero .cvai{min-width:0;max-width:100%}
+@media(max-width:700px){
+	.cvfs-hero{min-height:0!important}
+	.cvfs-hero-in{padding:40px 20px 28px!important}
+	.cvfs-hero:not(.cvfs-has-res)::before{height:100%!important}
+	.cvfs-hero h1{margin-bottom:12px!important}
+	.cvfs-hero p.cvfs-lead{font-size:17px!important;margin-bottom:20px!important}
+}
+.cvfs-facts{display:flex!important;flex-wrap:wrap;justify-content:space-between;gap:16px 32px!important}
+.cvfs-fact{flex:0 1 auto}
+@media(max-width:700px){
+	.cvfs-facts{display:none!important}
+}
+
+/*
+ * Del 2: pluginens tillägg.
+ */
+
+/* I prototypen gav <p>-taggen runt skripten 20 px luft under heron. */
+.cvfs-hero{margin-bottom:20px}
+
+/*
+ * Nyhetsbrevet renderas av pluginen (inte Avadas fusion_blog) men ska se ut som prototypen,
+ * inklusive Avadas avstånd: 3 px över och 1 px under bilden, 8 + 20 px mellan rubrik och
+ * utdrag och 20 px under utdraget.
+ */
+.cvfs-grid3{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}
+.cvfs-blogsec{padding-bottom:10px}
+.cvfs-grid3 .cvfs-img{padding:3px 0 1px}
+.cvfs-card h2.cvfs-bt{margin:0 0 8px;font-size:18px;line-height:1.3;color:#1C2620}
+.cvfs-card h2.cvfs-bt a{color:#1C2620!important}
+.cvfs-card p.cvfs-ex{margin:14px 0 20px;font-size:15px;line-height:1.5;color:#3A463F}

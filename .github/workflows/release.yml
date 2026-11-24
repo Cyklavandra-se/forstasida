@@ -1,0 +1,76 @@
+name: Bygg release
+
+# Tre sätt att släppa en version:
+#  1. Actions → Bygg release → Run workflow (på main) → taggen vX.Y.Z tas från
+#     "Version:" i pluginen, och release + zip skapas automatiskt.
+#  2. Pusha en tagg vX.Y.Z → samma sak.
+#  3. Releases → Draft a new release → Publish → zip bifogas till din release.
+# Releasetexten tas från raden för versionen under "Versioner" i README.md.
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.event.release.tag_name || github.ref_name }}
+
+jobs:
+  zip:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.release.tag_name || github.ref }}
+
+      - name: Läs version och tagg
+        run: |
+          VER=$(grep -m1 -E '^\s*\*\s*Version:' cyklavandra-forstasida.php | sed -E 's/.*Version:\s*//' | tr -d '[:space:]')
+          CONST=$(grep -m1 "define( 'CVFS_VERSION'" cyklavandra-forstasida.php | sed -E "s/.*'CVFS_VERSION', '([^']+)'.*/\1/")
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG="v$VER"
+          else
+            TAG="${{ github.event.release.tag_name || github.ref_name }}"
+          fi
+          echo "Tagg: $TAG  Version: $VER  CVFS_VERSION: $CONST"
+          if [ "${TAG#v}" != "$VER" ] || [ "$VER" != "$CONST" ]; then
+            echo "::error::Taggen ($TAG) måste vara v + Version ($VER) och lika med CVFS_VERSION ($CONST)."
+            exit 1
+          fi
+          echo "TAG=$TAG" >> "$GITHUB_ENV"
+
+      - name: Stoppa om versionen redan är släppt (vid knapptryck)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1 || git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null; then
+            echo "::error::$TAG finns redan. Höj Version: och CVFS_VERSION först."
+            exit 1
+          fi
+
+      - name: Bygg zip
+        run: |
+          mkdir -p build/cyklavandra-forstasida
+          rsync -a --exclude '.git*' --exclude '.github' --exclude 'build' --exclude 'README.md' --exclude 'CLAUDE.md' ./ build/cyklavandra-forstasida/
+          cd build && zip -r ../cyklavandra-forstasida.zip cyklavandra-forstasida
+
+      - name: Skapa releasen om den saknas
+        if: github.event_name != 'release'
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Releasen $TAG finns redan."
+            exit 0
+          fi
+          NOTES=$(grep -m1 -F -- "- **${TAG#v}** – " README.md | sed -E 's/^- \*\*[^*]+\*\* – //')
+          [ -n "$NOTES" ] || NOTES="Version ${TAG#v}"
+          # Vid knapptryck skapas taggen här, på den commit som byggdes.
+          gh release create "$TAG" --target "$GITHUB_SHA" --title "${TAG#v}" --notes "$NOTES" \
+            || gh release view "$TAG" >/dev/null
+
+      - name: Bifoga zip till releasen
+        run: gh release upload "$TAG" cyklavandra-forstasida.zip --clobber

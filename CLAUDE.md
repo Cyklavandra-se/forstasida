@@ -1,0 +1,181 @@
+# CLAUDE.md – Cykla & Vandra Förstasida (plugin)
+
+WordPress-plugin som bygger förstasidan på cyklavandra.se från ett inställningsgränssnitt,
+per språk. Ersätter en handbyggd prototyp (HTML + CSS + skript i en Avada-textmodul).
+
+Ägare: Pär (Cykla & Vandra). Skriv till honom på **svenska**, kort och konkret.
+Systerplugin: **cyklavandra-ai-sok** (AI-sökningen) – följ samma struktur, regler och
+release-flöde som där.
+
+## Miljö
+
+- WordPress, tema **Avada** (Avada Builder), **WPML** (svenska = standard, norska `no`
+  → `nb`, fler språk senare), The Events Calendar, All in One SEO, WP Fastest Cache.
+- AI-sökningen finns som shortcode `[cv_ai_sok]` (attribut: `platshallare`, `knapp`,
+  `exempel="nej"`, `exempelfragor="a|b"`). Exempelfrågor per språk ställs in i pluginen
+  AI-sök – lägg inte till egna.
+- Resor är WordPress-**sidor** taggade `guidad` / `självguidad` (+ språkvarianter),
+  svårighet via taggar `hike1–4` / `bike1–4`, nyheter via taggen `2027`.
+  Utvald bild (featured image) finns på de flesta resesidor.
+
+## Mål
+
+1. Shortcode **`[cv_forstasida]`** som renderar hela förstasidan för aktuellt WPML-språk.
+2. Admin: **Inställningar → Förstasida**, en flik per aktivt WPML-språk.
+3. Svenska versionen ska se ut **exakt som prototypen** (se nedan) innan vi går vidare.
+4. Därefter norska (samma upplägg), sedan engelska m.fl.
+
+## Språkregel (viktig)
+
+- **Svenska och norska**: identiska upplägg, guidade resor visas.
+- **Alla andra språk**: guidade resor visas **inte alls** – inte rutan "Guidade resor",
+  inte sektionen "Aktuella guidade resor", inte i faktaraden. (Guidningen sker på svenska.)
+  Styrs av en inställning per språk ("Visa guidade resor": på för sv/nb, av för övriga).
+
+## Prototypen (förlaga för design)
+
+- Sida **"Ny förstasida"**, page ID **36205**,
+  https://cyklavandra.se/information/om-oss/ny-forstasida/ – publicerad, mall "100% Width",
+  sidtitelfält dolt, ingen menypunkt.
+- All CSS + två `<script>` ligger i **första** Avada-textmodulen. Hämta källan via REST:
+  `GET /wp-json/wp/v2/pages/36205?context=edit` → `content.raw` (inloggad, nonce).
+  Klasserna heter `cvfs-*`. Flytta CSS till `assets/forstasida.css` och JS till
+  `assets/forstasida.js` i pluginen.
+- Rör inte prototypen förrän den nya versionen är godkänd.
+
+### Sektioner i ordning (svenska texter som de står nu)
+
+1. **Hero** (full bredd)
+   - Bakgrundsbild slumpas per besök bland 4 bilder (ingen mörkning; textskugga på
+     rubrik, svag mörk toning bakom underrubriken):
+     - `2020/12/12924658334_3daa5efc52_k.jpg` (vandrare, vulkanlandskap)
+     - `2020/12/44334843835_2e38fdab86_k.jpg` (vandrare, klippkust)
+     - `2024/09/PXL_20240826_093340787.jpg` (cyklist på bro)
+     - `2025/10/eurobike_radreisen_donauradweg_weingarten_radgruppe-21.jpg` (Donau)
+     (alla under `https://cyklavandra.se/wp-content/uploads/`). Pär byter till bilder med
+     bara landskap eller motivet vid sidan – gör bildlistan redigerbar per språk
+     (mediaväljare).
+   - Rubrik "Var vill du cykla eller vandra?"
+   - Underrubrik "Beskriv din drömresa med egna ord – vi hittar resorna som passar."
+   - `[cv_ai_sok platshallare="T.ex. lätt cykling med vinprovning i september, två par" knapp="Hitta resor"]`
+   - Bildhöjd fast 600 px (desktop). **När sökresultat visas** krymper bilden mjukt så den
+     slutar 24 px under sökformuläret; resultaten hamnar på ljus bakgrund (#F4F6F3) i en
+     vit ruta; exempelfrågorna döljs. (MutationObserver på `.cvai-out`, klass
+     `cvfs-has-res`, CSS-variabel `--cvfs-hero-h`.)
+   - Exempelfrågor: vita, 92 % täckning (8 % genomskinliga), mörk text.
+   - **Mobil (≤700 px)**: bilden täcker hela hero när ingen sökning gjorts; exempelfrågorna
+     ligger på **en rad som sveps i sidled** (en rad per knapp, ellips vid lång text);
+     mindre padding.
+2. **Tre rutor** (ingen liten överrubrik)
+   - Guidade resor – "Svensk guide, trevligt sällskap och fasta avresedatum. Vi tar hand om
+     allt." – "Se alla guidade resor →" → `/vandra/guidade/` (grön #EEF3EF)
+   - Cykla på egen hand – "Längs floder, vingårdar och kuster i din egen takt. Vi bokar
+     hotell och flyttar bagaget." – "Se alla cykelresor →" → `/cykla/cykla-pa-egen-hand/` (persika #FBEFE4)
+   - Vandra på egen hand – "Kustleder och bergsstigar med navigeringsapp, bagagetransport
+     och support under resan." – "Se alla vandringsresor →" → `/vandra/pa-egen-hand/` (ljusblå #EAF1F6)
+   - Hela rutan klickbar.
+3. **Faktarad** (4 kolumner, sista kant i kant till höger; **dold på mobil**)
+   - Cykel- och vandringsresor sedan 2009 / Erfarenhet av cykel- och vandringsresor
+     (Pär kan vilja byta underraden – upprepar rubriken)
+   - Tusentals nöjda resenärer / Från ett tjugotal länder
+   - Support under resan / På alla resor på egen hand
+   - Bagagetransport och app / Ingår i alla resor på egen hand
+4. **Aktuella guidade resor** (ljusgrå bakgrund #F4F6F3, full bredd) – länk "Alla guidade resor →"
+   - Andorra, La Gomera, Rioja & San Sebastián, Piemonte & Ligurien, Korfu/Paxos/Albanien
+     (nuvarande SvD-kampanjresor). Kort: bild, "Guidad vandring · X dagar", namn, "från X kr".
+5. **Populära resor på egen hand** (vit) – länk "Alla resor på egen hand →" `/sjalvguidade/`
+   - Costa Brava, Canal du Midi, Mosel, Baskien (San Sebastián), Wachau. Kort: bild,
+     "Typ · X dagar · Nivå N", namn, "från X €".
+6. **Nyheter för säsongen 2027** (ljusgrå) – länk "Se alla nyheter →"
+   `/information/hitta-resa/destinationer/nyheter/`. 4 kort. Endast självguidade.
+7. **Nyhetsbrev** – Avadas `[fusion_blog]`, kategori `nyheter`, 3 senaste, kort stylade som
+   resekorten, länk "Alla inlägg →" `/category/nyheter/`. (Avadas datumformat för svenska
+   är `j F Y`.) Gör gärna egen rendering i pluginen i stället för fusion_blog.
+8. **Band "Följ oss och få inspiration!"** (sandfärg #F6E6D6) – "Bilder, tips och nyheter
+   från våra resor." – knappar **Nyhetsbrev** (`/information/nyhetsbrev/`, samma flik),
+   **Instagram** (`instagram.com/cyklavandra.se`), **Facebook** (`facebook.com/cyklavandra/`)
+   (ny flik) + 4 små kvadratiska bilder till höger.
+
+Alla sektioner har samma innehållsbredd (1200 px wrap med 24 px inre marginal → 1152 px),
+även bloggen och bandet.
+
+## Admin-gränssnitt (förslag)
+
+Per språkflik:
+- Hero: rubrik, underrubrik, bilder (mediaväljare, flera), platshållare + knapptext till AI-sök.
+- Tre rutor: rubrik, text, länktext, URL (guidade-rutan döljs om "Visa guidade resor" är av).
+- Faktarad: 4 × (rubrik, underrad).
+- Resesektioner: rubrik, länktext, URL, och **resväljare** (sök bland sidor taggade
+  guidad/självguidad, dra för att sortera). Kortet hämtar titel, utvald bild och permalänk
+  automatiskt; i andra språk via WPML (`wpml_object_id`).
+- Nyheter: automatiskt från taggen (inställbar, nu `2027`) + typ självguidad, antal (4),
+  eller manuellt val.
+- Blogg: kategori + antal.
+- Band: rubrik, text, knappar (text + URL), 4 bilder.
+- "Visa guidade resor" (på/av).
+
+## Öppna frågor till Pär
+
+- **Pris och antal dagar**: finns de som egna fält/taggar på resesidorna, eller bara i
+  texten/prisboken? Avgör om korten kan hämta dem automatiskt eller måste fyllas i manuellt.
+- **Norska sidan**: vad finns i dag i WPML (trasig översättning eller ingen sida)?
+- ~~Repo-namn~~ – repot heter `Cyklavandra-se/forstasida`; pluginmappen och zip-filen heter
+  `cyklavandra-forstasida`.
+
+## Regler (samma som AI-sök)
+
+- Höj `Version:` och konstanten `CVFS_VERSION` vid varje ändring, och lägg en rad under
+  "Versioner" i README.md.
+- Nya inställningar ska ha standardvärden.
+- Inga API-nycklar eller hemligheter i repot.
+- Ingen inline-HTML som WordPress `wpautop` kan förstöra – rendera från PHP-mallar.
+- All text ut via `esc_html` / `esc_url` / `esc_attr`.
+
+## Testa lokalt
+
+WordPress + SQLite Database Integration + `php` (ingen MySQL). Mocka WPML med filtren
+`wpml_current_language`, `wpml_active_languages`, `wpml_object_id` och actionen
+`wpml_switch_language`. Kör `php -l` och `node --check` på JS.
+
+## Release
+
+Som AI-sök: pusha till `main` → GitHub Release med tagg `vX.Y.Z` → workflow bygger
+`cyklavandra-forstasida.zip` → Pär installerar via Tillägg → Ladda upp → "Ersätt nuvarande".
+Påminn om att ladda ner pluginens zip, inte "Source code (zip)".
+
+## Läge (0.1.0)
+
+Första uppgiften är gjord. Arkitektur:
+
+- `includes/settings.php` – option `cvfs_settings` = `array( lang => inställningar )`.
+  `cvfs_get($lang)` slår ihop sparat med `cvfs_defaults($lang)` (assoc rekursivt, listor ersätts).
+  Svenska standardvärden = prototypen, inklusive resornas sid-id och kortens texter/priser.
+  Andra språk: samma, men kortens titel/meta/pris tomma (hämtas automatiskt) och
+  `show_guided` bara på för sv/nb.
+- `includes/trips.php` – kort = sid-id + valfria `title`, `meta`, `price`, `image`. Tomt →
+  sidans titel/utvalda bild ("large"), metarad från taggar (`guidad`, `hike1–4`/`bike1–4`).
+  Kort utan översättning i språket hoppas över (`cvfs_object_id`).
+- `templates/forstasida.php` – samma HTML/klasser som prototypen. `cvfs_render()` tar bort
+  radbrytningar mellan taggar (skydd mot wpautop). Slumpningen av herobild är ett inline-skript
+  direkt efter heron (som i prototypen, så att bilden väljs innan sidan ritas).
+- `assets/forstasida.css` – del 1 = prototypens CSS oförändrad (en regel per rad, ordningen
+  spelar roll), del 2 = pluginens tillägg (20 px under heron som prototypens `<p>` gav, och
+  bloggkorten).
+- Admin: Inställningar → Förstasida (`options-general.php?page=cvfs&lang=xx`), sparas via
+  `admin-post.php?action=cvfs_save`, resväljaren söker via AJAX `cvfs_search_trips`.
+
+Verifierat lokalt: min utdata inlagd i live-sidans Avada-HTML ger exakt samma positioner och
+storlekar som prototypen på 1440, 900 och 390 px. Enda avsiktliga skillnaden: bloggsektionen
+har samma 24 px sidmarginal som övriga sektioner även under 1000 px (i prototypen gick den
+kant i kant där).
+
+Nästa steg: Pär svarar på frågan om pris/dagar → ev. automatiska kort; Pär testar på en
+testsida; därefter norska.
+
+## Första uppgiften i Claude Code
+
+1. Skapa pluginskelett (huvudfil, `includes/`, `assets/`, `templates/`, README, workflow).
+2. Hämta prototypens HTML/CSS/JS (page 36205) och flytta in den i mallar och assets.
+3. Bygg inställningssidan med svenska standardvärden = texterna ovan.
+4. Testa lokalt att `[cv_forstasida]` ger samma resultat som prototypen.
+5. Fråga Pär om de öppna frågorna innan resekorten görs automatiska.
