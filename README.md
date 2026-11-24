@@ -14,8 +14,12 @@ ett per språk (WPML). Ersätter den handbyggda prototypen "Ny förstasida" (pag
   Styrs av "Visa guidade resor" per språk.
 - **Resekort:** välj resor bland sidor taggade `guidad` / `självguidad`, dra för att sortera.
   Titel, utvald bild och länk hämtas från sidan (i andra språk via WPML). Kortrubrik,
-  metarad, pris och bild kan skrivas över per kort. Tom metarad byggs av taggarna
-  (t.ex. "Vandring · Nivå 1"). Saknas en översättning visas inte kortet på det språket.
+  metarad, pris och bild kan skrivas över per kort. Saknas en översättning visas inte kortet
+  på det språket.
+- **Dagar och pris automatiskt** ur resesidans faktaruta ("Längd 5 dagar / 4 nätter",
+  "Pris från 725 €", även norska "Lengde"/"fra"). Tom metarad byggs av taggarna och
+  faktarutan, t.ex. "Vandring · 5 dagar · Nivå 1". Guidade resor saknar faktaruta – där
+  skrivs metarad och pris in för hand. Det som skrivs in per kort går alltid före.
 - **Nyheter:** manuellt valda resor eller automatiskt (tagg, t.ex. `2027`, + självguidad).
 - **Blogg:** senaste inläggen i en kategori, renderade av pluginen (inte Avadas `fusion_blog`).
 - **Uppdateringar** direkt från GitHub-releaser (som AI-sök).
@@ -60,4 +64,5 @@ Shortcode-attribut: `lang="sv"` visar ett visst språks inställningar (för tes
 
 ## Versioner
 
+- **0.2.0** – Antal dagar och pris läses automatiskt ur resesidans faktaruta (Längd/Pris, även på norska). Inställningen "Pris från resesidan" per sektion (av för nyheterna, som i prototypen). Samma resa kan inte väljas två gånger i en sektion.
 - **0.1.0** – Första versionen: shortcoden `[cv_forstasida]` med prototypens utseende, inställningar per språk (Inställningar → Förstasida), resväljare, språkregeln för guidade resor, egen rendering av blogginläggen och uppdateringar från GitHub.

@@ -3,8 +3,9 @@
  * Resekort: från sparade val (sid-id + ev. egna texter) till färdiga kortdata.
  *
  * Titel, bild och länk hämtas från sidan (i aktuellt språk via WPML) om fälten är tomma.
- * Metaraden byggs av taggarna (guidad, hike1–4/bike1–4) om fältet är tomt.
- * Pris och antal dagar finns ännu inte som egna fält på resesidorna – de skrivs in per kort.
+ * Metaraden byggs av taggarna (guidad, hike1–4/bike1–4) och antal dagar om fältet är tomt.
+ * Antal dagar och pris läses ur resesidans faktaruta ("Längd 5 dagar / 4 nätter",
+ * "Pris från 725 €"). Det som skrivs in per kort i admin går alltid före.
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -69,9 +70,47 @@ function cvfs_trip_facts( $post_id ) {
 }
 
 /**
- * Automatisk metarad, t.ex. "Vandring · Nivå 1", "Guidad vandring" eller "Cykling · Nyhet 2027".
+ * Antal dagar och pris ur resesidans faktaruta, t.ex.
+ *   <div …>Längd</div><div …>5 dagar / 4 nätter</div>
+ *   <div …>Pris</div><div …>från 725 €</div>
+ * Fungerar på alla språk (Lengde/fra, Length/from …). Guidade resor saknar oftast rutan.
  *
- * @param string $extra Text som läggs sist i stället för nivån (nyhetsetiketten).
+ * @return array{ days: int, price: string }  price utan "från", t.ex. "725 €".
+ */
+function cvfs_trip_details( $post_id ) {
+	static $cache = array();
+	$post_id = (int) $post_id;
+	if ( isset( $cache[ $post_id ] ) ) {
+		return $cache[ $post_id ];
+	}
+	$out     = array(
+		'days'  => 0,
+		'price' => '',
+	);
+	$len_l   = array( 'längd', 'lengde', 'længde', 'length', 'länge', 'dauer', 'lengte', 'durée', 'kesto' );
+	$price_l = array( 'pris', 'price', 'preis', 'prijs', 'prix', 'hinta' );
+	$content = (string) get_post_field( 'post_content', $post_id );
+	if ( $content && preg_match_all( '#>\s*([^<>]{2,40}?)\s*</div>\s*<div[^>]*>\s*([^<>]{1,100}?)\s*</div>#u', $content, $m, PREG_SET_ORDER ) ) {
+		foreach ( $m as $x ) {
+			$label = mb_strtolower( trim( html_entity_decode( $x[1], ENT_QUOTES, 'UTF-8' ) ) );
+			$value = trim( preg_replace( '/\s+/u', ' ', html_entity_decode( $x[2], ENT_QUOTES, 'UTF-8' ) ) );
+			if ( ! $out['days'] && in_array( $label, $len_l, true ) && preg_match( '/(\d+)\s*(dagar|dager|dage|days?|tage?|dagen|jours?|päivää)/iu', $value, $d ) ) {
+				$out['days'] = (int) $d[1];
+			}
+			if ( '' === $out['price'] && in_array( $label, $price_l, true ) && preg_match( '/\d/', $value ) ) {
+				$out['price'] = trim( preg_replace( '/^(från|fra|from|ab|vanaf|à partir de|alkaen)\s+/iu', '', $value ) );
+			}
+		}
+	}
+	$cache[ $post_id ] = apply_filters( 'cvfs_trip_details', $out, $post_id );
+	return $cache[ $post_id ];
+}
+
+/**
+ * Automatisk metarad, t.ex. "Vandring · 5 dagar · Nivå 1", "Guidad vandring · 8 dagar"
+ * eller "Cykling · Nyhet 2027".
+ *
+ * @param string $extra Text som läggs efter typen i stället för dagar och nivå (nyhetsetiketten).
  */
 function cvfs_auto_meta( $post_id, $labels, $extra = '' ) {
 	$f     = cvfs_trip_facts( $post_id );
@@ -82,10 +121,16 @@ function cvfs_auto_meta( $post_id, $labels, $extra = '' ) {
 	}
 	if ( '' !== $extra ) {
 		$parts[] = $extra;
-	} elseif ( $f['level'] && ! $f['guided'] ) {
-		$parts[] = trim( ( $labels['level'] ?? '' ) . ' ' . $f['level'] );
+	} else {
+		$days = cvfs_trip_details( $post_id )['days'];
+		if ( $days ) {
+			$parts[] = $days . ' ' . ( $labels['days'] ?? '' );
+		}
+		if ( $f['level'] && ! $f['guided'] ) {
+			$parts[] = trim( ( $labels['level'] ?? '' ) . ' ' . $f['level'] );
+		}
 	}
-	return implode( ' · ', array_filter( $parts ) );
+	return implode( ' · ', array_filter( array_map( 'trim', $parts ) ) );
 }
 
 /**
@@ -108,9 +153,10 @@ function cvfs_trip_image( $post_id ) {
  * @param array  $s      Språkets inställningar.
  * @param string $lang   Språkkod.
  * @param string $extra  Nyhetsetikett för automatisk metarad (bara nyhetssektionen).
+ * @param bool   $auto_price Hämta priset från faktarutan när fältet Pris är tomt.
  * @return array[] { url, title, image, alt, meta, price }
  */
-function cvfs_cards( $trips, $s, $lang, $extra = '' ) {
+function cvfs_cards( $trips, $s, $lang, $extra = '', $auto_price = true ) {
 	$cards = array();
 	foreach ( (array) $trips as $t ) {
 		$id = cvfs_object_id( $t['id'] ?? 0, $lang );
@@ -130,10 +176,19 @@ function cvfs_cards( $trips, $s, $lang, $extra = '' ) {
 			// Prototypen har kortets titel som alt-text.
 			'alt'   => html_entity_decode( wp_strip_all_tags( $title ), ENT_QUOTES, 'UTF-8' ),
 			'meta'  => '' !== ( $t['meta'] ?? '' ) ? $t['meta'] : cvfs_auto_meta( $id, $s['labels'], $extra ),
-			'price' => '' !== ( $t['price'] ?? '' ) ? trim( $s['labels']['from'] . ' ' . $t['price'] ) : '',
+			'price' => cvfs_card_price( $t, $id, $s['labels'], $auto_price ),
 		);
 	}
 	return $cards;
+}
+
+/** Pristext för ett kort: eget pris, annars faktarutans (om $auto), med "från" först. */
+function cvfs_card_price( $t, $post_id, $labels, $auto = true ) {
+	$price = trim( (string) ( $t['price'] ?? '' ) );
+	if ( '' === $price && $auto ) {
+		$price = cvfs_trip_details( $post_id )['price'];
+	}
+	return '' === $price ? '' : trim( ( $labels['from'] ?? '' ) . ' ' . $price );
 }
 
 /**
@@ -213,15 +268,17 @@ function cvfs_search_trips( $term, $lang, $limit = 20 ) {
 			if ( '' !== $term ) {
 				$args['s'] = $term;
 			}
-			$q   = new WP_Query( $args );
-			$out = array();
+			$q      = new WP_Query( $args );
+			$out    = array();
+			$labels = cvfs_get( $lang )['labels'];
 			foreach ( $q->posts as $p ) {
 				$f     = cvfs_trip_facts( $p->ID );
 				$out[] = array(
 					'id'    => $p->ID,
 					'title' => html_entity_decode( get_the_title( $p ), ENT_QUOTES, 'UTF-8' ),
 					'url'   => get_permalink( $p ),
-					'meta'  => cvfs_auto_meta( $p->ID, cvfs_get( $lang )['labels'] ),
+					'meta'  => cvfs_auto_meta( $p->ID, $labels ),
+					'price' => cvfs_trip_details( $p->ID )['price'],
 					'image' => cvfs_trip_image( $p->ID )[0],
 				);
 			}

@@ -49,9 +49,9 @@ function cvfs_view_data( $lang ) {
 		'guided'  => ! empty( $s['show_guided'] ),
 		'search'  => cvfs_search_box( $s ),
 		'cards'   => array(
-			'guided'  => ! empty( $s['show_guided'] ) ? cvfs_cards( $s['guided']['trips'], $s, $lang ) : array(),
-			'popular' => cvfs_cards( $s['popular']['trips'], $s, $lang ),
-			'news'    => cvfs_cards( $news_trips, $s, $lang, $s['news']['label'] ),
+			'guided'  => ! empty( $s['show_guided'] ) ? cvfs_cards( $s['guided']['trips'], $s, $lang, '', ! empty( $s['guided']['auto_price'] ) ) : array(),
+			'popular' => cvfs_cards( $s['popular']['trips'], $s, $lang, '', ! empty( $s['popular']['auto_price'] ) ),
+			'news'    => cvfs_cards( $news_trips, $s, $lang, $s['news']['label'], ! empty( $s['news']['auto_price'] ) ),
 		),
 		'posts'   => ! empty( $s['blog']['show'] ) ? cvfs_blog_posts( $s, $lang ) : array(),
 	);

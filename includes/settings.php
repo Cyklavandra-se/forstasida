@@ -99,8 +99,11 @@ function cvfs_defaults( $lang = 'sv' ) {
 		'guided'      => array(
 			'title'     => 'Aktuella guidade resor',
 			'link_text' => 'Alla guidade resor →',
-			'url'       => cvfs_u( '/vandra/guidade/' ),
-			'trips'     => array(
+			'url'        => cvfs_u( '/vandra/guidade/' ),
+			// Hämta priset ur faktarutan när kortets prisfält är tomt.
+			'auto_price' => 1,
+			// Guidade resor har ingen faktaruta – dagar och pris står här.
+			'trips'      => array(
 				cvfs_trip( 1821, 'Vandra i Andorra – magiska Pyrenéerna', 'Guidad vandring · 8 dagar', '21 950 kr' ),
 				cvfs_trip( 19019, 'Vandringsparadiset La Gomera', 'Guidad vandring · 8 dagar', '25 950 kr' ),
 				cvfs_trip( 9772, 'Rioja & San Sebastián', 'Guidad vandring · 8 dagar', '29 750 kr' ),
@@ -112,13 +115,16 @@ function cvfs_defaults( $lang = 'sv' ) {
 		'popular'     => array(
 			'title'     => 'Populära resor på egen hand',
 			'link_text' => 'Alla resor på egen hand →',
-			'url'       => cvfs_u( '/sjalvguidade/' ),
-			'trips'     => array(
-				cvfs_trip( 18881, 'Costa Bravas pärlor – kustvandring', 'Vandring · 5 dagar · Nivå 1', '725 €' ),
-				cvfs_trip( 22059, 'Canal du Midi – Toulouse till Medelhavet', 'Cykling · 7 dagar · Nivå 1', '1 185 €' ),
-				cvfs_trip( 16884, 'Vincykling längs Mosel', 'Cykling · 6 dagar · Nivå 1', '905 €' ),
-				cvfs_trip( 3877, 'San Sebastián – kustvandring längs pilgrimsleden', 'Vandring · 5 dagar · Nivå 2', '805 €' ),
-				cvfs_trip( 33232, 'Donau i lugn takt – Wachau och Wien', 'Cykling · 5 dagar · Nivå 1', '795 €' ),
+			'url'        => cvfs_u( '/sjalvguidade/' ),
+			'auto_price' => 1,
+			'trips'      => array(
+				// Dagar och pris läses ur faktarutan på resesidan.
+				cvfs_trip( 18881, 'Costa Bravas pärlor – kustvandring' ),
+				cvfs_trip( 22059, 'Canal du Midi – Toulouse till Medelhavet' ),
+				cvfs_trip( 16884, 'Vincykling längs Mosel' ),
+				cvfs_trip( 3877, 'San Sebastián – kustvandring längs pilgrimsleden' ),
+				// Sidan har taggen bike2, men prototypen säger Nivå 1.
+				cvfs_trip( 33232, 'Donau i lugn takt – Wachau och Wien', 'Cykling · 5 dagar · Nivå 1' ),
 			),
 		),
 
@@ -131,11 +137,14 @@ function cvfs_defaults( $lang = 'sv' ) {
 			'tag'       => '2027',
 			'count'     => 4,
 			'label'     => 'Nyhet 2027',
+			// Prototypen visar inget pris på nyheterna.
+			'auto_price' => 0,
 			'trips'     => array(
-				cvfs_trip( 35210, 'Madeira runt på cykel', 'Cykling · Nyhet 2027' ),
-				cvfs_trip( 35098, 'Cykla på Lanzarote – vulkanernas ö', 'Cykling · Nyhet 2027' ),
-				cvfs_trip( 34196, 'Mallorca – Tramuntana till fots', 'Vandring · Nyhet 2027' ),
-				cvfs_trip( 34064, 'Mellan Alperna och Provence – Vercors', 'Vandring · Nyhet 2027' ),
+				// Metaraden blir automatiskt typ + etiketten, t.ex. "Cykling · Nyhet 2027".
+				cvfs_trip( 35210, 'Madeira runt på cykel' ),
+				cvfs_trip( 35098, 'Cykla på Lanzarote – vulkanernas ö' ),
+				cvfs_trip( 34196, 'Mallorca – Tramuntana till fots' ),
+				cvfs_trip( 34064, 'Mellan Alperna och Provence – Vercors' ),
 			),
 		),
 
@@ -220,6 +229,7 @@ function cvfs_default_labels( $lang ) {
 			'guided_hike' => 'Guidad vandring',
 			'guided_bike' => 'Guidad cykling',
 			'level'       => 'Nivå',
+			'days'        => 'dagar',
 		),
 		'nb' => array(
 			'from'        => 'fra',
@@ -228,6 +238,7 @@ function cvfs_default_labels( $lang ) {
 			'guided_hike' => 'Guidet fottur',
 			'guided_bike' => 'Guidet sykkeltur',
 			'level'       => 'Nivå',
+			'days'        => 'dager',
 		),
 		'da' => array(
 			'from'        => 'fra',
@@ -236,6 +247,7 @@ function cvfs_default_labels( $lang ) {
 			'guided_hike' => 'Guidet vandring',
 			'guided_bike' => 'Guidet cykling',
 			'level'       => 'Niveau',
+			'days'        => 'dage',
 		),
 		'de' => array(
 			'from'        => 'ab',
@@ -244,6 +256,7 @@ function cvfs_default_labels( $lang ) {
 			'guided_hike' => 'Geführte Wanderung',
 			'guided_bike' => 'Geführte Radtour',
 			'level'       => 'Stufe',
+			'days'        => 'Tage',
 		),
 		'en' => array(
 			'from'        => 'from',
@@ -252,6 +265,7 @@ function cvfs_default_labels( $lang ) {
 			'guided_hike' => 'Guided walking',
 			'guided_bike' => 'Guided cycling',
 			'level'       => 'Level',
+			'days'        => 'days',
 		),
 	);
 	$l = cvfs_norm_lang( $lang );
@@ -397,7 +411,8 @@ function cvfs_sanitize( $in, $lang ) {
 			'title'     => cvfs_clean_text( $s['title'] ?? '' ),
 			'link_text' => cvfs_clean_text( $s['link_text'] ?? '' ),
 			'url'       => cvfs_clean_url( $s['url'] ?? '' ),
-			'trips'     => cvfs_clean_trips( $s['trips'] ?? array() ),
+			'auto_price' => empty( $s['auto_price'] ) ? 0 : 1,
+			'trips'      => cvfs_clean_trips( $s['trips'] ?? array() ),
 		);
 	}
 	$n                    = $in['news'] ?? array();

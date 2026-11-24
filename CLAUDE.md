@@ -116,9 +116,14 @@ Per språkflik:
 
 ## Öppna frågor till Pär
 
-- **Pris och antal dagar**: finns de som egna fält/taggar på resesidorna, eller bara i
-  texten/prisboken? Avgör om korten kan hämta dem automatiskt eller måste fyllas i manuellt.
-- **Norska sidan**: vad finns i dag i WPML (trasig översättning eller ingen sida)?
+- ~~Pris och antal dagar~~ – **besvarat (0.2.0):** läses ur resesidans faktaruta
+  (`<div>Längd</div><div>5 dagar / 4 nätter</div>`, `<div>Pris</div><div>från 725 €</div>`;
+  norska `Lengde`/`fra`), `cvfs_trip_details()`. 109 av 136 självguidade svenska sidor har
+  rutan (nov 2026); guidade sidor har den inte – där fylls metarad/pris i för hand.
+  Fälten `_cvkp_days`/`_cvkp_nights` (kanalpubliceringen) finns men är ofta 0 – används inte.
+- ~~Norska sidan~~ – **besvarat:** det finns en fungerande norsk startsida som ska ersättas.
+  Det finns också en norsk kopia av prototypen: `/no/informasjon-om-programmet/om-oss/ny-forside/`
+  (page 37430) – bra källa till norska texter.
 - ~~Repo-namn~~ – repot heter `Cyklavandra-se/forstasida`; pluginmappen och zip-filen heter
   `cyklavandra-forstasida`.
 
@@ -143,7 +148,7 @@ Som AI-sök: pusha till `main` → GitHub Release med tagg `vX.Y.Z` → workflow
 `cyklavandra-forstasida.zip` → Pär installerar via Tillägg → Ladda upp → "Ersätt nuvarande".
 Påminn om att ladda ner pluginens zip, inte "Source code (zip)".
 
-## Läge (0.1.0)
+## Läge (0.2.0)
 
 Första uppgiften är gjord. Arkitektur:
 
@@ -153,7 +158,9 @@ Första uppgiften är gjord. Arkitektur:
   Andra språk: samma, men kortens titel/meta/pris tomma (hämtas automatiskt) och
   `show_guided` bara på för sv/nb.
 - `includes/trips.php` – kort = sid-id + valfria `title`, `meta`, `price`, `image`. Tomt →
-  sidans titel/utvalda bild ("large"), metarad från taggar (`guidad`, `hike1–4`/`bike1–4`).
+  sidans titel/utvalda bild ("large"), metarad från taggar (`guidad`, `hike1–4`/`bike1–4`)
+  + dagar ur faktarutan, pris ur faktarutan om sektionens `auto_price` är på.
+  Wachau (33232) har kvar manuell metarad: taggen är bike2 men prototypen säger Nivå 1.
   Kort utan översättning i språket hoppas över (`cvfs_object_id`).
 - `templates/forstasida.php` – samma HTML/klasser som prototypen. `cvfs_render()` tar bort
   radbrytningar mellan taggar (skydd mot wpautop). Slumpningen av herobild är ett inline-skript
@@ -169,8 +176,7 @@ storlekar som prototypen på 1440, 900 och 390 px. Enda avsiktliga skillnaden: b
 har samma 24 px sidmarginal som övriga sektioner även under 1000 px (i prototypen gick den
 kant i kant där).
 
-Nästa steg: Pär svarar på frågan om pris/dagar → ev. automatiska kort; Pär testar på en
-testsida; därefter norska.
+Nästa steg: Pär testar på en testsida och godkänner; därefter norska (texter från page 37430).
 
 ## Första uppgiften i Claude Code
 

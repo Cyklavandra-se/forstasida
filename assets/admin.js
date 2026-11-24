@@ -32,7 +32,7 @@
 			'<div class="cvfs-trip-fields">' +
 			'<label>Kortrubrik <input type="text" data-f="title" value="" placeholder="' + esc( t.title ) + '" /></label> ' +
 			'<label>Metarad <input type="text" data-f="meta" value="" placeholder="' + esc( t.meta ) + '" /></label> ' +
-			'<label>Pris <input type="text" data-f="price" class="cvfs-short" value="" placeholder="t.ex. 21 950 kr" /></label> ' +
+			'<label>Pris <input type="text" data-f="price" class="cvfs-short" value="" placeholder="' + esc( t.price || 'Inget i faktarutan' ) + '" /></label> ' +
 			'<label>Egen bild <input type="text" data-f="image" class="cvfs-img-url" value="" placeholder="Utvald bild" /></label> ' +
 			'<button type="button" class="button cvfs-pick-one">Välj bild</button>' +
 			'</div></div>' +

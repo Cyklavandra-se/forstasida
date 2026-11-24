@@ -132,6 +132,9 @@ function cvfs_f_head( $key, $sec ) {
 	cvfs_f_text( "cvfs[$key][title]", $sec['title'], 'Rubrik', array( 'wide' => true ) );
 	cvfs_f_text( "cvfs[$key][link_text]", $sec['link_text'], 'Länktext' );
 	cvfs_f_text( "cvfs[$key][url]", $sec['url'], 'Länk (URL)', array( 'wide' => true ) );
+	if ( isset( $sec['auto_price'] ) ) {
+		cvfs_f_check( "cvfs[$key][auto_price]", $sec['auto_price'], 'Pris från resesidan', 'Visa priset ur resesidans faktaruta när kortets prisfält är tomt' );
+	}
 }
 
 /** En rad i resväljaren. $t = sparad rad, $info = sidans titel/bild/länk. */
@@ -153,7 +156,7 @@ function cvfs_trip_row( $base, $i, $t, $info ) {
 			<div class="cvfs-trip-fields">
 				<label>Kortrubrik <input type="text" data-f="title" name="<?php echo esc_attr( $base . '[' . (int) $i . '][title]' ); ?>" value="<?php echo esc_attr( $t['title'] ); ?>" placeholder="<?php echo esc_attr( $info['title'] ); ?>" /></label>
 				<label>Metarad <input type="text" data-f="meta" name="<?php echo esc_attr( $base . '[' . (int) $i . '][meta]' ); ?>" value="<?php echo esc_attr( $t['meta'] ); ?>" placeholder="<?php echo esc_attr( $info['meta'] ); ?>" /></label>
-				<label>Pris <input type="text" data-f="price" name="<?php echo esc_attr( $base . '[' . (int) $i . '][price]' ); ?>" class="cvfs-short" value="<?php echo esc_attr( $t['price'] ); ?>" placeholder="t.ex. 21 950 kr" /></label>
+				<label>Pris <input type="text" data-f="price" name="<?php echo esc_attr( $base . '[' . (int) $i . '][price]' ); ?>" class="cvfs-short" value="<?php echo esc_attr( $t['price'] ); ?>" placeholder="<?php echo esc_attr( '' !== ( $info['price'] ?? '' ) ? $info['price'] : 'Inget i faktarutan' ); ?>" /></label>
 				<label>Egen bild <input type="text" data-f="image" name="<?php echo esc_attr( $base . '[' . (int) $i . '][image]' ); ?>" class="cvfs-img-url" value="<?php echo esc_attr( $t['image'] ); ?>" placeholder="Utvald bild" /></label>
 				<button type="button" class="button cvfs-pick-one">Välj bild</button>
 			</div>
@@ -187,6 +190,7 @@ function cvfs_trip_info( $id, $lang, $labels ) {
 		'url'   => get_permalink( $p ),
 		'image' => cvfs_trip_image( $tid )[0],
 		'meta'  => cvfs_auto_meta( $tid, $labels ),
+		'price' => cvfs_trip_details( $tid )['price'],
 	);
 }
 
@@ -209,7 +213,7 @@ function cvfs_f_trips( $key, $trips, $lang, $labels, $label = 'Resor' ) {
 					<input type="search" class="regular-text cvfs-trip-search" placeholder="Sök resa att lägga till (guidad/självguidad) …" />
 					<ul class="cvfs-trip-results"></ul>
 				</div>
-				<p class="description">Dra för att sortera. Tomma fält hämtas från resesidan: rubrik och bild från sidan, metaraden från taggarna (typ och nivå). Priset skrivs ut som "<?php echo esc_html( $labels['from'] ); ?> …".</p>
+				<p class="description">Dra för att sortera. Tomma fält hämtas från resesidan (förslaget syns i grått): rubrik och bild från sidan, metaraden från taggarna (typ, nivå) och faktarutans "Längd", priset från faktarutans "Pris". Priset skrivs ut som "<?php echo esc_html( $labels['from'] ); ?> …".</p>
 			</div>
 		</td>
 	</tr>
@@ -409,6 +413,7 @@ function cvfs_admin_page() {
 					'guided_hike' => 'Guidad vandring',
 					'guided_bike' => 'Guidad cykling',
 					'level'       => 'Nivå',
+					'days'        => 'Dagar ("5 dagar")',
 				);
 				foreach ( $names as $k => $name ) {
 					cvfs_f_text( "cvfs[labels][$k]", $l[ $k ], $name );
