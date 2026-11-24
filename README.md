@@ -32,7 +32,10 @@ Kräver pluginen **cyklavandra-ai-sok** för sökrutan i heron (utan den visas h
 2. WordPress → Tillägg → Lägg till nytt → Ladda upp tillägg → Aktivera
    (vid uppdatering: "Ersätt nuvarande").
 3. Lägg `[cv_forstasida]` i en Avada-textmodul (eller kodblock) på en sida med mallen
-   "100% Width", i en container utan inre marginaler (som prototypen).
+   **"100% Width"** och dolt sidtitelfält, i en container med **Interior Content Width =
+   100% Width** och 0 i padding/marginal. Enklast: klona prototypsidan, ta bort alla
+   containrar utom den första och ersätt textmodulens innehåll med shortcoden.
+   Med standardmall eller "Site Width" blir heron och banden inte kant i kant.
 4. Ställ in texter, bilder och resor under **Cykla&Vandra → Förstasida**.
 
 Shortcode-attribut: `lang="sv"` visar ett visst språks inställningar (för test).
@@ -66,6 +69,7 @@ Shortcode-attribut: `lang="sv"` visar ett visst språks inställningar (för tes
 
 ## Versioner
 
+- **0.4.0** – Egna bakgrundsbilder i heron för mobil (skärmar upp till 700 px, gärna stående bilder). Tom lista = samma bilder som för dator och surfplatta.
 - **0.3.0** – Inställningarna ligger under menyn Cykla&Vandra → Förstasida (samma meny som Bokningsformulär, AI-sök och Kanalpublicering), med ett kort och en ikon på översiktssidan.
 - **0.2.0** – Antal dagar och pris läses automatiskt ur resesidans faktaruta (Längd/Pris, även på norska). Inställningen "Pris från resesidan" per sektion (av för nyheterna, som i prototypen). Samma resa kan inte väljas två gånger i en sektion.
 - **0.1.0** – Första versionen: shortcoden `[cv_forstasida]` med prototypens utseende, inställningar per språk (Cykla&Vandra → Förstasida), resväljare, språkregeln för guidade resor, egen rendering av blogginläggen och uppdateringar från GitHub.

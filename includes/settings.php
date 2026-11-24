@@ -52,6 +52,8 @@ function cvfs_defaults( $lang = 'sv' ) {
 				cvfs_up( '2024/09/PXL_20240826_093340787.jpg' ),
 				cvfs_up( '2025/10/eurobike_radreisen_donauradweg_weingarten_radgruppe-21.jpg' ),
 			),
+			// Mobil (≤ 700 px): egna, gärna stående bilder. Tom lista = samma som ovan.
+			'images_mobile' => array(),
 			'placeholder' => 'T.ex. lätt cykling med vinprovning i september, två par',
 			'button'      => 'Hitta resor',
 		),
@@ -381,6 +383,7 @@ function cvfs_sanitize( $in, $lang ) {
 		'title'       => cvfs_clean_text( $h['title'] ?? '' ),
 		'lead'        => cvfs_clean_text( $h['lead'] ?? '' ),
 		'images'      => array_values( array_filter( array_map( 'cvfs_clean_url', (array) ( $h['images'] ?? array() ) ) ) ),
+		'images_mobile' => array_values( array_filter( array_map( 'cvfs_clean_url', (array) ( $h['images_mobile'] ?? array() ) ) ) ),
 		'placeholder' => cvfs_clean_text( $h['placeholder'] ?? '' ),
 		'button'      => cvfs_clean_text( $h['button'] ?? '' ),
 	);

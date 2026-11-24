@@ -44,7 +44,8 @@ $cvfs_card = function ( $c ) {
 	<?php
 };
 
-$cvfs_images = array_values( array_filter( (array) $s['hero']['images'] ) );
+$cvfs_images  = array_values( array_filter( array_map( 'esc_url_raw', (array) $s['hero']['images'] ) ) );
+$cvfs_mobile  = array_values( array_filter( array_map( 'esc_url_raw', (array) $s['hero']['images_mobile'] ) ) );
 ?>
 <div class="cvfs" lang="<?php echo esc_attr( $lang ); ?>">
 
@@ -58,8 +59,9 @@ $cvfs_images = array_values( array_filter( (array) $s['hero']['images'] ) );
 			<?php echo $search; // phpcs:ignore WordPress.Security.EscapeOutput -- HTML från AI-sökets shortcode. ?>
 		</div>
 	</div>
-	<?php if ( $cvfs_images ) : ?>
-		<script>(function(){var a=<?php echo wp_json_encode( array_map( 'esc_url_raw', $cvfs_images ) ); ?>,e=document.querySelector(".cvfs-hero");if(e){e.style.setProperty("--cvfs-hero-img","url("+a[Math.floor(Math.random()*a.length)]+")");}})();</script>
+	<?php if ( $cvfs_images || $cvfs_mobile ) : ?>
+		<?php /* Mobil (samma gräns som CSS:en, 700 px) får egna bilder om sådana finns. */ ?>
+		<script>(function(){var d=<?php echo wp_json_encode( $cvfs_images ); ?>,m=<?php echo wp_json_encode( $cvfs_mobile ); ?>,a=(m.length&&window.matchMedia&&window.matchMedia("(max-width:700px)").matches)||!d.length?m:d,e=document.querySelector(".cvfs-hero");if(e&&a.length){e.style.setProperty("--cvfs-hero-img","url("+a[Math.floor(Math.random()*a.length)]+")");}})();</script>
 	<?php endif; ?>
 
 	<?php /* 2. Tre rutor + 3. faktarad */ ?>

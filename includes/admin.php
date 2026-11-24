@@ -142,6 +142,30 @@ function cvfs_f_check( $name, $value, $label, $desc = '' ) {
 	<?php
 }
 
+/** Lista med bilder (mediaväljare, flera, sorterbar). $name slutar på []. */
+function cvfs_f_images( $name, $urls, $label, $desc = '' ) {
+	?>
+	<tr>
+		<th scope="row"><?php echo esc_html( $label ); ?></th>
+		<td>
+			<ul class="cvfs-imgs" data-name="<?php echo esc_attr( $name ); ?>">
+				<?php foreach ( (array) $urls as $url ) : ?>
+					<li class="cvfs-img-item">
+						<img src="<?php echo esc_url( $url ); ?>" alt="" />
+						<input type="hidden" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( $url ); ?>" />
+						<button type="button" class="button-link cvfs-remove" title="Ta bort">✕</button>
+					</li>
+				<?php endforeach; ?>
+			</ul>
+			<button type="button" class="button cvfs-pick-many">Lägg till bilder</button>
+			<?php if ( $desc ) : ?>
+				<p class="description"><?php echo esc_html( $desc ); ?></p>
+			<?php endif; ?>
+		</td>
+	</tr>
+	<?php
+}
+
 /** Rubrik + länktext + URL för en sektion. */
 function cvfs_f_head( $key, $sec ) {
 	cvfs_f_text( "cvfs[$key][title]", $sec['title'], 'Rubrik', array( 'wide' => true ) );
@@ -285,22 +309,10 @@ function cvfs_admin_page() {
 				cvfs_f_text( 'cvfs[hero][title]', $s['hero']['title'], 'Rubrik', array( 'wide' => true ) );
 				cvfs_f_text( 'cvfs[hero][lead]', $s['hero']['lead'], 'Underrubrik', array( 'wide' => true ) );
 				?>
-				<tr>
-					<th scope="row">Bakgrundsbilder</th>
-					<td>
-						<ul class="cvfs-imgs" data-name="cvfs[hero][images][]">
-							<?php foreach ( $s['hero']['images'] as $url ) : ?>
-								<li class="cvfs-img-item">
-									<img src="<?php echo esc_url( $url ); ?>" alt="" />
-									<input type="hidden" name="cvfs[hero][images][]" value="<?php echo esc_attr( $url ); ?>" />
-									<button type="button" class="button-link cvfs-remove" title="Ta bort">✕</button>
-								</li>
-							<?php endforeach; ?>
-						</ul>
-						<button type="button" class="button cvfs-pick-many">Lägg till bilder</button>
-						<p class="description">En av bilderna slumpas vid varje besök. Dra för att sortera. Välj gärna bilder med bara landskap eller med motivet vid sidan.</p>
-					</td>
-				</tr>
+				<?php
+				cvfs_f_images( 'cvfs[hero][images][]', $s['hero']['images'], 'Bakgrundsbilder (dator och surfplatta)', 'En av bilderna slumpas vid varje besök. Dra för att sortera. Välj gärna bilder med bara landskap eller med motivet vid sidan.' );
+				cvfs_f_images( 'cvfs[hero][images_mobile][]', $s['hero']['images_mobile'], 'Bakgrundsbilder (mobil)', 'Visas på skärmar upp till 700 px breda (mobiler). Här passar stående bilder. Tom lista = samma bilder som för dator.' );
+				?>
 				<?php
 				cvfs_f_text( 'cvfs[hero][placeholder]', $s['hero']['placeholder'], 'AI-sök: platshållare', array( 'wide' => true ) );
 				cvfs_f_text( 'cvfs[hero][button]', $s['hero']['button'], 'AI-sök: knapptext', array( 'desc' => 'Exempelfrågorna ställs in i pluginen AI-sök.' ) );

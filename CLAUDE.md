@@ -148,7 +148,7 @@ Som AI-sök: pusha till `main` → GitHub Release med tagg `vX.Y.Z` → workflow
 `cyklavandra-forstasida.zip` → Pär installerar via Tillägg → Ladda upp → "Ersätt nuvarande".
 Påminn om att ladda ner pluginens zip, inte "Source code (zip)".
 
-## Läge (0.3.0)
+## Läge (0.4.0)
 
 Första uppgiften är gjord. Arkitektur:
 
@@ -162,6 +162,12 @@ Första uppgiften är gjord. Arkitektur:
   + dagar ur faktarutan, pris ur faktarutan om sektionens `auto_price` är på.
   Wachau (33232) har kvar manuell metarad: taggen är bike2 men prototypen säger Nivå 1.
   Kort utan översättning i språket hoppas över (`cvfs_object_id`).
+- Heron har två bildlistor: `hero.images` (dator/surfplatta) och `hero.images_mobile`
+  (≤ 700 px, samma gräns som CSS:en). Inline-skriptet väljer lista med `matchMedia`; tom
+  lista faller tillbaka på den andra.
+- Pärs testsida "Cykla & Vandra v2.0" (page 37967): heron gick inte kant i kant eftersom
+  sidan hade standardmall, synligt sidtitelfält och containern på "Site Width" – inget fel i
+  pluginen. Se README → Installation.
 - `templates/forstasida.php` – samma HTML/klasser som prototypen. `cvfs_render()` tar bort
   radbrytningar mellan taggar (skydd mot wpautop). Slumpningen av herobild är ett inline-skript
   direkt efter heron (som i prototypen, så att bilden väljs innan sidan ritas).
