@@ -310,11 +310,11 @@ function cvfs_defaults_nb( $d ) {
 		cvfs_trip( 34064, 'Mellom Alpene og Provence – Vercors' ),
 	);
 
-	// De norske innleggene ligger i kategorien "uncategorized-no" (oversettelsen av "nyheter").
+	// De norske innleggene ligger i kategorien "Nyheter" (slug nyheter-no, oversettelsen av "nyheter").
 	$d['blog']['title']       = 'Nyhetsbrev';
 	$d['blog']['link_text']   = 'Alle innlegg →';
-	$d['blog']['url']         = cvfs_u( '/no/category/uncategorized-no/' );
-	$d['blog']['category']    = 'uncategorized-no';
+	$d['blog']['url']         = cvfs_u( '/no/category/nyheter-no/' );
+	$d['blog']['category']    = 'nyheter-no';
 	$d['blog']['date_format'] = 'j. F Y';
 
 	$d['band']['title']              = 'Følg oss og bli inspirert!';

@@ -148,7 +148,7 @@ Som AI-sök: pusha till `main` → GitHub Release med tagg `vX.Y.Z` → workflow
 `cyklavandra-forstasida.zip` → Pär installerar via Tillägg → Ladda upp → "Ersätt nuvarande".
 Påminn om att ladda ner pluginens zip, inte "Source code (zip)".
 
-## Läge (0.5.0)
+## Läge (0.5.1)
 
 Första uppgiften är gjord. Arkitektur:
 
@@ -190,7 +190,7 @@ Svenska är godkänd av Pär (testsida page 37967, nu kant i kant).
 Norska (0.5.0): `cvfs_defaults_nb()` i settings.php – Pär ville utgå från den **svenska sidan**,
 inte den norska prototypkopian (page 37430), så texterna är översättningar av de svenska.
 Norska adresser hämtade från hreflang-länkarna. Bloggkategorin på norska heter
-`uncategorized-no` ("Uncategorized @no" – bör döpas om i WPML). Guidade priser står i "kr"
+`nyheter-no` (namn "Nyheter"; hette `uncategorized-no` före 0.5.1). Guidade priser står i "kr"
 även på de norska resesidorna. Baskien saknar "Lengde" i den norska faktarutan → manuell metarad.
 
 Nästa steg: Pär testar norska; därefter engelska m.fl. (utan guidade resor).

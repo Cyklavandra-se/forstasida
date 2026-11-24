@@ -69,6 +69,7 @@ Shortcode-attribut: `lang="sv"` visar ett visst språks inställningar (för tes
 
 ## Versioner
 
+- **0.5.1** – Norska standardvärdet för bloggkategorin är nu `nyheter-no` (kategorin har bytt namn till Nyheter), länken "Alle innlegg →" går till `/no/category/nyheter-no/`.
 - **0.5.0** – Norska standardvärden: samma upplägg, resor och bilder som den svenska sidan med norska texter, norska adresser, norska kortrubriker och bloggkategorin `uncategorized-no`. Ord i automatiska metarader på norska: Vandring/Sykling, Guidet vandring, dager. Har den norska fliken sparats tidigare: tryck "Återställ fliken till standardvärden" för att få de nya texterna.
 - **0.4.0** – Egna bakgrundsbilder i heron för mobil (skärmar upp till 700 px, gärna stående bilder). Tom lista = samma bilder som för dator och surfplatta.
 - **0.3.0** – Inställningarna ligger under menyn Cykla&Vandra → Förstasida (samma meny som Bokningsformulär, AI-sök och Kanalpublicering), med ett kort och en ikon på översiktssidan.
