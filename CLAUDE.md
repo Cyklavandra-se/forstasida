@@ -148,7 +148,7 @@ Som AI-sök: pusha till `main` → GitHub Release med tagg `vX.Y.Z` → workflow
 `cyklavandra-forstasida.zip` → Pär installerar via Tillägg → Ladda upp → "Ersätt nuvarande".
 Påminn om att ladda ner pluginens zip, inte "Source code (zip)".
 
-## Läge (0.6.0)
+## Läge (0.6.1)
 
 Första uppgiften är gjord. Arkitektur:
 
@@ -211,7 +211,15 @@ Svenska som huvudsida (0.6.0), beslutat med Pär:
   `admin-post.php?action=cvfs_apply_translations`. Nyckel: `CVFS_API_KEY` eller AI-söks.
   Ej testat mot riktiga API:et (ingen nyckel i utvecklingsmiljön) – lokalt med mock.
 
-Nästa steg: Pär testar översättningen på riktigt; därefter engelska m.fl. (utan guidade resor).
+0.6.1 efter Pärs norska testsida (`/no/informasjon-om-programmet/om-oss/cykla-vandra-v2-0/`):
+- `cvfs_trip_facts()` läser taggar från originalsidan (`cvfs_original_id`) – norska sidor saknar
+  ofta hike/bike-taggar (har `vandre`/`syklus`). URL-reserven tittar bara på sökvägen.
+- `cvfs_translate_url()` slår upp sidor med `get_page_by_path` först; misslyckade uppslag cachas inte.
+- `cvfs_master_trips()`: nyheter i auto-läge följer svenskans automatiska urval.
+- `cvfs_plain_text()` för utdrag: strip_shortcodes tog bort hela Avada-innehållet.
+- Översättningen med Claude fungerar live (norska texterna på testsidan kom därifrån).
+
+Nästa steg: engelska m.fl. (utan guidade resor).
 
 ## Första uppgiften i Claude Code
 

@@ -29,15 +29,29 @@ function cvfs_trip_tags() {
  * @return array{ guided: bool, kind: string, level: int }  kind = hike|bike|''.
  */
 function cvfs_trip_facts( $post_id ) {
-	$out  = array(
+	static $cache = array();
+	$post_id = (int) $post_id;
+	if ( isset( $cache[ $post_id ] ) ) {
+		return $cache[ $post_id ];
+	}
+	$out = array(
 		'guided' => false,
 		'kind'   => '',
 		'level'  => 0,
 	);
-	$tags = get_the_tags( $post_id );
-	if ( ! $tags || is_wp_error( $tags ) ) {
-		return $out;
+
+	// Typ och nivå läses från originalsidan på standardspråket: översatta sidor saknar ofta
+	// nivåtaggarna (hike1–4/bike1–4) eller har dem under andra namn.
+	$ids  = array_unique( array_filter( array( cvfs_original_id( $post_id ), $post_id ) ) );
+	$tags = array();
+	foreach ( $ids as $id ) {
+		$t = get_the_tags( $id );
+		if ( $t && ! is_wp_error( $t ) ) {
+			$tags = $t;
+			break;
+		}
 	}
+
 	$guided = array_map( 'sanitize_title', cvfs_trip_tags()['guided'] );
 	$levels = array();
 	foreach ( $tags as $t ) {
@@ -47,7 +61,7 @@ function cvfs_trip_facts( $post_id ) {
 		if ( in_array( $base, $guided, true ) || in_array( sanitize_title( $t->name ), $guided, true ) ) {
 			$out['guided'] = true;
 		}
-		if ( preg_match( '/^(hike|bike)([1-4])(?:-\d+)?$/', $slug, $m ) ) {
+		if ( preg_match( '/^(hike|bike)([1-4])(?:-[a-z0-9]+)?$/', $slug, $m ) ) {
 			$levels[ $m[1] ][] = (int) $m[2];
 		}
 	}
@@ -63,10 +77,30 @@ function cvfs_trip_facts( $post_id ) {
 		$out['level'] = min( $levels[ $out['kind'] ] );
 	}
 	if ( ! $out['kind'] ) {
-		$link        = (string) get_permalink( $post_id );
-		$out['kind'] = false !== strpos( $link, '/cykla' ) ? 'bike' : ( false !== strpos( $link, '/vandra' ) ? 'hike' : '' );
+		// Reserv: sidans adress (bara sökvägen – domänen "cyklavandra.se" innehåller "/cykla").
+		foreach ( $ids as $id ) {
+			$path = '/' . trim( (string) wp_parse_url( (string) get_permalink( $id ), PHP_URL_PATH ), '/' ) . '/';
+			if ( preg_match( '#/(cykla|sykling|sykle|cycling|bike|radreisen|pyoraily)#i', $path ) ) {
+				$out['kind'] = 'bike';
+				break;
+			}
+			if ( preg_match( '#/(vandra|vandring|vandre|walking|hiking|wandern)#i', $path ) ) {
+				$out['kind'] = 'hike';
+				break;
+			}
+		}
 	}
+	$cache[ $post_id ] = $out;
 	return $out;
+}
+
+/** Sidans id på standardspråket (samma id utan WPML eller om originalet saknas). */
+function cvfs_original_id( $post_id ) {
+	if ( ! cvfs_has_wpml() ) {
+		return (int) $post_id;
+	}
+	$id = apply_filters( 'wpml_object_id', (int) $post_id, 'page', true, cvfs_default_lang() );
+	return $id ? (int) $id : (int) $post_id;
 }
 
 /**

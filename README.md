@@ -78,6 +78,7 @@ Shortcode-attribut: `lang="sv"` visar ett visst språks inställningar (för tes
 
 ## Versioner
 
+- **0.6.1** – Rättat: kortens typ och nivå läses från den svenska originalsidans taggar, eftersom översatta sidor ofta saknar hike/bike-taggarna. Tidigare blev resor utan nivåtagg "Cykling" eftersom domänen cyklavandra.se innehåller "/cykla". Länkar som följer svenskan hittas nu via sidans sökväg (till exempel /vandra/guidade/ på norska). Nyheter i automatiskt läge visar samma resor på alla språk som på svenska. Blogginlägg byggda med Avada får utdrag igen.
 - **0.6.0** – Svenska är huvudsidan: övriga språk följer svenskans resor, bilder och länkar (kryssrutan "Följ svenska" per sektion, länkar översätts via WPML). Ny knapp "Spara och översätt ändringarna till alla språk": Claude översätter ändrade texter, förslagen granskas innan de sparas, och handjusterade texter skrivs inte över.
 - **0.5.1** – Norska standardvärdet för bloggkategorin är nu `nyheter-no` (kategorin har bytt namn till Nyheter), länken "Alle innlegg →" går till `/no/category/nyheter-no/`.
 - **0.5.0** – Norska standardvärden: samma upplägg, resor och bilder som den svenska sidan med norska texter, norska adresser, norska kortrubriker och bloggkategorin `uncategorized-no`. Ord i automatiska metarader på norska: Vandring/Sykling, Guidet vandring, dager. Har den norska fliken sparats tidigare: tryck "Återställ fliken till standardvärden" för att få de nya texterna.

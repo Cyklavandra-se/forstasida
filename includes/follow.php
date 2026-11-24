@@ -51,12 +51,13 @@ function cvfs_effective( $lang ) {
 		}
 		$s[ $sec ]['url']        = cvfs_translate_url( $m[ $sec ]['url'], $lang );
 		$s[ $sec ]['auto_price'] = $m[ $sec ]['auto_price'];
-		$s[ $sec ]['trips']      = cvfs_follow_trips( $m[ $sec ]['trips'], $s[ $sec ]['trips'] );
 		if ( 'news' === $sec ) {
-			$s['news']['mode']  = $m['news']['mode'];
 			$s['news']['tag']   = $m['news']['tag'];
 			$s['news']['count'] = $m['news']['count'];
+			$s['news']['mode']  = 'manual'; // Resorna nedan är redan standardspråkets urval.
 		}
+		$master_trips = cvfs_master_trips( $sec, $m );
+		$s[ $sec ]['trips'] = cvfs_follow_trips( $master_trips, $s[ $sec ]['trips'] );
 	}
 	if ( ! empty( $f['blog'] ) ) {
 		foreach ( array( 'show', 'count', 'words' ) as $k ) {
@@ -75,6 +76,24 @@ function cvfs_effective( $lang ) {
 		}
 	}
 	return $s;
+}
+
+/**
+ * Standardspråkets resor i en sektion. För nyheter i automatiskt läge: samma resor som
+ * visas på standardspråket (inte språkets egen taggsökning, som kan ge andra resor när de
+ * översatta sidorna har andra taggar).
+ */
+function cvfs_master_trips( $sec, $m = null ) {
+	$m = $m ? $m : cvfs_get( cvfs_default_lang() );
+	if ( 'news' === $sec && 'auto' === $m['news']['mode'] ) {
+		return cvfs_in_lang(
+			cvfs_default_lang(),
+			function () use ( $m ) {
+				return cvfs_auto_news( $m, cvfs_default_lang() );
+			}
+		);
+	}
+	return $m[ $sec ]['trips'];
 }
 
 /**
@@ -159,7 +178,9 @@ function cvfs_translate_url( $url, $lang ) {
 				}
 				return '';
 			}
-			$id = url_to_postid( $url );
+			// Sidor: först via sökvägen (t.ex. vandra/guidade), sedan WordPress egen tolkning.
+			$page = '' !== $path ? get_page_by_path( $path, OBJECT, 'page' ) : null;
+			$id   = $page ? (int) $page->ID : url_to_postid( $url );
 			if ( ! $id ) {
 				return '';
 			}
@@ -175,7 +196,11 @@ function cvfs_translate_url( $url, $lang ) {
 			);
 		}
 	);
-	$out = $out ? $out : $url;
+	if ( ! $out ) {
+		// Hittades inte: visa originaladressen, men spara inte i cachen (prövas igen nästa gång).
+		$mem[ $key ] = $url;
+		return $url;
+	}
 
 	set_transient( $key, $out, DAY_IN_SECONDS );
 	$mem[ $key ] = $out;

@@ -100,9 +100,7 @@ function cvfs_blog_posts( $s, $lang ) {
 					// Eget utdrag visas helt, som i Avadas blogglista.
 					$excerpt = wp_strip_all_tags( $p->post_excerpt );
 				} else {
-					$text    = strip_shortcodes( $p->post_content );
-					$text    = preg_replace( '/\[\/?[a-z_]+[^\]]*\]/i', ' ', $text ); // Avada-kortkoder som inte är registrerade.
-					$excerpt = wp_trim_words( wp_strip_all_tags( $text ), (int) $b['words'], ' [...]' );
+					$excerpt = wp_trim_words( cvfs_plain_text( $p->post_content ), (int) $b['words'], ' [...]' );
 				}
 				$out[] = array(
 					'url'     => get_permalink( $p ),
@@ -115,6 +113,23 @@ function cvfs_blog_posts( $s, $lang ) {
 			return $out;
 		}
 	);
+}
+
+/**
+ * Ren text ur ett inlägg byggt med Avada. strip_shortcodes() tar bort hela Avadas
+ * behållare (och därmed all text), så här tas bara kortkodstaggarna bort och texten
+ * inuti behålls. Bild-/kodkortkoder och adresser rensas bort.
+ */
+function cvfs_plain_text( $content ) {
+	$t = (string) $content;
+	// Kortkoder vars innehåll inte är text (bilder, kod, kartor, video …).
+	$t = preg_replace( '#\[(fusion_imageframe|fusion_code|fusion_gallery|fusion_image|fusion_video|fusion_youtube|fusion_vimeo|fusion_map|fusion_google_map|fusion_slider|fusion_slide|caption)\b[^\]]*\].*?\[/\1\]#is', ' ', $t );
+	$t = preg_replace( '#\[/?[a-zA-Z_][^\]]*\]#', ' ', $t ); // Övriga kortkodstaggar, innehållet behålls.
+	$t = wp_strip_all_tags( $t );
+	$t = html_entity_decode( $t, ENT_QUOTES, 'UTF-8' );
+	$t = preg_replace( '#https?://\S+#', ' ', $t );
+	$t = preg_replace( '#\S{40,}#', ' ', $t ); // Kodsträngar o.d.
+	return trim( preg_replace( '/\s+/u', ' ', $t ) );
 }
 
 /**

@@ -321,7 +321,7 @@ function cvfs_admin_page() {
 		$mst = cvfs_get( cvfs_default_lang() );
 		foreach ( array( 'guided', 'popular', 'news' ) as $sec ) {
 			if ( ! empty( $s['follow'][ $sec ] ) ) {
-				$s[ $sec ]['trips'] = cvfs_follow_trips( $mst[ $sec ]['trips'], $own[ $sec ]['trips'], false );
+				$s[ $sec ]['trips'] = cvfs_follow_trips( cvfs_master_trips( $sec, $mst ), $own[ $sec ]['trips'], false );
 			}
 		}
 	}
