@@ -215,10 +215,115 @@ function cvfs_defaults( $lang = 'sv' ) {
 		}
 	}
 
+	if ( 'nb' === cvfs_norm_lang( $lang ) ) {
+		$d = cvfs_defaults_nb( $d );
+	}
+
 	// Språkregeln: guidade resor bara på svenska och norska (guidningen sker på svenska).
 	$d['show_guided'] = in_array( cvfs_norm_lang( $lang ), array( 'sv', 'nb' ), true ) ? 1 : 0;
 
 	return apply_filters( 'cvfs_defaults', $d, $lang );
+}
+
+/**
+ * Norska standardvärden: samma upplägg, resor och bilder som den svenska sidan, med
+ * översatta texter och norska adresser (från sidornas hreflang-länkar, nov 2026).
+ * Kortens dagar och priser hämtas ur de norska resesidornas faktaruta ("Lengde", "Pris").
+ */
+function cvfs_defaults_nb( $d ) {
+	$d['hero']['title']       = 'Hvor vil du sykle eller vandre?';
+	$d['hero']['lead']        = 'Beskriv drømmereisen med egne ord – vi finner reisene som passer.';
+	$d['hero']['placeholder'] = 'F.eks. lett sykling med vinsmaking i september, to par';
+	$d['hero']['button']      = 'Finn reiser';
+
+	$d['paths']['guided'] = array(
+		'title'     => 'Guidede reiser',
+		'text'      => 'Svensk guide, hyggelig reisefølge og faste avreisedatoer. Vi tar oss av alt.',
+		'link_text' => 'Se alle guidede reiser →',
+		'url'       => cvfs_u( '/no/vandring/guidede-turer/' ),
+	);
+	$d['paths']['bike']   = array(
+		'title'     => 'Sykle på egen hånd',
+		'text'      => 'Langs elver, vingårder og kyster i ditt eget tempo. Vi bestiller hotell og flytter bagasjen.',
+		'link_text' => 'Se alle sykkelreiser →',
+		'url'       => cvfs_u( '/no/sykling/sykling-pa-egen-hand/' ),
+	);
+	$d['paths']['hike']   = array(
+		'title'     => 'Vandre på egen hånd',
+		'text'      => 'Kyststier og fjellstier med navigasjonsapp, bagasjetransport og support underveis.',
+		'link_text' => 'Se alle vandreturer →',
+		'url'       => cvfs_u( '/no/vandring/vandreferie-pa-egen-hand/' ),
+	);
+
+	$d['facts'] = array(
+		array(
+			'title' => 'Sykkel- og vandreturer siden 2009',
+			'sub'   => 'Erfaring med sykkel- og vandreturer',
+		),
+		array(
+			'title' => 'Tusenvis av fornøyde reisende',
+			'sub'   => 'Fra rundt tjue land',
+		),
+		array(
+			'title' => 'Support underveis',
+			'sub'   => 'På alle reiser på egen hånd',
+		),
+		array(
+			'title' => 'Bagasjetransport og app',
+			'sub'   => 'Inngår i alle reiser på egen hånd',
+		),
+	);
+
+	$d['guided']['title']     = 'Aktuelle guidede reiser';
+	$d['guided']['link_text'] = 'Alle guidede reiser →';
+	$d['guided']['url']       = cvfs_u( '/no/vandring/guidede-turer/' );
+	// Guidede reiser har ingen faktaruta. Prisene står i kronor også på de norske sidene.
+	$d['guided']['trips'] = array(
+		cvfs_trip( 1821, 'Vandre i Andorra – magiske Pyreneene', 'Guidet vandring · 8 dager', '21 950 kr' ),
+		cvfs_trip( 19019, 'Vandreparadiset La Gomera', 'Guidet vandring · 8 dager', '25 950 kr' ),
+		cvfs_trip( 9772, 'Rioja & San Sebastián', 'Guidet vandring · 8 dager', '29 750 kr' ),
+		cvfs_trip( 2468, 'Piemonte & Liguria', 'Guidet vandring · 7 dager', '23 800 kr' ),
+		cvfs_trip( 3370, 'Korfu, Paxos og Albania', 'Guidet vandring · 8 dager', '25 700 kr' ),
+	);
+
+	$d['popular']['title']     = 'Populære reiser på egen hånd';
+	$d['popular']['link_text'] = 'Alle reiser på egen hånd →';
+	$d['popular']['url']       = cvfs_u( '/no/reise-pa-egen-hand/' );
+	$d['popular']['trips']     = array(
+		cvfs_trip( 18881, 'Costa Bravas perler – kystvandring' ),
+		cvfs_trip( 22059, 'Canal du Midi – Toulouse til Middelhavet' ),
+		cvfs_trip( 16884, 'Vinsykling langs Mosel' ),
+		// Den norske siden mangler "Lengde" i faktaruten.
+		cvfs_trip( 3877, 'San Sebastián – kystvandring langs pilegrimsleden', 'Vandring · 5 dager · Nivå 2' ),
+		// Som på svensk: taggen er bike2, men prototypen sier Nivå 1.
+		cvfs_trip( 33232, 'Donau i rolig tempo – Wachau og Wien', 'Sykling · 5 dager · Nivå 1' ),
+	);
+
+	$d['news']['title']     = 'Nyheter for sesongen 2027';
+	$d['news']['link_text'] = 'Se alle nyheter →';
+	$d['news']['url']       = cvfs_u( '/no/informasjon-om-programmet/finn-en-reise-for-sykling-og-fotturer/reisemal/nyheter-nye-destinasjoner-denne-sesongen/' );
+	$d['news']['label']     = 'Nyhet 2027';
+	$d['news']['trips']     = array(
+		cvfs_trip( 35210, 'Madeira rundt på sykkel' ),
+		cvfs_trip( 35098, 'Sykle på Lanzarote – vulkanenes øy' ),
+		cvfs_trip( 34196, 'Mallorca – Tramuntana til fots' ),
+		cvfs_trip( 34064, 'Mellom Alpene og Provence – Vercors' ),
+	);
+
+	// De norske innleggene ligger i kategorien "uncategorized-no" (oversettelsen av "nyheter").
+	$d['blog']['title']       = 'Nyhetsbrev';
+	$d['blog']['link_text']   = 'Alle innlegg →';
+	$d['blog']['url']         = cvfs_u( '/no/category/uncategorized-no/' );
+	$d['blog']['category']    = 'uncategorized-no';
+	$d['blog']['date_format'] = 'j. F Y';
+
+	$d['band']['title']              = 'Følg oss og bli inspirert!';
+	$d['band']['text']               = 'Bilder, tips og nyheter fra våre reiser.';
+	$d['band']['buttons'][0]['url']  = cvfs_u( '/no/informasjon-om-programmet/nyhetsbrev/' );
+	$d['band']['images'][1]['alt']   = 'De julianske alpene';
+	$d['band']['images'][2]['alt']   = 'Det skotske høylandet';
+
+	return $d;
 }
 
 /** Ord i automatiska metarader, per språk. */
@@ -235,10 +340,10 @@ function cvfs_default_labels( $lang ) {
 		),
 		'nb' => array(
 			'from'        => 'fra',
-			'hike'        => 'Fottur',
-			'bike'        => 'Sykkeltur',
-			'guided_hike' => 'Guidet fottur',
-			'guided_bike' => 'Guidet sykkeltur',
+			'hike'        => 'Vandring',
+			'bike'        => 'Sykling',
+			'guided_hike' => 'Guidet vandring',
+			'guided_bike' => 'Guidet sykling',
 			'level'       => 'Nivå',
 			'days'        => 'dager',
 		),

@@ -148,7 +148,7 @@ Som AI-sök: pusha till `main` → GitHub Release med tagg `vX.Y.Z` → workflow
 `cyklavandra-forstasida.zip` → Pär installerar via Tillägg → Ladda upp → "Ersätt nuvarande".
 Påminn om att ladda ner pluginens zip, inte "Source code (zip)".
 
-## Läge (0.4.0)
+## Läge (0.5.0)
 
 Första uppgiften är gjord. Arkitektur:
 
@@ -185,7 +185,15 @@ storlekar som prototypen på 1440, 900 och 390 px. Enda avsiktliga skillnaden: b
 har samma 24 px sidmarginal som övriga sektioner även under 1000 px (i prototypen gick den
 kant i kant där).
 
-Nästa steg: Pär testar på en testsida och godkänner; därefter norska (texter från page 37430).
+Svenska är godkänd av Pär (testsida page 37967, nu kant i kant).
+
+Norska (0.5.0): `cvfs_defaults_nb()` i settings.php – Pär ville utgå från den **svenska sidan**,
+inte den norska prototypkopian (page 37430), så texterna är översättningar av de svenska.
+Norska adresser hämtade från hreflang-länkarna. Bloggkategorin på norska heter
+`uncategorized-no` ("Uncategorized @no" – bör döpas om i WPML). Guidade priser står i "kr"
+även på de norska resesidorna. Baskien saknar "Lengde" i den norska faktarutan → manuell metarad.
+
+Nästa steg: Pär testar norska; därefter engelska m.fl. (utan guidade resor).
 
 ## Första uppgiften i Claude Code
 
