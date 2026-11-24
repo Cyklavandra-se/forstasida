@@ -22,6 +22,13 @@ ett per språk (WPML). Ersätter den handbyggda prototypen "Ny förstasida" (pag
   skrivs metarad och pris in för hand. Det som skrivs in per kort går alltid före.
 - **Nyheter:** manuellt valda resor eller automatiskt (tagg, t.ex. `2027`, + självguidad).
 - **Blogg:** senaste inläggen i en kategori, renderade av pluginen (inte Avadas `fusion_blog`).
+- **Svenska är huvudsidan.** Övriga språk *följer svenska* per sektion (standard): resor och
+  deras ordning, bilder, länkar och av/på-val hämtas direkt från den svenska fliken. Länkar
+  till sidor och kategorier byts automatiskt mot samma sida på språket (WPML).
+- **"Spara och översätt ändringarna till alla språk"** på svenska fliken: Claude översätter de
+  svenska texter som ändrats sedan förra gången. Förslagen visas per språk och sparas först när
+  du godkänner dem. Texter du har justerat för hand på ett språk skrivs inte över (de visas som
+  förslag utan kryss). Använder samma API-nyckel som AI-sök (`CVAI_API_KEY`), eller `CVFS_API_KEY`.
 - **Uppdateringar** direkt från GitHub-releaser (som AI-sök).
 
 Kräver pluginen **cyklavandra-ai-sok** för sökrutan i heron (utan den visas heron utan sökruta).
@@ -49,6 +56,8 @@ Shortcode-attribut: `lang="sv"` visar ett visst språks inställningar (för tes
 | `includes/lang.php` | WPML-hjälpare (språk, översatta sidor och taggar) |
 | `includes/settings.php` | Standardvärden per språk, läsning, tvättning och sparning |
 | `includes/trips.php` | Resekort, automatisk metarad, automatiska nyheter, sökning |
+| `includes/follow.php` | "Följ svenska": resor, bilder och länkar från standardspråket |
+| `includes/translate.php` | Översättning av ändrade texter med Claude, förslagssidan |
 | `includes/render.php` | Shortcoden, blogginlägg, rendering |
 | `includes/admin.php` | Inställningssidan |
 | `includes/updater.php` | Uppdateringar från GitHub-releaser |
@@ -69,6 +78,7 @@ Shortcode-attribut: `lang="sv"` visar ett visst språks inställningar (för tes
 
 ## Versioner
 
+- **0.6.0** – Svenska är huvudsidan: övriga språk följer svenskans resor, bilder och länkar (kryssrutan "Följ svenska" per sektion, länkar översätts via WPML). Ny knapp "Spara och översätt ändringarna till alla språk": Claude översätter ändrade texter, förslagen granskas innan de sparas, och handjusterade texter skrivs inte över.
 - **0.5.1** – Norska standardvärdet för bloggkategorin är nu `nyheter-no` (kategorin har bytt namn till Nyheter), länken "Alle innlegg →" går till `/no/category/nyheter-no/`.
 - **0.5.0** – Norska standardvärden: samma upplägg, resor och bilder som den svenska sidan med norska texter, norska adresser, norska kortrubriker och bloggkategorin `uncategorized-no`. Ord i automatiska metarader på norska: Vandring/Sykling, Guidet vandring, dager. Har den norska fliken sparats tidigare: tryck "Återställ fliken till standardvärden" för att få de nya texterna.
 - **0.4.0** – Egna bakgrundsbilder i heron för mobil (skärmar upp till 700 px, gärna stående bilder). Tom lista = samma bilder som för dator och surfplatta.

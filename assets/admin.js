@@ -174,9 +174,94 @@
 		} );
 	}
 
+	/* ---------- Följ svenska ---------- */
+
+	function initFollow() {
+		$( document ).on( 'change', '.cvfs-follow-cb', function () {
+			$( this ).closest( '.cvfs-sec' ).toggleClass( 'is-following', this.checked );
+		} );
+	}
+
+	/* ---------- Översättning: förslag per språk ---------- */
+
+	var statusText = {
+		new: 'Ny',
+		changed: 'Svenskan ändrad',
+		clear: 'Svenskan tömd',
+		adjusted: 'Du har ändrat här – svenskan har också ändrats',
+		own: 'Egen text på språket',
+	};
+
+	function initTranslate() {
+		var $langs = $( '.cvfs-tr-lang' );
+		if ( ! $langs.length ) {
+			return;
+		}
+		var $save = $( '#cvfs-tr-save' ),
+			total = 0,
+			queue = $langs.toArray();
+
+		function next() {
+			var el = queue.shift();
+			if ( ! el ) {
+				$save.prop( 'disabled', total === 0 );
+				if ( total === 0 ) {
+					$save.after( ' <span class="cvfs-muted">Inget att översätta – allt är redan översatt.</span>' );
+				}
+				return;
+			}
+			var $box = $( el ),
+				lang = $box.data( 'lang' ),
+				$st = $box.find( '.cvfs-tr-status' ),
+				$body = $box.find( '.cvfs-tr-body' );
+			$st.text( 'Översätter … (kan ta en halv minut)' ).addClass( 'is-busy' );
+			$.post( cvfsAdmin.ajax, { action: 'cvfs_translate_lang', nonce: cvfsAdmin.trNonce, lang: lang } )
+				.done( function ( r ) {
+					$st.removeClass( 'is-busy' );
+					if ( ! r || ! r.success ) {
+						$st.text( 'Fel: ' + ( ( r && r.data && r.data.message ) || 'okänt fel' ) ).addClass( 'is-error' );
+						return;
+					}
+					var rows = r.data.rows || [];
+					if ( ! rows.length ) {
+						$st.text( 'Inget har ändrats' );
+						return;
+					}
+					total += rows.length;
+					$st.text( rows.length + ' texter' );
+					var h = '<table class="widefat striped cvfs-tr-table"><thead><tr><th class="check-column"></th><th>Fält</th><th>Svenska</th><th>Nu</th><th>Ny text</th></tr></thead><tbody>';
+					rows.forEach( function ( row, i ) {
+						var n = 'tr[' + lang + '][' + i + ']';
+						h += '<tr class="cvfs-st-' + esc( row.status ) + '">' +
+							'<th class="check-column"><input type="checkbox" name="' + n + '[on]" value="1"' + ( row.checked ? ' checked' : '' ) + ' /></th>' +
+							'<td>' + esc( row.label ) + '<br><span class="cvfs-tr-st">' + esc( statusText[ row.status ] || row.status ) + '</span>' +
+							'<input type="hidden" name="' + n + '[path]" value="' + esc( row.path ) + '" /></td>' +
+							'<td>' + esc( row.src ) + '</td>' +
+							'<td class="cvfs-muted">' + esc( row.cur ) + '</td>' +
+							'<td><textarea name="' + n + '[text]" rows="2">' + esc( row.new ) + '</textarea></td>' +
+							'</tr>';
+					} );
+					h += '</tbody></table>';
+					$body.html( h );
+				} )
+				.fail( function () {
+					$st.removeClass( 'is-busy' ).text( 'Fel: servern svarade inte (tidsgräns?). Ladda om sidan och försök igen.' ).addClass( 'is-error' );
+				} )
+				.always( next );
+		}
+		next();
+
+		// Ändrad text = välj raden.
+		$( document ).on( 'input', '.cvfs-tr-table textarea', function () {
+			$( this ).closest( 'tr' ).find( 'input[type=checkbox]' ).prop( 'checked', true );
+		} );
+	}
+
 	$( function () {
 		initTrips();
 		initImages();
+		initFollow();
+		initTranslate();
 		$( '.cvfs-reset' ).on( 'click', function () {
 			return window.confirm( 'Återställa hela fliken till standardvärdena? Det du har sparat för språket försvinner.' );
 		} );

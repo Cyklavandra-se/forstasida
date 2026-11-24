@@ -53,7 +53,8 @@ function cvfs_admin_assets() {
 		'cvfsAdmin',
 		array(
 			'ajax'  => admin_url( 'admin-ajax.php' ),
-			'nonce' => wp_create_nonce( 'cvfs_search' ),
+			'nonce'   => wp_create_nonce( 'cvfs_search' ),
+			'trNonce' => wp_create_nonce( 'cvfs_translate' ),
 		)
 	);
 }
@@ -89,6 +90,10 @@ add_action(
 			$msg = 'saved';
 		}
 		do_action( 'cvfs_saved', $lang );
+		if ( isset( $_POST['cvfs_then_translate'] ) && cvfs_is_master( $lang ) ) {
+			wp_safe_redirect( admin_url( 'admin.php?page=cvfs&view=oversatt' ) );
+			exit;
+		}
 		wp_safe_redirect( admin_url( 'admin.php?page=cvfs&lang=' . $lang . '&cvfs_msg=' . $msg ) );
 		exit;
 	}
@@ -119,7 +124,7 @@ function cvfs_f_text( $name, $value, $label, $args = array() ) {
 	$wide = ! empty( $args['wide'] ) ? ' large-text' : ' regular-text';
 	$type = $args['type'] ?? 'text';
 	?>
-	<tr>
+	<tr<?php echo ! empty( $args['struct'] ) ? ' class="cvfs-struct"' : ''; ?>>
 		<th scope="row"><label><?php echo esc_html( $label ); ?></label></th>
 		<td>
 			<input type="<?php echo esc_attr( $type ); ?>" class="<?php echo esc_attr( trim( $wide ) ); ?>" name="<?php echo esc_attr( $name ); ?>" value="<?php echo esc_attr( $value ); ?>" />
@@ -131,9 +136,9 @@ function cvfs_f_text( $name, $value, $label, $args = array() ) {
 	<?php
 }
 
-function cvfs_f_check( $name, $value, $label, $desc = '' ) {
+function cvfs_f_check( $name, $value, $label, $desc = '', $struct = false ) {
 	?>
-	<tr>
+	<tr<?php echo $struct ? ' class="cvfs-struct"' : ''; ?>>
 		<th scope="row"><?php echo esc_html( $label ); ?></th>
 		<td>
 			<label><input type="checkbox" name="<?php echo esc_attr( $name ); ?>" value="1" <?php checked( (int) $value, 1 ); ?> /> <?php echo esc_html( $desc ); ?></label>
@@ -143,9 +148,9 @@ function cvfs_f_check( $name, $value, $label, $desc = '' ) {
 }
 
 /** Lista med bilder (mediaväljare, flera, sorterbar). $name slutar på []. */
-function cvfs_f_images( $name, $urls, $label, $desc = '' ) {
+function cvfs_f_images( $name, $urls, $label, $desc = '', $struct = false ) {
 	?>
-	<tr>
+	<tr<?php echo $struct ? ' class="cvfs-struct"' : ''; ?>>
 		<th scope="row"><?php echo esc_html( $label ); ?></th>
 		<td>
 			<ul class="cvfs-imgs" data-name="<?php echo esc_attr( $name ); ?>">
@@ -170,10 +175,45 @@ function cvfs_f_images( $name, $urls, $label, $desc = '' ) {
 function cvfs_f_head( $key, $sec ) {
 	cvfs_f_text( "cvfs[$key][title]", $sec['title'], 'Rubrik', array( 'wide' => true ) );
 	cvfs_f_text( "cvfs[$key][link_text]", $sec['link_text'], 'Länktext' );
-	cvfs_f_text( "cvfs[$key][url]", $sec['url'], 'Länk (URL)', array( 'wide' => true ) );
+	cvfs_f_text(
+		"cvfs[$key][url]",
+		$sec['url'],
+		'Länk (URL)',
+		array(
+			'wide'   => true,
+			'struct' => true,
+		)
+	);
 	if ( isset( $sec['auto_price'] ) ) {
-		cvfs_f_check( "cvfs[$key][auto_price]", $sec['auto_price'], 'Pris från resesidan', 'Visa priset ur resesidans faktaruta när kortets prisfält är tomt' );
+		cvfs_f_check( "cvfs[$key][auto_price]", $sec['auto_price'], 'Pris från resesidan', 'Visa priset ur resesidans faktaruta när kortets prisfält är tomt', true );
 	}
+}
+
+/**
+ * Början på en sektion. På andra språk än standardspråket: kryssrutan "Följ svenska".
+ * Rader med klassen cvfs-struct (resor, bilder, länkar) döljs när sektionen följer.
+ */
+function cvfs_sec_open( $key, $title, $s, $lang, $desc = '' ) {
+	$master  = cvfs_is_master( $lang );
+	$follows = ! $master && ! empty( $s['follow'][ $key ] );
+	$mname   = cvfs_active_langs()[ cvfs_default_lang() ] ?? 'standardspråket';
+	?>
+	<div class="cvfs-sec<?php echo $follows ? ' is-following' : ''; ?>" data-sec="<?php echo esc_attr( $key ); ?>">
+		<h2><?php echo esc_html( $title ); ?></h2>
+		<?php if ( $desc ) : ?>
+			<p class="description"><?php echo esc_html( $desc ); ?></p>
+		<?php endif; ?>
+		<?php if ( ! $master ) : ?>
+			<p class="cvfs-follow">
+				<label><input type="checkbox" class="cvfs-follow-cb" name="cvfs[follow][<?php echo esc_attr( $key ); ?>]" value="1" <?php checked( $follows ); ?> /> <strong>Följ <?php echo esc_html( mb_strtolower( $mname ) ); ?></strong> – resor, bilder och länkar</label>
+				<span class="cvfs-follow-note">Hämtas från den <?php echo esc_html( mb_strtolower( $mname ) ); ?> fliken (länkar till sidor och kategorier i det här språket). Texterna här nedan är språkets egna.</span>
+			</p>
+		<?php endif; ?>
+	<?php
+}
+
+function cvfs_sec_close() {
+	echo '</div>';
 }
 
 /** En rad i resväljaren. $t = sparad rad, $info = sidans titel/bild/länk. */
@@ -267,9 +307,24 @@ function cvfs_admin_page() {
 	if ( ! current_user_can( 'manage_options' ) ) {
 		return;
 	}
+	if ( isset( $_GET['view'] ) && 'oversatt' === $_GET['view'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+		cvfs_translate_page();
+		return;
+	}
 	$langs = cvfs_active_langs();
 	$lang  = cvfs_admin_lang();
-	$s     = cvfs_get( $lang );
+	$s     = cvfs_effective( $lang );
+	if ( ! cvfs_is_master( $lang ) ) {
+		// Resor som följer: standardspråkets urval och ordning, men bara språkets egna fält i formuläret
+		// (så att svenska priser och bilder inte sparas som språkets egna).
+		$own = cvfs_get( $lang );
+		$mst = cvfs_get( cvfs_default_lang() );
+		foreach ( array( 'guided', 'popular', 'news' ) as $sec ) {
+			if ( ! empty( $s['follow'][ $sec ] ) ) {
+				$s[ $sec ]['trips'] = cvfs_follow_trips( $mst[ $sec ]['trips'], $own[ $sec ]['trips'], false );
+			}
+		}
+	}
 	$saved = get_option( CVFS_OPTION, array() );
 	$msg   = isset( $_GET['cvfs_msg'] ) ? sanitize_key( wp_unslash( $_GET['cvfs_msg'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
 	$l     = $s['labels'];
@@ -303,24 +358,25 @@ function cvfs_admin_page() {
 				<?php cvfs_f_check( 'cvfs[show_guided]', $s['show_guided'], 'Visa guidade resor', 'Rutan "Guidade resor", sektionen med aktuella guidade resor. Standard: på för svenska och norska, av för övriga språk (guidningen sker på svenska).' ); ?>
 			</table>
 
-			<h2>1. Hero</h2>
+			<?php cvfs_sec_open( 'hero', '1. Hero', $s, $lang ); ?>
 			<table class="form-table" role="presentation">
 				<?php
 				cvfs_f_text( 'cvfs[hero][title]', $s['hero']['title'], 'Rubrik', array( 'wide' => true ) );
 				cvfs_f_text( 'cvfs[hero][lead]', $s['hero']['lead'], 'Underrubrik', array( 'wide' => true ) );
 				?>
 				<?php
-				cvfs_f_images( 'cvfs[hero][images][]', $s['hero']['images'], 'Bakgrundsbilder (dator och surfplatta)', 'En av bilderna slumpas vid varje besök. Dra för att sortera. Välj gärna bilder med bara landskap eller med motivet vid sidan.' );
-				cvfs_f_images( 'cvfs[hero][images_mobile][]', $s['hero']['images_mobile'], 'Bakgrundsbilder (mobil)', 'Visas på skärmar upp till 700 px breda (mobiler). Här passar stående bilder. Tom lista = samma bilder som för dator.' );
+				cvfs_f_images( 'cvfs[hero][images][]', $s['hero']['images'], 'Bakgrundsbilder (dator och surfplatta)', 'En av bilderna slumpas vid varje besök. Dra för att sortera. Välj gärna bilder med bara landskap eller med motivet vid sidan.', true );
+				cvfs_f_images( 'cvfs[hero][images_mobile][]', $s['hero']['images_mobile'], 'Bakgrundsbilder (mobil)', 'Visas på skärmar upp till 700 px breda (mobiler). Här passar stående bilder. Tom lista = samma bilder som för dator.', true );
 				?>
 				<?php
 				cvfs_f_text( 'cvfs[hero][placeholder]', $s['hero']['placeholder'], 'AI-sök: platshållare', array( 'wide' => true ) );
 				cvfs_f_text( 'cvfs[hero][button]', $s['hero']['button'], 'AI-sök: knapptext', array( 'desc' => 'Exempelfrågorna ställs in i pluginen AI-sök.' ) );
 				?>
 			</table>
+			<?php cvfs_sec_close(); ?>
 
-			<h2>2. Tre rutor</h2>
 			<?php
+			cvfs_sec_open( 'paths', '2. Tre rutor', $s, $lang );
 			$paths = array(
 				'guided' => 'Guidade resor (visas bara när guidade resor är på)',
 				'bike'   => 'Cykla på egen hand',
@@ -335,10 +391,19 @@ function cvfs_admin_page() {
 					cvfs_f_text( "cvfs[paths][$k][title]", $p['title'], 'Rubrik' );
 					cvfs_f_text( "cvfs[paths][$k][text]", $p['text'], 'Text', array( 'wide' => true ) );
 					cvfs_f_text( "cvfs[paths][$k][link_text]", $p['link_text'], 'Länktext' );
-					cvfs_f_text( "cvfs[paths][$k][url]", $p['url'], 'Länk (URL)', array( 'wide' => true ) );
+					cvfs_f_text(
+						"cvfs[paths][$k][url]",
+						$p['url'],
+						'Länk (URL)',
+						array(
+							'wide'   => true,
+							'struct' => true,
+						)
+					);
 					?>
 				</table>
 			<?php endforeach; ?>
+			<?php cvfs_sec_close(); ?>
 
 			<h2>3. Faktarad</h2>
 			<p class="description">Fyra kolumner under rutorna. Döljs på mobil.</p>
@@ -354,27 +419,28 @@ function cvfs_admin_page() {
 				<?php endforeach; ?>
 			</table>
 
-			<h2>4. Aktuella guidade resor</h2>
-			<p class="description">Visas bara när "Visa guidade resor" är på.</p>
+			<?php cvfs_sec_open( 'guided', '4. Aktuella guidade resor', $s, $lang, 'Visas bara när "Visa guidade resor" är på.' ); ?>
 			<table class="form-table" role="presentation">
 				<?php
 				cvfs_f_head( 'guided', $s['guided'] );
 				cvfs_f_trips( 'guided', $s['guided']['trips'], $lang, $l );
 				?>
 			</table>
+			<?php cvfs_sec_close(); ?>
 
-			<h2>5. Populära resor på egen hand</h2>
+			<?php cvfs_sec_open( 'popular', '5. Populära resor på egen hand', $s, $lang ); ?>
 			<table class="form-table" role="presentation">
 				<?php
 				cvfs_f_head( 'popular', $s['popular'] );
 				cvfs_f_trips( 'popular', $s['popular']['trips'], $lang, $l );
 				?>
 			</table>
+			<?php cvfs_sec_close(); ?>
 
-			<h2>6. Nyheter</h2>
+			<?php cvfs_sec_open( 'news', '6. Nyheter', $s, $lang ); ?>
 			<table class="form-table" role="presentation">
 				<?php cvfs_f_head( 'news', $s['news'] ); ?>
-				<tr>
+				<tr class="cvfs-struct">
 					<th scope="row">Urval</th>
 					<td>
 						<label><input type="radio" name="cvfs[news][mode]" value="auto" <?php checked( $s['news']['mode'], 'auto' ); ?> /> Automatiskt: sidor med taggen nedan och taggen självguidad, nyast först</label><br />
@@ -382,26 +448,61 @@ function cvfs_admin_page() {
 					</td>
 				</tr>
 				<?php
-				cvfs_f_text( 'cvfs[news][tag]', $s['news']['tag'], 'Tagg (automatiskt)', array( 'desc' => 'T.ex. 2027.' ) );
-				cvfs_f_text( 'cvfs[news][count]', $s['news']['count'], 'Antal (automatiskt)', array( 'type' => 'number' ) );
+				cvfs_f_text(
+					'cvfs[news][tag]',
+					$s['news']['tag'],
+					'Tagg (automatiskt)',
+					array(
+						'desc'   => 'T.ex. 2027.',
+						'struct' => true,
+					)
+				);
+				cvfs_f_text(
+					'cvfs[news][count]',
+					$s['news']['count'],
+					'Antal (automatiskt)',
+					array(
+						'type'   => 'number',
+						'struct' => true,
+					)
+				);
 				cvfs_f_text( 'cvfs[news][label]', $s['news']['label'], 'Etikett i metaraden', array( 'desc' => 'Används när metaraden byggs automatiskt, t.ex. "Cykling · Nyhet 2027".' ) );
 				cvfs_f_trips( 'news', $s['news']['trips'], $lang, $l, 'Resor (manuellt)' );
 				?>
 			</table>
+			<?php cvfs_sec_close(); ?>
 
-			<h2>7. Nyhetsbrev (blogginlägg)</h2>
+			<?php cvfs_sec_open( 'blog', '7. Nyhetsbrev (blogginlägg)', $s, $lang ); ?>
 			<table class="form-table" role="presentation">
 				<?php
-				cvfs_f_check( 'cvfs[blog][show]', $s['blog']['show'], 'Visa', 'Visa de senaste inläggen' );
+				cvfs_f_check( 'cvfs[blog][show]', $s['blog']['show'], 'Visa', 'Visa de senaste inläggen', true );
 				cvfs_f_head( 'blog', $s['blog'] );
-				cvfs_f_text( 'cvfs[blog][category]', $s['blog']['category'], 'Kategori (slug)' );
-				cvfs_f_text( 'cvfs[blog][count]', $s['blog']['count'], 'Antal inlägg', array( 'type' => 'number' ) );
-				cvfs_f_text( 'cvfs[blog][words]', $s['blog']['words'], 'Ord i utdraget', array( 'type' => 'number', 'desc' => 'Gäller inlägg utan eget utdrag. Ett eget utdrag visas alltid helt.' ) );
+				cvfs_f_text( 'cvfs[blog][category]', $s['blog']['category'], 'Kategori (slug)', array( 'struct' => true ) );
+				cvfs_f_text(
+					'cvfs[blog][count]',
+					$s['blog']['count'],
+					'Antal inlägg',
+					array(
+						'type'   => 'number',
+						'struct' => true,
+					)
+				);
+				cvfs_f_text(
+					'cvfs[blog][words]',
+					$s['blog']['words'],
+					'Ord i utdraget',
+					array(
+						'type'   => 'number',
+						'desc'   => 'Gäller inlägg utan eget utdrag. Ett eget utdrag visas alltid helt.',
+						'struct' => true,
+					)
+				);
 				cvfs_f_text( 'cvfs[blog][date_format]', $s['blog']['date_format'], 'Datumformat', array( 'desc' => 'PHP-format, t.ex. j F Y → 23 november 2026.' ) );
 				?>
 			</table>
+			<?php cvfs_sec_close(); ?>
 
-			<h2>8. Band "Följ oss"</h2>
+			<?php cvfs_sec_open( 'band', '8. Band "Följ oss"', $s, $lang ); ?>
 			<table class="form-table" role="presentation">
 				<?php
 				cvfs_f_text( 'cvfs[band][title]', $s['band']['title'], 'Rubrik', array( 'wide' => true ) );
@@ -412,8 +513,10 @@ function cvfs_admin_page() {
 						<th scope="row">Knapp <?php echo (int) $i + 1; ?></th>
 						<td>
 							<input type="text" name="cvfs[band][buttons][<?php echo (int) $i; ?>][text]" value="<?php echo esc_attr( $b['text'] ); ?>" placeholder="Text" />
-							<input type="text" class="regular-text" name="cvfs[band][buttons][<?php echo (int) $i; ?>][url]" value="<?php echo esc_attr( $b['url'] ); ?>" placeholder="URL" />
-							<label><input type="checkbox" name="cvfs[band][buttons][<?php echo (int) $i; ?>][new_tab]" value="1" <?php checked( (int) $b['new_tab'], 1 ); ?> /> Ny flik</label>
+							<span class="cvfs-struct-inline">
+								<input type="text" class="regular-text" name="cvfs[band][buttons][<?php echo (int) $i; ?>][url]" value="<?php echo esc_attr( $b['url'] ); ?>" placeholder="URL" />
+								<label><input type="checkbox" name="cvfs[band][buttons][<?php echo (int) $i; ?>][new_tab]" value="1" <?php checked( (int) $b['new_tab'], 1 ); ?> /> Ny flik</label>
+							</span>
 						</td>
 					</tr>
 				<?php endforeach; ?>
@@ -422,13 +525,16 @@ function cvfs_admin_page() {
 						<th scope="row">Bild <?php echo (int) $i + 1; ?></th>
 						<td class="cvfs-one">
 							<span class="cvfs-thumb"><?php if ( $im['url'] ) : ?><img src="<?php echo esc_url( $im['url'] ); ?>" alt="" /><?php endif; ?></span>
-							<input type="text" class="regular-text cvfs-img-url" name="cvfs[band][images][<?php echo (int) $i; ?>][url]" value="<?php echo esc_attr( $im['url'] ); ?>" placeholder="Bild-URL" />
-							<button type="button" class="button cvfs-pick-one">Välj bild</button>
+							<span class="cvfs-struct-inline">
+								<input type="text" class="regular-text cvfs-img-url" name="cvfs[band][images][<?php echo (int) $i; ?>][url]" value="<?php echo esc_attr( $im['url'] ); ?>" placeholder="Bild-URL" />
+								<button type="button" class="button cvfs-pick-one">Välj bild</button>
+							</span>
 							<input type="text" name="cvfs[band][images][<?php echo (int) $i; ?>][alt]" value="<?php echo esc_attr( $im['alt'] ); ?>" placeholder="Alt-text" />
 						</td>
 					</tr>
 				<?php endforeach; ?>
 			</table>
+			<?php cvfs_sec_close(); ?>
 
 			<h2>Ord i automatiska metarader</h2>
 			<table class="form-table" role="presentation">
@@ -450,8 +556,14 @@ function cvfs_admin_page() {
 
 			<p class="submit">
 				<?php submit_button( 'Spara ' . $langs[ $lang ], 'primary', 'submit', false ); ?>
+				<?php if ( cvfs_is_master( $lang ) && count( $langs ) > 1 ) : ?>
+					<button type="submit" name="cvfs_then_translate" value="1" class="button button-primary cvfs-then-tr">Spara och översätt ändringarna till alla språk</button>
+				<?php endif; ?>
 				<button type="submit" name="cvfs_reset" value="1" class="button cvfs-reset">Återställ fliken till standardvärden</button>
 			</p>
+			<?php if ( cvfs_is_master( $lang ) && count( $langs ) > 1 ) : ?>
+				<p class="description">"Spara och översätt" sparar svenskan och visar sedan förslag på översättningar av de texter som ändrats, för alla språk. Inget ändras på de andra språken förrän du sparar förslagen. Resor, bilder och länkar följer svenskan direkt på de språk där "Följ svenska" är ikryssat.</p>
+			<?php endif; ?>
 		</form>
 
 	</div>

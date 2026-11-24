@@ -39,7 +39,7 @@ function cvfs_shortcode( $atts = array() ) {
 
 /** Data till mallen: inställningar + färdiga kort och blogginlägg. */
 function cvfs_view_data( $lang ) {
-	$s = cvfs_get( $lang );
+	$s = cvfs_effective( $lang );
 
 	$news_trips = 'auto' === $s['news']['mode'] ? cvfs_auto_news( $s, $lang ) : $s['news']['trips'];
 

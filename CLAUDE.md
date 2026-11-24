@@ -148,7 +148,7 @@ Som AI-sök: pusha till `main` → GitHub Release med tagg `vX.Y.Z` → workflow
 `cyklavandra-forstasida.zip` → Pär installerar via Tillägg → Ladda upp → "Ersätt nuvarande".
 Påminn om att ladda ner pluginens zip, inte "Source code (zip)".
 
-## Läge (0.5.1)
+## Läge (0.6.0)
 
 Första uppgiften är gjord. Arkitektur:
 
@@ -193,7 +193,25 @@ Norska adresser hämtade från hreflang-länkarna. Bloggkategorin på norska het
 `nyheter-no` (namn "Nyheter"; hette `uncategorized-no` före 0.5.1). Guidade priser står i "kr"
 även på de norska resesidorna. Baskien saknar "Lengde" i den norska faktarutan → manuell metarad.
 
-Nästa steg: Pär testar norska; därefter engelska m.fl. (utan guidade resor).
+Svenska som huvudsida (0.6.0), beslutat med Pär:
+- `includes/follow.php` – `cvfs_effective($lang)` = språkets inställningar + standardspråkets
+  struktur i sektioner där `follow[sektion]` är på (standard för alla andra språk). Struktur =
+  bilder, länkar (`cvfs_translate_url` via `url_to_postid`/kategori → `wpml_object_id`, cache i
+  transient med `cvfs_cache_ver`), av/på-val, resornas urval/ordning (`cvfs_follow_trips`:
+  rubrik/metarad alltid språkets egna per resa-id, pris/bild språkets eller svenskans).
+  Frontend och admin använder `cvfs_effective`. Texter och `date_format`, `labels`,
+  `show_guided` är alltid språkets egna.
+- `includes/translate.php` – knapp (Pär valde knapp, inte vid sparande). `cvfs_text_fields`
+  listar texter (guidade hoppas över där `show_guided` är av; kortrubriker översätts från
+  svenskan – Pärs val). Option `cvfs_translations[lang][sökväg] = {src: md5(svenska), out}`.
+  Status: new/changed (förvalda), adjusted/own (handjusterade – ej förvalda), clear.
+  AJAX `cvfs_translate_lang` per språk → Claude (`claude-opus-5-5`, effort low,
+  `output_config.format` json_schema, `fallbacks: "default"` + beta
+  `server-side-fallback-2026-07-01`, retry utan fallbacks vid 400) → förslag; sparas med
+  `admin-post.php?action=cvfs_apply_translations`. Nyckel: `CVFS_API_KEY` eller AI-söks.
+  Ej testat mot riktiga API:et (ingen nyckel i utvecklingsmiljön) – lokalt med mock.
+
+Nästa steg: Pär testar översättningen på riktigt; därefter engelska m.fl. (utan guidade resor).
 
 ## Första uppgiften i Claude Code
 

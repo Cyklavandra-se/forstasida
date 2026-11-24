@@ -222,6 +222,9 @@ function cvfs_defaults( $lang = 'sv' ) {
 	// Språkregeln: guidade resor bara på svenska och norska (guidningen sker på svenska).
 	$d['show_guided'] = in_array( cvfs_norm_lang( $lang ), array( 'sv', 'nb' ), true ) ? 1 : 0;
 
+	// Andra språk följer standardspråkets resor, bilder och länkar (se includes/follow.php).
+	$d['follow'] = array_fill_keys( cvfs_follow_sections(), 1 );
+
 	return apply_filters( 'cvfs_defaults', $d, $lang );
 }
 
@@ -482,6 +485,11 @@ function cvfs_sanitize( $in, $lang ) {
 	$out = array();
 
 	$out['show_guided'] = empty( $in['show_guided'] ) ? 0 : 1;
+
+	$out['follow'] = array();
+	foreach ( cvfs_follow_sections() as $k ) {
+		$out['follow'][ $k ] = empty( $in['follow'][ $k ] ) ? 0 : 1;
+	}
 
 	$h           = $in['hero'] ?? array();
 	$out['hero'] = array(

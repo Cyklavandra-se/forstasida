@@ -33,3 +33,26 @@
 .cvfs-img-item .cvfs-remove { position: absolute; top: 4px; right: 4px; background: #fff; border-radius: 50%; width: 22px; height: 22px; padding: 0 !important; }
 
 .cvfs-one { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+/* Följ svenska */
+.cvfs-sec { margin: 0; }
+.cvfs-follow { background: #f0f6fc; border-left: 4px solid #2271b1; padding: 8px 12px; max-width: 980px; }
+.cvfs-follow-note { display: none; color: #50575e; margin-left: 6px; }
+.cvfs-sec.is-following .cvfs-follow-note { display: inline; }
+.cvfs-sec.is-following .cvfs-struct,
+.cvfs-sec.is-following .cvfs-struct-inline,
+.cvfs-sec.is-following .cvfs-trip-add,
+.cvfs-sec.is-following .cvfs-handle,
+.cvfs-sec.is-following .cvfs-trip > .cvfs-remove { display: none; }
+
+/* Översättning */
+.cvfs-tr-status { font-size: 13px; font-weight: 400; color: #646970; margin-left: 8px; }
+.cvfs-tr-status.is-busy::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 6px; border: 2px solid #2271b1; border-right-color: transparent; border-radius: 50%; animation: cvfs-spin .8s linear infinite; vertical-align: -1px; }
+.cvfs-tr-status.is-error { color: #b32d2e; }
+@keyframes cvfs-spin { to { transform: rotate(360deg); } }
+.cvfs-tr-table { max-width: 1400px; }
+.cvfs-tr-table td { vertical-align: top; }
+.cvfs-tr-table textarea { width: 100%; min-width: 260px; }
+.cvfs-tr-st { font-size: 12px; color: #646970; }
+.cvfs-st-adjusted .cvfs-tr-st, .cvfs-st-own .cvfs-tr-st { color: #b26200; font-weight: 600; }
+.cvfs-then-tr { margin-left: 6px !important; }
