@@ -152,6 +152,9 @@
  */
 
 /* I prototypen gav <p>-taggen runt skripten 20 px luft under heron. */
+
+/* Avada ger h3 28 px marginal ovanför, vilket gav 34 px mellan metaraden och resans namn. */
+.cvfs .cvfs-card .cvfs-card-b h3{margin:2px 0!important}
 .cvfs-hero{margin-bottom:20px}
 
 /*
