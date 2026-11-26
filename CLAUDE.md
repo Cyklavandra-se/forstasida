@@ -148,7 +148,7 @@ Som AI-sök: pusha till `main` → GitHub Release med tagg `vX.Y.Z` → workflow
 `cyklavandra-forstasida.zip` → Pär installerar via Tillägg → Ladda upp → "Ersätt nuvarande".
 Påminn om att ladda ner pluginens zip, inte "Source code (zip)".
 
-## Läge (0.7.2)
+## Läge (0.7.3)
 
 Första uppgiften är gjord. Arkitektur:
 
@@ -225,7 +225,7 @@ Svenska som huvudsida (0.6.0), beslutat med Pär:
 
 Nya förstasidan är i drift sedan 26 nov 2026: shortcoden ligger på de befintliga startsidorna "Hem" (sv id 118, no id 26619), inte på testsidorna.
 
-0.7.0: karta (`[resekarta]`, iframe `cvrk-karta` från en annan Cykla&Vandra-plugin, AI-sök lägger den i `.cvai-dolj` så att den döljs vid sökning – Pär vill att den syns på förstasidan, så `cvfs_map_html()` byter klassen mot `cvfs-map-in` (0.7.1)) längst ner i `.cvfs-wrap.cvfs-map`. Inställning `band.show_map` (standard 1, struktur → följer svenskan). `.cvfs-has-map` på roten ger bandet 40 px marginal i stället för 72.
+0.7.0: karta (`[resekarta]`, iframe `cvrk-karta` från en annan Cykla&Vandra-plugin, AI-sök lägger den i `.cvai-dolj` så att den döljs vid sökning – Pär vill att den syns på förstasidan, så `cvfs_map_html()` byter klassen mot `cvfs-map-in` (0.7.1)) i `.cvfs-wrap.cvfs-map` mellan bloggen och bandet "Följ oss" (flyttad dit i 0.7.3 – bandet ska vara sist). Inställning `band.show_map` (standard 1, struktur → följer svenskan). Kartan har 46 px margin-top (+ bloggens 10 px = 56), `.cvfs-has-map .cvfs-social{margin-top:40px}`.
 
 0.7.2: Pär har aktiva men dolda WPML-språk **en, da, fi, is** (dolda språk 302:ar till / för utloggade). `cvfs_all_labels()` har inbyggda ord för sv, nb, da, fi, is, de, en (andra språk översätts med knappen). Standard-`date_format` per språk i `cvfs_defaults()`. Faktarutans etiketter utökade med isländska/finska.
 

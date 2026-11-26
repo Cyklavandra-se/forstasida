@@ -7,7 +7,7 @@ ett per språk (WPML). Ersätter den handbyggda prototypen "Ny förstasida" (pag
 
 - **Shortcode `[cv_forstasida]`** renderar hela förstasidan för sidans WPML-språk:
   hero med AI-sökning, tre rutor, faktarad, aktuella guidade resor, populära resor på egen
-  hand, nyheter, senaste blogginläggen, bandet "Följ oss" och kartan över resorna (`[resekarta]`).
+  hand, nyheter, senaste blogginläggen, kartan över resorna (`[resekarta]`) och bandet "Följ oss".
 - **Cykla&Vandra → Förstasida**, en flik per aktivt språk. Svenska standardvärden =
   prototypens texter och resor.
 - **Språkregel:** guidade resor (rutan, sektionen) visas bara på svenska och norska.
@@ -78,6 +78,7 @@ Shortcode-attribut: `lang="sv"` visar ett visst språks inställningar (för tes
 
 ## Versioner
 
+- **0.7.3** – Kartan ligger nu ovanför bandet "Följ oss", som åter är sist på sidan.
 - **0.7.2** – Förberett för engelska, danska, finska och isländska. Inbyggda ord för metaraderna finns på finska och isländska ("Vaellus", "Gönguferð" …). Datumformat per språk (danska och isländska `j. F Y`, finska `j.n.Y`). Faktarutan läses också på isländska och finska (Lengd, Tímalengd, Verð, frá, alk.).
 - **0.7.1** – Kartan på förstasidan döljs inte längre när kunden gör en AI-sökning. På andra sidor döljs den som förut.
 - **0.7.0** – Kartan över resorna (`[resekarta]`) längst ner, under bandet "Följ oss", i samma bredd som övriga sektioner. Kryssrutan "Karta" under Band "Följ oss" och karta stänger av och på den. Den är på från början och följer svenskan på andra språk.

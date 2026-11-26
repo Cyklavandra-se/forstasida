@@ -158,7 +158,14 @@ $cvfs_mobile  = array_values( array_filter( array_map( 'esc_url_raw', (array) $s
 		</div>
 	<?php endif; ?>
 
-	<?php /* 8. Band "Följ oss" */ ?>
+	<?php /* 8. Karta över resorna (pluginens [resekarta]) */ ?>
+	<?php if ( $map ) : ?>
+		<div class="cvfs-wrap cvfs-map">
+			<?php echo $map; // phpcs:ignore WordPress.Security.EscapeOutput -- HTML från [resekarta]. ?>
+		</div>
+	<?php endif; ?>
+
+	<?php /* 9. Band "Följ oss" */ ?>
 	<div class="cvfs-wrap">
 		<div class="cvfs-social">
 			<div class="cvfs-social-txt">
@@ -188,11 +195,5 @@ $cvfs_mobile  = array_values( array_filter( array_map( 'esc_url_raw', (array) $s
 		</div>
 	</div>
 
-	<?php /* 9. Karta över resorna (pluginens [resekarta]) */ ?>
-	<?php if ( $map ) : ?>
-		<div class="cvfs-wrap cvfs-map">
-			<?php echo $map; // phpcs:ignore WordPress.Security.EscapeOutput -- HTML från [resekarta]. ?>
-		</div>
-	<?php endif; ?>
 
 </div>
