@@ -169,7 +169,6 @@
 .cvfs-card h2.cvfs-bt a{color:#1C2620!important}
 .cvfs-card p.cvfs-ex{margin:14px 0 20px;font-size:15px;line-height:1.5;color:#3A463F}
 
-/* Kartan ovanför bandet "Följ oss" (samma luft ovanför som bandet har, 56 px). */
-.cvfs-map{margin-top:46px}
-.cvfs-has-map .cvfs-social{margin-top:40px}
+/* Kartan ovanför bandet "Följ oss", på ljusgrå botten i full bredd som de andra banden. */
+.cvfs-band.cvfs-mapband{padding:56px 0}
 .cvfs-map iframe{display:block;width:100%;border:0;border-radius:20px;overflow:hidden}

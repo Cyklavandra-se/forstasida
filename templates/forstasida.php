@@ -160,8 +160,10 @@ $cvfs_mobile  = array_values( array_filter( array_map( 'esc_url_raw', (array) $s
 
 	<?php /* 8. Karta över resorna (pluginens [resekarta]) */ ?>
 	<?php if ( $map ) : ?>
-		<div class="cvfs-wrap cvfs-map">
-			<?php echo $map; // phpcs:ignore WordPress.Security.EscapeOutput -- HTML från [resekarta]. ?>
+		<div class="cvfs-band cvfs-mapband">
+			<div class="cvfs-wrap cvfs-map">
+				<?php echo $map; // phpcs:ignore WordPress.Security.EscapeOutput -- HTML från [resekarta]. ?>
+			</div>
 		</div>
 	<?php endif; ?>
 
