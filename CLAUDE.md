@@ -148,7 +148,7 @@ Som AI-sök: pusha till `main` → GitHub Release med tagg `vX.Y.Z` → workflow
 `cyklavandra-forstasida.zip` → Pär installerar via Tillägg → Ladda upp → "Ersätt nuvarande".
 Påminn om att ladda ner pluginens zip, inte "Source code (zip)".
 
-## Läge (0.7.0)
+## Läge (0.7.1)
 
 Första uppgiften är gjord. Arkitektur:
 
@@ -225,7 +225,7 @@ Svenska som huvudsida (0.6.0), beslutat med Pär:
 
 Nya förstasidan är i drift sedan 26 nov 2026: shortcoden ligger på de befintliga startsidorna "Hem" (sv id 118, no id 26619), inte på testsidorna.
 
-0.7.0: karta (`[resekarta]`, iframe `cvrk-karta` från en annan Cykla&Vandra-plugin, inslagen i `.cvai-dolj` så att AI-sök döljer den vid sökning) längst ner i `.cvfs-wrap.cvfs-map`. Inställning `band.show_map` (standard 1, struktur → följer svenskan). `.cvfs-has-map` på roten ger bandet 40 px marginal i stället för 72.
+0.7.0: karta (`[resekarta]`, iframe `cvrk-karta` från en annan Cykla&Vandra-plugin, AI-sök lägger den i `.cvai-dolj` så att den döljs vid sökning – Pär vill att den syns på förstasidan, så `cvfs_map_html()` byter klassen mot `cvfs-map-in` (0.7.1)) längst ner i `.cvfs-wrap.cvfs-map`. Inställning `band.show_map` (standard 1, struktur → följer svenskan). `.cvfs-has-map` på roten ger bandet 40 px marginal i stället för 72.
 
 Nästa steg: engelska m.fl. (utan guidade resor).
 

@@ -54,8 +54,20 @@ function cvfs_view_data( $lang ) {
 			'news'    => cvfs_cards( $news_trips, $s, $lang, $s['news']['label'], ! empty( $s['news']['auto_price'] ) ),
 		),
 		'posts'   => ! empty( $s['blog']['show'] ) ? cvfs_blog_posts( $s, $lang ) : array(),
-		'map'     => ! empty( $s['band']['show_map'] ) && shortcode_exists( 'resekarta' ) ? do_shortcode( '[resekarta]' ) : '',
+		'map'     => cvfs_map_html( $s ),
 	);
+}
+
+/**
+ * Kartan över resorna ([resekarta]). AI-sök lägger kartan i klassen cvai-dolj så att den döljs
+ * när kunden söker – på förstasidan ska den synas hela tiden, så klassen tas bort här.
+ */
+function cvfs_map_html( $s ) {
+	if ( empty( $s['band']['show_map'] ) || ! shortcode_exists( 'resekarta' ) ) {
+		return '';
+	}
+	$html = (string) do_shortcode( '[resekarta]' );
+	return preg_replace( '/(class="[^"]*)\bcvai-dolj\b/', '$1cvfs-map-in', $html );
 }
 
 /** AI-sökningen (pluginen cyklavandra-ai-sok). Tom om den inte är aktiv. */
