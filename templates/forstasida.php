@@ -3,7 +3,8 @@
  * Mall för förstasidan. Samma HTML och klasser (cvfs-*) som prototypen.
  *
  * Tillgängligt: $lang, $s (inställningar), $guided (bool), $search (AI-sökets HTML),
- * $cards['guided'|'popular'|'news'], $posts (blogginlägg), $map (kartans HTML eller '').
+ * $cards['guided'|'popular'|'news'], $posts (blogginlägg), $map (kartans HTML eller ''),
+ * $news_random (antal nyheter att visa i slumpläge, annars 0).
  *
  * @package cyklavandra-forstasida
  */
@@ -25,9 +26,9 @@ $cvfs_head = function ( $title, $link_text, $url ) {
 	<?php
 };
 
-$cvfs_card = function ( $c ) {
+$cvfs_card = function ( $c, $hidden = false ) {
 	?>
-	<div class="cvfs-card">
+	<div class="cvfs-card"<?php echo $hidden ? ' hidden' : ''; ?>>
 		<?php if ( $c['image'] ) : ?>
 			<div class="cvfs-img"><img src="<?php echo esc_url( $c['image'] ); ?>" alt="<?php echo esc_attr( $c['alt'] ); ?>" loading="lazy" decoding="async" /></div>
 		<?php endif; ?>
@@ -128,9 +129,21 @@ $cvfs_mobile  = array_values( array_filter( array_map( 'esc_url_raw', (array) $s
 		<div class="cvfs-band">
 			<div class="cvfs-wrap cvfs-sec">
 				<?php $cvfs_head( $s['news']['title'], $s['news']['link_text'], $s['news']['url'] ); ?>
-				<div class="cvfs-grid cvfs-grid4">
-					<?php array_map( $cvfs_card, $cards['news'] ); ?>
-				</div>
+				<?php if ( $news_random ) : ?>
+					<?php /* Slumpläge: de första visas utan JavaScript, skriptet väljer och blandar vid varje besök. */ ?>
+					<div class="cvfs-grid cvfs-grid4" data-cvfs-random="<?php echo (int) $news_random; ?>">
+						<?php
+						foreach ( array_values( $cards['news'] ) as $cvfs_i => $cvfs_c ) {
+							$cvfs_card( $cvfs_c, $cvfs_i >= $news_random );
+						}
+						?>
+					</div>
+					<script>(function(){var g=document.currentScript&&document.currentScript.previousElementSibling;if(!g)return;var n=+g.getAttribute("data-cvfs-random")||4,c=[].slice.call(g.children),i,j,t;for(i=c.length-1;i>0;i--){j=Math.floor(Math.random()*(i+1));t=c[i];c[i]=c[j];c[j]=t;}c.forEach(function(e,k){e.hidden=k>=n;g.appendChild(e);});})();</script>
+				<?php else : ?>
+					<div class="cvfs-grid cvfs-grid4">
+						<?php array_map( $cvfs_card, $cards['news'] ); ?>
+					</div>
+				<?php endif; ?>
 			</div>
 		</div>
 	<?php endif; ?>

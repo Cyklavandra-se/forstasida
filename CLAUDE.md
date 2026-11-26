@@ -148,7 +148,7 @@ Som AI-sök: pusha till `main` → GitHub Release med tagg `vX.Y.Z` → workflow
 `cyklavandra-forstasida.zip` → Pär installerar via Tillägg → Ladda upp → "Ersätt nuvarande".
 Påminn om att ladda ner pluginens zip, inte "Source code (zip)".
 
-## Läge (0.7.4)
+## Läge (0.8.0)
 
 Första uppgiften är gjord. Arkitektur:
 
@@ -228,6 +228,8 @@ Nya förstasidan är i drift sedan 26 nov 2026: shortcoden ligger på de befintl
 0.7.0: karta (`[resekarta]`, iframe `cvrk-karta` från en annan Cykla&Vandra-plugin, AI-sök lägger den i `.cvai-dolj` så att den döljs vid sökning – Pär vill att den syns på förstasidan, så `cvfs_map_html()` byter klassen mot `cvfs-map-in` (0.7.1)) i `.cvfs-wrap.cvfs-map` mellan bloggen och bandet "Följ oss" (flyttad dit i 0.7.3 – bandet ska vara sist). Inställning `band.show_map` (standard 1, struktur → följer svenskan). Sedan 0.7.4 ligger kartan i ett ljusgrått band: `.cvfs-band.cvfs-mapband` (padding 56 px) runt `.cvfs-wrap.cvfs-map`; bandet "Följ oss" har sin vanliga margin-top 56.
 
 0.7.2: Pär har aktiva men dolda WPML-språk **en, da, fi, is** (dolda språk 302:ar till / för utloggade). `cvfs_all_labels()` har inbyggda ord för sv, nb, da, fi, is, de, en (andra språk översätts med knappen). Standard-`date_format` per språk i `cvfs_defaults()`. Faktarutans etiketter utökade med isländska/finska.
+
+0.8.0: nyheter `mode` = manual | auto | **random**. Random: `cvfs_auto_news` hämtar upp till 40 sidor, mallen skriver ut alla kort (de efter `count` med `hidden`) i `[data-cvfs-random]`, och ett inline-skript blandar och visar `count` vid varje besök (fungerar med WP Fastest Cache). Följande språk får `news.shuffle=1`. `cvfs_cards` hoppar över dubbletter.
 
 Nästa steg: Pär kör "Spara och översätt" för en/da/fi/is, kontrollerar flikarna och gör startsidan per språk (WPML-översättning av "Hem" med `[cv_forstasida]`).
 

@@ -172,3 +172,6 @@
 /* Kartan ovanför bandet "Följ oss", på ljusgrå botten i full bredd som de andra banden. */
 .cvfs-band.cvfs-mapband{padding:56px 0}
 .cvfs-map iframe{display:block;width:100%;border:0;border-radius:20px;overflow:hidden}
+
+/* Nyheter i slumpläge: kort som inte valts ut. */
+.cvfs .cvfs-card[hidden]{display:none!important}

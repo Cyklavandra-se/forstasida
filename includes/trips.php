@@ -192,12 +192,14 @@ function cvfs_trip_image( $post_id ) {
  */
 function cvfs_cards( $trips, $s, $lang, $extra = '', $auto_price = true ) {
 	$cards = array();
+	$seen  = array();
 	foreach ( (array) $trips as $t ) {
 		$id = cvfs_object_id( $t['id'] ?? 0, $lang );
 		$p  = $id ? get_post( $id ) : null;
-		if ( ! $p || 'publish' !== $p->post_status ) {
-			continue;
+		if ( ! $p || 'publish' !== $p->post_status || isset( $seen[ $id ] ) ) {
+			continue; // Saknas, ej publicerad, eller samma resa en gång till.
 		}
+		$seen[ $id ] = true;
 		list( $img, $alt ) = cvfs_trip_image( $id );
 		$title             = '' !== ( $t['title'] ?? '' ) ? $t['title'] : get_the_title( $id );
 		if ( ! empty( $t['image'] ) ) {
@@ -245,7 +247,8 @@ function cvfs_auto_news( $s, $lang ) {
 				array(
 					'post_type'           => 'page',
 					'post_status'         => 'publish',
-					'posts_per_page'      => (int) $s['news']['count'],
+					// Slumpläge: alla sidor med taggen (högst 40) – webbläsaren väljer ut och blandar.
+					'posts_per_page'      => 'random' === $s['news']['mode'] ? 40 : (int) $s['news']['count'],
 					'fields'              => 'ids',
 					'orderby'             => 'date',
 					'order'               => 'DESC',

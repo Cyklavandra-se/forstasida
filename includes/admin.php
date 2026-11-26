@@ -444,6 +444,7 @@ function cvfs_admin_page() {
 					<th scope="row">Urval</th>
 					<td>
 						<label><input type="radio" name="cvfs[news][mode]" value="auto" <?php checked( $s['news']['mode'], 'auto' ); ?> /> Automatiskt: sidor med taggen nedan och taggen självguidad, nyast först</label><br />
+						<label><input type="radio" name="cvfs[news][mode]" value="random" <?php checked( $s['news']['mode'], 'random' ); ?> /> Automatiskt: sidor med taggen nedan och taggen självguidad, slumpmässig ordning</label><br />
 						<label><input type="radio" name="cvfs[news][mode]" value="manual" <?php checked( $s['news']['mode'], 'manual' ); ?> /> Manuellt: resorna i listan nedan</label>
 					</td>
 				</tr>

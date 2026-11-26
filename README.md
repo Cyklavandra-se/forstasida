@@ -20,7 +20,7 @@ ett per språk (WPML). Ersätter den handbyggda prototypen "Ny förstasida" (pag
   "Pris från 725 €", även norska "Lengde"/"fra"). Tom metarad byggs av taggarna och
   faktarutan, t.ex. "Vandring · 5 dagar · Nivå 1". Guidade resor saknar faktaruta – där
   skrivs metarad och pris in för hand. Det som skrivs in per kort går alltid före.
-- **Nyheter:** manuellt valda resor eller automatiskt (tagg, t.ex. `2027`, + självguidad).
+- **Nyheter:** manuellt valda resor eller automatiskt (tagg, t.ex. `2027`, + självguidad), nyast först eller i slumpmässig ordning (blandas i webbläsaren vid varje besök).
 - **Blogg:** senaste inläggen i en kategori, renderade av pluginen (inte Avadas `fusion_blog`).
 - **Svenska är huvudsidan.** Övriga språk *följer svenska* per sektion (standard): resor och
   deras ordning, bilder, länkar och av/på-val hämtas direkt från den svenska fliken. Länkar
@@ -78,6 +78,7 @@ Shortcode-attribut: `lang="sv"` visar ett visst språks inställningar (för tes
 
 ## Versioner
 
+- **0.8.0** – Nyheter kan visas i slumpmässig ordning: "Automatiskt: … slumpmässig ordning". Webbläsaren väljer vid varje besök ut antalet kort (standard 4) bland alla resor med taggen, så det fungerar även med sidcache. Övriga språk följer. Samma resa kan aldrig visas två gånger i en sektion.
 - **0.7.4** – Kartan ligger på ett ljusgrått band i full bredd (#F4F6F3), som Aktuella guidade resor och Nyheter.
 - **0.7.3** – Kartan ligger nu ovanför bandet "Följ oss", som åter är sist på sidan.
 - **0.7.2** – Förberett för engelska, danska, finska och isländska. Inbyggda ord för metaraderna finns på finska och isländska ("Vaellus", "Gönguferð" …). Datumformat per språk (danska och isländska `j. F Y`, finska `j.n.Y`). Faktarutan läses också på isländska och finska (Lengd, Tímalengd, Verð, frá, alk.).

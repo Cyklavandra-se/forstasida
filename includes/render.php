@@ -41,7 +41,10 @@ function cvfs_shortcode( $atts = array() ) {
 function cvfs_view_data( $lang ) {
 	$s = cvfs_effective( $lang );
 
-	$news_trips = 'auto' === $s['news']['mode'] ? cvfs_auto_news( $s, $lang ) : $s['news']['trips'];
+	$news_auto  = in_array( $s['news']['mode'], array( 'auto', 'random' ), true );
+	$news_trips = $news_auto ? cvfs_auto_news( $s, $lang ) : $s['news']['trips'];
+	// Slumpläge: alla kort skrivs ut, webbläsaren visar `count` av dem i slumpmässig ordning.
+	$news_rand  = ( 'random' === $s['news']['mode'] || ! empty( $s['news']['shuffle'] ) ) ? max( 1, (int) $s['news']['count'] ) : 0;
 
 	return array(
 		'lang'    => $lang,
@@ -55,6 +58,7 @@ function cvfs_view_data( $lang ) {
 		),
 		'posts'   => ! empty( $s['blog']['show'] ) ? cvfs_blog_posts( $s, $lang ) : array(),
 		'map'     => cvfs_map_html( $s ),
+		'news_random' => $news_rand,
 	);
 }
 

@@ -55,6 +55,7 @@ function cvfs_effective( $lang ) {
 			$s['news']['tag']   = $m['news']['tag'];
 			$s['news']['count'] = $m['news']['count'];
 			$s['news']['mode']  = 'manual'; // Resorna nedan är redan standardspråkets urval.
+			$s['news']['shuffle'] = 'random' === $m['news']['mode'] ? 1 : 0;
 		}
 		$master_trips = cvfs_master_trips( $sec, $m );
 		$s[ $sec ]['trips'] = cvfs_follow_trips( $master_trips, $s[ $sec ]['trips'] );
@@ -86,7 +87,7 @@ function cvfs_effective( $lang ) {
  */
 function cvfs_master_trips( $sec, $m = null ) {
 	$m = $m ? $m : cvfs_get( cvfs_default_lang() );
-	if ( 'news' === $sec && 'auto' === $m['news']['mode'] ) {
+	if ( 'news' === $sec && in_array( $m['news']['mode'], array( 'auto', 'random' ), true ) ) {
 		return cvfs_in_lang(
 			cvfs_default_lang(),
 			function () use ( $m ) {

@@ -134,7 +134,8 @@ function cvfs_defaults( $lang = 'sv' ) {
 			'title'     => 'Nyheter för säsongen 2027',
 			'link_text' => 'Se alla nyheter →',
 			'url'       => cvfs_u( '/information/hitta-resa/destinationer/nyheter/' ),
-			// manual = korten nedan; auto = sidor med taggen nedan + självguidad, nyast först.
+			// manual = korten nedan; auto = sidor med taggen nedan + självguidad, nyast först;
+			// random = samma sidor, men webbläsaren väljer och blandar `count` av dem vid varje besök.
 			'mode'      => 'manual',
 			'tag'       => '2027',
 			'count'     => 4,
@@ -570,7 +571,7 @@ function cvfs_sanitize( $in, $lang ) {
 		);
 	}
 	$n                    = $in['news'] ?? array();
-	$out['news']['mode']  = ( isset( $n['mode'] ) && 'auto' === $n['mode'] ) ? 'auto' : 'manual';
+	$out['news']['mode']  = ( isset( $n['mode'] ) && in_array( $n['mode'], array( 'auto', 'random' ), true ) ) ? $n['mode'] : 'manual';
 	$out['news']['tag']   = sanitize_title( wp_unslash( (string) ( $n['tag'] ?? '' ) ) );
 	$out['news']['count'] = max( 1, min( 12, absint( $n['count'] ?? 4 ) ) );
 	$out['news']['label'] = cvfs_clean_text( $n['label'] ?? '' );
