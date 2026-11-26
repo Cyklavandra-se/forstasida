@@ -56,6 +56,7 @@ Shortcode-attribut: `lang="sv"` visar ett visst språks inställningar (för tes
 | `includes/lang.php` | WPML-hjälpare (språk, översatta sidor och taggar) |
 | `includes/settings.php` | Standardvärden per språk, läsning, tvättning och sparning |
 | `includes/trips.php` | Resekort, automatisk metarad, automatiska nyheter, sökning |
+| `includes/events.php` | Guidade resor från The Events Calendar (avgångar → resesidor, sorterat på nästa avresa) |
 | `includes/follow.php` | "Följ svenska": resor, bilder och länkar från standardspråket |
 | `includes/translate.php` | Översättning av ändrade texter med Claude, förslagssidan |
 | `includes/render.php` | Shortcoden, blogginlägg, rendering |
@@ -78,6 +79,7 @@ Shortcode-attribut: `lang="sv"` visar ett visst språks inställningar (för tes
 
 ## Versioner
 
+- **0.9.0** – Rad i sidled för guidade, populära och nyheter, med av/på per sektion för dator (pilar ‹ ›) och mobil (svep). Raden har ett "Se alla"-kort sist. När raden är av visas högst 5 kort (för nyheter det angivna antalet). Guidade resor fylls automatiskt från The Events Calendar: alla resor med kommande avgång, sorterade efter nästa avresa, med "Nästa avresa …" i metaraden och pris från avgångens "Kostnad". Nyheternas tagg kan vara "nästa säsong" automatiskt (byts 1 september), och `{år}` i rubrik och etikett byts mot säsongens år.
 - **0.8.0** – Nyheter kan visas i slumpmässig ordning: "Automatiskt: … slumpmässig ordning". Webbläsaren väljer vid varje besök ut antalet kort (standard 4) bland alla resor med taggen, så det fungerar även med sidcache. Övriga språk följer. Samma resa kan aldrig visas två gånger i en sektion.
 - **0.7.4** – Kartan ligger på ett ljusgrått band i full bredd (#F4F6F3), som Aktuella guidade resor och Nyheter.
 - **0.7.3** – Kartan ligger nu ovanför bandet "Följ oss", som åter är sist på sidan.

@@ -4,7 +4,8 @@
  *
  * Tillgängligt: $lang, $s (inställningar), $guided (bool), $search (AI-sökets HTML),
  * $cards['guided'|'popular'|'news'], $posts (blogginlägg), $map (kartans HTML eller ''),
- * $news_random (antal nyheter att visa i slumpläge, annars 0).
+ * $news_random (antal nyheter att visa i slumpläge, annars 0),
+ * $rail[sektion] = { d: rad i sidled på dator, m: på mobil, n: antal kort när raden är av }.
  *
  * @package cyklavandra-forstasida
  */
@@ -26,9 +27,9 @@ $cvfs_head = function ( $title, $link_text, $url ) {
 	<?php
 };
 
-$cvfs_card = function ( $c, $hidden = false ) {
+$cvfs_card = function ( $c, $hidden = false, $extra = false ) {
 	?>
-	<div class="cvfs-card"<?php echo $hidden ? ' hidden' : ''; ?>>
+	<div class="cvfs-card<?php echo $extra ? ' cvfs-extra' : ''; ?>"<?php echo $hidden ? ' hidden' : ''; ?>>
 		<?php if ( $c['image'] ) : ?>
 			<div class="cvfs-img"><img src="<?php echo esc_url( $c['image'] ); ?>" alt="<?php echo esc_attr( $c['alt'] ); ?>" loading="lazy" decoding="async" /></div>
 		<?php endif; ?>
@@ -42,6 +43,32 @@ $cvfs_card = function ( $c, $hidden = false ) {
 			<?php endif; ?>
 		</div>
 	</div>
+	<?php
+};
+
+/*
+ * En rad med resekort. Med rad i sidled (dator och/eller mobil) visas alla kort och ett
+ * "Se alla"-kort sist; annars de första n (övriga har klassen cvfs-extra och döljs med CSS).
+ * Slumpläge ($random > 0): skriptet blandar korten vid varje besök.
+ */
+$cvfs_rail = function ( $sec, $list, $extra_class = '', $random = 0 ) use ( $cvfs_card, $rail, $s ) {
+	$r       = $rail[ $sec ];
+	$classes = trim( 'cvfs-grid ' . $extra_class . ( $r['d'] ? ' cvfs-rail-d' : '' ) . ( $r['m'] ? ' cvfs-rail-m' : '' ) );
+	$list    = array_values( $list );
+	?>
+	<div class="<?php echo esc_attr( $classes ); ?>"<?php echo $random ? ' data-cvfs-random="' . (int) $random . '"' : ''; ?>>
+		<?php
+		foreach ( $list as $i => $c ) {
+			$cvfs_card( $c, $random && $i >= $random, ! $random && $i >= $r['n'] );
+		}
+		if ( ( $r['d'] || $r['m'] ) && $s[ $sec ]['link_text'] && $s[ $sec ]['url'] ) :
+			?>
+			<div class="cvfs-card cvfs-morecard"><a class="cvfs-stretch" href="<?php echo esc_url( $s[ $sec ]['url'] ); ?>"><?php echo esc_html( $s[ $sec ]['link_text'] ); ?></a></div>
+		<?php endif; ?>
+	</div>
+	<?php if ( $random ) : ?>
+		<script>(function(){var g=document.currentScript&&document.currentScript.previousElementSibling;if(!g)return;var n=+g.getAttribute("data-cvfs-random")||4,more=g.querySelector(".cvfs-morecard"),c=[].slice.call(g.querySelectorAll(".cvfs-card:not(.cvfs-morecard)")),i,j,t;for(i=c.length-1;i>0;i--){j=Math.floor(Math.random()*(i+1));t=c[i];c[i]=c[j];c[j]=t;}c.forEach(function(e){g.appendChild(e);});if(more){g.appendChild(more);}var mq=window.matchMedia?window.matchMedia("(max-width:700px)"):null;function set(){var m=mq&&mq.matches,all=g.classList.contains(m?"cvfs-rail-m":"cvfs-rail-d");c.forEach(function(e,k){e.hidden=!all&&k>=n;});}set();if(mq){if(mq.addEventListener){mq.addEventListener("change",set);}else if(mq.addListener){mq.addListener(set);}}})();</script>
+	<?php endif; ?>
 	<?php
 };
 
@@ -107,9 +134,7 @@ $cvfs_mobile  = array_values( array_filter( array_map( 'esc_url_raw', (array) $s
 		<div class="cvfs-band">
 			<div class="cvfs-wrap cvfs-sec">
 				<?php $cvfs_head( $s['guided']['title'], $s['guided']['link_text'], $s['guided']['url'] ); ?>
-				<div class="cvfs-grid">
-					<?php array_map( $cvfs_card, $cards['guided'] ); ?>
-				</div>
+				<?php $cvfs_rail( 'guided', $cards['guided'] ); ?>
 			</div>
 		</div>
 	<?php endif; ?>
@@ -118,9 +143,7 @@ $cvfs_mobile  = array_values( array_filter( array_map( 'esc_url_raw', (array) $s
 	<?php if ( $cards['popular'] ) : ?>
 		<div class="cvfs-wrap cvfs-sec">
 			<?php $cvfs_head( $s['popular']['title'], $s['popular']['link_text'], $s['popular']['url'] ); ?>
-			<div class="cvfs-grid">
-				<?php array_map( $cvfs_card, $cards['popular'] ); ?>
-			</div>
+			<?php $cvfs_rail( 'popular', $cards['popular'] ); ?>
 		</div>
 	<?php endif; ?>
 
@@ -129,21 +152,7 @@ $cvfs_mobile  = array_values( array_filter( array_map( 'esc_url_raw', (array) $s
 		<div class="cvfs-band">
 			<div class="cvfs-wrap cvfs-sec">
 				<?php $cvfs_head( $s['news']['title'], $s['news']['link_text'], $s['news']['url'] ); ?>
-				<?php if ( $news_random ) : ?>
-					<?php /* Slumpläge: de första visas utan JavaScript, skriptet väljer och blandar vid varje besök. */ ?>
-					<div class="cvfs-grid cvfs-grid4" data-cvfs-random="<?php echo (int) $news_random; ?>">
-						<?php
-						foreach ( array_values( $cards['news'] ) as $cvfs_i => $cvfs_c ) {
-							$cvfs_card( $cvfs_c, $cvfs_i >= $news_random );
-						}
-						?>
-					</div>
-					<script>(function(){var g=document.currentScript&&document.currentScript.previousElementSibling;if(!g)return;var n=+g.getAttribute("data-cvfs-random")||4,c=[].slice.call(g.children),i,j,t;for(i=c.length-1;i>0;i--){j=Math.floor(Math.random()*(i+1));t=c[i];c[i]=c[j];c[j]=t;}c.forEach(function(e,k){e.hidden=k>=n;g.appendChild(e);});})();</script>
-				<?php else : ?>
-					<div class="cvfs-grid cvfs-grid4">
-						<?php array_map( $cvfs_card, $cards['news'] ); ?>
-					</div>
-				<?php endif; ?>
+				<?php $cvfs_rail( 'news', $cards['news'], 'cvfs-grid4', $news_random ); ?>
 			</div>
 		</div>
 	<?php endif; ?>

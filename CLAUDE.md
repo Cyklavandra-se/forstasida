@@ -148,7 +148,7 @@ Som AI-sök: pusha till `main` → GitHub Release med tagg `vX.Y.Z` → workflow
 `cyklavandra-forstasida.zip` → Pär installerar via Tillägg → Ladda upp → "Ersätt nuvarande".
 Påminn om att ladda ner pluginens zip, inte "Source code (zip)".
 
-## Läge (0.8.0)
+## Läge (0.9.0)
 
 Första uppgiften är gjord. Arkitektur:
 
@@ -230,6 +230,10 @@ Nya förstasidan är i drift sedan 26 nov 2026: shortcoden ligger på de befintl
 0.7.2: Pär har aktiva men dolda WPML-språk **en, da, fi, is** (dolda språk 302:ar till / för utloggade). `cvfs_all_labels()` har inbyggda ord för sv, nb, da, fi, is, de, en (andra språk översätts med knappen). Standard-`date_format` per språk i `cvfs_defaults()`. Faktarutans etiketter utökade med isländska/finska.
 
 0.8.0: nyheter `mode` = manual | auto | **random**. Random: `cvfs_auto_news` hämtar upp till 40 sidor, mallen skriver ut alla kort (de efter `count` med `hidden`) i `[data-cvfs-random]`, och ett inline-skript blandar och visar `count` vid varje besök (fungerar med WP Fastest Cache). Följande språk får `news.shuffle=1`. `cvfs_cards` hoppar över dubbletter.
+
+0.9.0 (Pärs beslut): rad i sidled för guided/popular/news, `scroll_desktop`/`scroll_mobile` per sektion (standard 1, struktur → följer). Mallens `$cvfs_rail()` sätter klasserna `cvfs-rail-d`/`cvfs-rail-m`; kort efter `n` (5, nyheter `count`) får `cvfs-extra` och döljs med CSS när raden är av vid den skärmbredden; `.cvfs-morecard` ("Se alla") bara i rad. Pilar skapas i `forstasida.js` (`initRails`) i `.cvfs-headlink`. Slumpläget visar alla kort i rad, annars `count`.
+- Guidade `mode` = events (standard) | manual. `includes/events.php`: avgångar (`tribe_get_events`, annars WP_Query på `tribe_events`/`_EventStartDate`) → resesida via `_EventURL` (`cvfs_url_to_page_id`), en per resa, datumordning, högst 40, transient per timme. Fågel-/naturresor under `/ovrigt/` ingår (Pär: ja), typ utan hike/bike-tagg = `labels.guided` ("Guidad resa"). Metarad + " · Nästa avresa j M" (år om > 300 dagar bort); pris: kortets → `_EventCost` (`cvfs_format_cost`) → faktaruta. Guidade.trips = egna texter per resa-id. Avgångar utan resesida visas bara där avgången finns på språket.
+- Nyheter: `tag_auto` (standard 1) → `cvfs_season_year()` (år+1 från 1 september, filter `cvfs_season_month`); `{år}` i title/label/link_text via `cvfs_year_text()`. Auto-läget hämtar alltid upp till 40.
 
 Nästa steg: Pär kör "Spara och översätt" för en/da/fi/is, kontrollerar flikarna och gör startsidan per språk (WPML-översättning av "Hem" med `[cv_forstasida]`).
 

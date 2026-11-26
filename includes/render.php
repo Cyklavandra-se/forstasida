@@ -41,6 +41,10 @@ function cvfs_shortcode( $atts = array() ) {
 function cvfs_view_data( $lang ) {
 	$s = cvfs_effective( $lang );
 
+	// Nyheter: säsongens år i rubrik, etikett och länktext ({år}).
+	foreach ( array( 'title', 'label', 'link_text' ) as $k ) {
+		$s['news'][ $k ] = cvfs_year_text( $s['news'][ $k ] );
+	}
 	$news_auto  = in_array( $s['news']['mode'], array( 'auto', 'random' ), true );
 	$news_trips = $news_auto ? cvfs_auto_news( $s, $lang ) : $s['news']['trips'];
 	// Slumpläge: alla kort skrivs ut, webbläsaren visar `count` av dem i slumpmässig ordning.
@@ -52,13 +56,19 @@ function cvfs_view_data( $lang ) {
 		'guided'  => ! empty( $s['show_guided'] ),
 		'search'  => cvfs_search_box( $s ),
 		'cards'   => array(
-			'guided'  => ! empty( $s['show_guided'] ) ? cvfs_cards( $s['guided']['trips'], $s, $lang, '', ! empty( $s['guided']['auto_price'] ) ) : array(),
+			'guided'  => ! empty( $s['show_guided'] ) ? ( 'events' === $s['guided']['mode'] ? cvfs_event_cards( $s, $lang ) : cvfs_cards( $s['guided']['trips'], $s, $lang, '', ! empty( $s['guided']['auto_price'] ) ) ) : array(),
 			'popular' => cvfs_cards( $s['popular']['trips'], $s, $lang, '', ! empty( $s['popular']['auto_price'] ) ),
 			'news'    => cvfs_cards( $news_trips, $s, $lang, $s['news']['label'], ! empty( $s['news']['auto_price'] ) ),
 		),
 		'posts'   => ! empty( $s['blog']['show'] ) ? cvfs_blog_posts( $s, $lang ) : array(),
 		'map'     => cvfs_map_html( $s ),
 		'news_random' => $news_rand,
+		// Rad i sidled per sektion: d = dator, m = mobil, n = antal kort när raden är av.
+		'rail'    => array(
+			'guided'  => array( 'd' => ! empty( $s['guided']['scroll_desktop'] ), 'm' => ! empty( $s['guided']['scroll_mobile'] ), 'n' => 5 ),
+			'popular' => array( 'd' => ! empty( $s['popular']['scroll_desktop'] ), 'm' => ! empty( $s['popular']['scroll_mobile'] ), 'n' => 5 ),
+			'news'    => array( 'd' => ! empty( $s['news']['scroll_desktop'] ), 'm' => ! empty( $s['news']['scroll_mobile'] ), 'n' => max( 1, (int) $s['news']['count'] ) ),
+		),
 	);
 }
 

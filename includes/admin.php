@@ -187,6 +187,19 @@ function cvfs_f_head( $key, $sec ) {
 	if ( isset( $sec['auto_price'] ) ) {
 		cvfs_f_check( "cvfs[$key][auto_price]", $sec['auto_price'], 'Pris från resesidan', 'Visa priset ur resesidans faktaruta när kortets prisfält är tomt', true );
 	}
+	if ( isset( $sec['scroll_desktop'] ) ) {
+		?>
+		<tr class="cvfs-struct">
+			<th scope="row">Rad i sidled</th>
+			<td>
+				<label><input type="checkbox" name="cvfs[<?php echo esc_attr( $key ); ?>][scroll_desktop]" value="1" <?php checked( (int) $sec['scroll_desktop'], 1 ); ?> /> På dator (pilar ‹ ›)</label>
+				&nbsp;&nbsp;
+				<label><input type="checkbox" name="cvfs[<?php echo esc_attr( $key ); ?>][scroll_mobile]" value="1" <?php checked( (int) $sec['scroll_mobile'], 1 ); ?> /> På mobil (svep)</label>
+				<p class="description">På: alla resor i en rad som går att scrolla åt höger, med ett "Se alla"-kort sist. Av: högst <?php echo 'news' === $key ? 'det antal som anges nedan' : '5'; ?> resor (rutnät på dator, lista på mobil).</p>
+			</td>
+		</tr>
+		<?php
+	}
 }
 
 /**
@@ -325,6 +338,19 @@ function cvfs_admin_page() {
 			}
 		}
 	}
+	if ( 'events' === ( $s['guided']['mode'] ?? '' ) && ( cvfs_is_master( $lang ) || empty( $s['follow']['guided'] ) ) ) {
+		// Automatiskt från kalendern: resorna med avgång i datumordning, med egna texter/priser;
+		// sparade rader för andra resor ligger kvar sist (så att inget försvinner om du byter läge).
+		$own_g  = cvfs_get( $lang )['guided']['trips'];
+		$ev     = cvfs_follow_trips( cvfs_event_trip_rows(), $own_g, false );
+		$ev_ids = wp_list_pluck( $ev, 'id' );
+		foreach ( $own_g as $t ) {
+			if ( ! in_array( (int) $t['id'], array_map( 'intval', $ev_ids ), true ) ) {
+				$ev[] = $t;
+			}
+		}
+		$s['guided']['trips'] = $ev;
+	}
 	$saved = get_option( CVFS_OPTION, array() );
 	$msg   = isset( $_GET['cvfs_msg'] ) ? sanitize_key( wp_unslash( $_GET['cvfs_msg'] ) ) : ''; // phpcs:ignore WordPress.Security.NonceVerification
 	$l     = $s['labels'];
@@ -423,6 +449,16 @@ function cvfs_admin_page() {
 			<table class="form-table" role="presentation">
 				<?php
 				cvfs_f_head( 'guided', $s['guided'] );
+				?>
+				<tr class="cvfs-struct">
+					<th scope="row">Urval</th>
+					<td>
+						<label><input type="radio" class="cvfs-guided-mode" name="cvfs[guided][mode]" value="events" <?php checked( $s['guided']['mode'], 'events' ); ?> /> Automatiskt: alla resor med kommande avgång i kalendern, sorterade efter nästa avresa</label><br />
+						<label><input type="radio" class="cvfs-guided-mode" name="cvfs[guided][mode]" value="manual" <?php checked( $s['guided']['mode'], 'manual' ); ?> /> Manuellt: resorna i listan nedan</label>
+						<p class="description">Automatiskt: avgångarna i The Events Calendar som länkar till en resesida (fältet "Webbplats"); avgångar utan resesida länkar till kalendern. Metaraden får "<?php echo esc_html( $l['next'] ?? '' ); ?> …" och priset tas från avgångens "Kostnad" om kortet saknar eget pris. I listan nedan kan du ge resorna egen kortrubrik, metarad, pris eller bild.</p>
+					</td>
+				</tr>
+				<?php
 				cvfs_f_trips( 'guided', $s['guided']['trips'], $lang, $l );
 				?>
 			</table>
@@ -449,25 +485,26 @@ function cvfs_admin_page() {
 					</td>
 				</tr>
 				<?php
-				cvfs_f_text(
-					'cvfs[news][tag]',
-					$s['news']['tag'],
-					'Tagg (automatiskt)',
-					array(
-						'desc'   => 'T.ex. 2027.',
-						'struct' => true,
-					)
-				);
+				?>
+				<tr class="cvfs-struct">
+					<th scope="row">Tagg (automatiskt)</th>
+					<td>
+						<label><input type="checkbox" name="cvfs[news][tag_auto]" value="1" <?php checked( (int) $s['news']['tag_auto'], 1 ); ?> /> Nästa säsong automatiskt – nu <strong><?php echo (int) cvfs_season_year(); ?></strong> (byts till nästa år den 1 september)</label><br />
+						<input type="text" class="regular-text" name="cvfs[news][tag]" value="<?php echo esc_attr( $s['news']['tag'] ); ?>" placeholder="T.ex. 2027" />
+						<p class="description">Fast tagg, används när rutan ovan inte är ikryssad. Skriv <code>{år}</code> i rubriken och etiketten (t.ex. "Nyheter för säsongen {år}", "Nyhet {år}"), så byts årtalet samtidigt.</p>
+					</td>
+				</tr>
+				<?php
 				cvfs_f_text(
 					'cvfs[news][count]',
 					$s['news']['count'],
-					'Antal (automatiskt)',
+					'Antal (utan rad i sidled)',
 					array(
 						'type'   => 'number',
 						'struct' => true,
 					)
 				);
-				cvfs_f_text( 'cvfs[news][label]', $s['news']['label'], 'Etikett i metaraden', array( 'desc' => 'Används när metaraden byggs automatiskt, t.ex. "Cykling · Nyhet 2027".' ) );
+				cvfs_f_text( 'cvfs[news][label]', $s['news']['label'], 'Etikett i metaraden', array( 'desc' => 'Används när metaraden byggs automatiskt, t.ex. "Nyhet {år}" → "Cykling · Nyhet 2027".' ) );
 				cvfs_f_trips( 'news', $s['news']['trips'], $lang, $l, 'Resor (manuellt)' );
 				?>
 			</table>
@@ -549,6 +586,8 @@ function cvfs_admin_page() {
 					'guided_bike' => 'Guidad cykling',
 					'level'       => 'Nivå',
 					'days'        => 'Dagar ("5 dagar")',
+					'guided'      => 'Guidad resa (typ okänd)',
+					'next'        => 'Nästa avresa',
 				);
 				foreach ( $names as $k => $name ) {
 					cvfs_f_text( "cvfs[labels][$k]", $l[ $k ], $name );

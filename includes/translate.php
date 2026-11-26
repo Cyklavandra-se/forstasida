@@ -297,6 +297,7 @@ function cvfs_claude_translate( $lang, $items ) {
 		. "- Ändra inte varumärket \"Cykla & Vandra\" eller namn som Instagram och Facebook. Använd målspråkets vedertagna form av ortnamn.\n"
 		. "- \"Nivå 2\" i en metarad är resans svårighetsgrad; \"Nyhet 2027\" betyder ny resa för säsongen 2027.\n"
 		. "- \"Svensk guide\" betyder att guiden är svensk – översätt så, även på andra språk.\n"
+		. "- Platshållare inom klammerparenteser, t.ex. {år}, ska stå kvar exakt som de är.\n"
 		. "- Returnera exakt samma id:n som du fick, en översättning per id.";
 
 	$list = array();

@@ -234,7 +234,7 @@ function cvfs_card_price( $t, $post_id, $labels, $auto = true ) {
  * @return array[] Rader i samma format som sparade resor.
  */
 function cvfs_auto_news( $s, $lang ) {
-	$tag  = $s['news']['tag'];
+	$tag  = ! empty( $s['news']['tag_auto'] ) ? (string) cvfs_season_year() : $s['news']['tag'];
 	$news = cvfs_tag_ids( array( $tag ), $lang );
 	$self = cvfs_tag_ids( cvfs_trip_tags()['self'], $lang );
 	if ( ! $news || ! $self ) {
@@ -248,7 +248,8 @@ function cvfs_auto_news( $s, $lang ) {
 					'post_type'           => 'page',
 					'post_status'         => 'publish',
 					// Slumpläge: alla sidor med taggen (högst 40) – webbläsaren väljer ut och blandar.
-					'posts_per_page'      => 'random' === $s['news']['mode'] ? 40 : (int) $s['news']['count'],
+					// Alla (högst 40): i rad i sidled visas alla, annars de första `count`.
+					'posts_per_page'      => 40,
 					'fields'              => 'ids',
 					'orderby'             => 'date',
 					'order'               => 'DESC',

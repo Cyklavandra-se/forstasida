@@ -51,8 +51,14 @@ function cvfs_effective( $lang ) {
 		}
 		$s[ $sec ]['url']        = cvfs_translate_url( $m[ $sec ]['url'], $lang );
 		$s[ $sec ]['auto_price'] = $m[ $sec ]['auto_price'];
+		$s[ $sec ]['scroll_desktop'] = $m[ $sec ]['scroll_desktop'];
+		$s[ $sec ]['scroll_mobile']  = $m[ $sec ]['scroll_mobile'];
+		if ( 'guided' === $sec ) {
+			$s['guided']['mode'] = $m['guided']['mode'];
+		}
 		if ( 'news' === $sec ) {
 			$s['news']['tag']   = $m['news']['tag'];
+			$s['news']['tag_auto'] = $m['news']['tag_auto'];
 			$s['news']['count'] = $m['news']['count'];
 			$s['news']['mode']  = 'manual'; // Resorna nedan är redan standardspråkets urval.
 			$s['news']['shuffle'] = 'random' === $m['news']['mode'] ? 1 : 0;
@@ -87,6 +93,9 @@ function cvfs_effective( $lang ) {
  */
 function cvfs_master_trips( $sec, $m = null ) {
 	$m = $m ? $m : cvfs_get( cvfs_default_lang() );
+	if ( 'guided' === $sec && 'events' === $m['guided']['mode'] ) {
+		return cvfs_event_trip_rows();
+	}
 	if ( 'news' === $sec && in_array( $m['news']['mode'], array( 'auto', 'random' ), true ) ) {
 		return cvfs_in_lang(
 			cvfs_default_lang(),

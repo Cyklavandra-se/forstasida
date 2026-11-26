@@ -102,6 +102,12 @@ function cvfs_defaults( $lang = 'sv' ) {
 			'title'     => 'Aktuella guidade resor',
 			'link_text' => 'Alla guidade resor →',
 			'url'        => cvfs_u( '/vandra/guidade/' ),
+			// events = alla resor med kommande avgång i The Events Calendar, sorterade efter nästa
+			// avresa (listan nedan används då bara för egna rubriker/priser per resa); manual = listan.
+			'mode'       => 'events',
+			// Rad i sidled (fler kort åt höger) på dator respektive mobil. Av = högst 5 kort.
+			'scroll_desktop' => 1,
+			'scroll_mobile'  => 1,
 			// Hämta priset ur faktarutan när kortets prisfält är tomt.
 			'auto_price' => 1,
 			// Guidade resor har ingen faktaruta – dagar och pris står här.
@@ -118,6 +124,8 @@ function cvfs_defaults( $lang = 'sv' ) {
 			'title'     => 'Populära resor på egen hand',
 			'link_text' => 'Alla resor på egen hand →',
 			'url'        => cvfs_u( '/sjalvguidade/' ),
+			'scroll_desktop' => 1,
+			'scroll_mobile'  => 1,
 			'auto_price' => 1,
 			'trips'      => array(
 				// Dagar och pris läses ur faktarutan på resesidan.
@@ -131,15 +139,21 @@ function cvfs_defaults( $lang = 'sv' ) {
 		),
 
 		'news'        => array(
-			'title'     => 'Nyheter för säsongen 2027',
+			// {år} byts mot säsongens år (se cvfs_season_year()).
+			'title'     => 'Nyheter för säsongen {år}',
 			'link_text' => 'Se alla nyheter →',
 			'url'       => cvfs_u( '/information/hitta-resa/destinationer/nyheter/' ),
 			// manual = korten nedan; auto = sidor med taggen nedan + självguidad, nyast först;
 			// random = samma sidor, men webbläsaren väljer och blandar `count` av dem vid varje besök.
 			'mode'      => 'manual',
 			'tag'       => '2027',
+			// Taggen = säsongens år automatiskt (byts 1 september till nästa år).
+			'tag_auto'  => 1,
+			// Antal kort när raden i sidled är av (och antal i slumpläget).
 			'count'     => 4,
-			'label'     => 'Nyhet 2027',
+			'label'     => 'Nyhet {år}',
+			'scroll_desktop' => 1,
+			'scroll_mobile'  => 1,
 			// Prototypen visar inget pris på nyheterna.
 			'auto_price' => 0,
 			'trips'     => array(
@@ -318,10 +332,10 @@ function cvfs_defaults_nb( $d ) {
 		cvfs_trip( 33232, 'Donau i rolig tempo – Wachau og Wien', 'Sykling · 5 dager · Nivå 1' ),
 	);
 
-	$d['news']['title']     = 'Nyheter for sesongen 2027';
+	$d['news']['title']     = 'Nyheter for sesongen {år}';
 	$d['news']['link_text'] = 'Se alle nyheter →';
 	$d['news']['url']       = cvfs_u( '/no/informasjon-om-programmet/finn-en-reise-for-sykling-og-fotturer/reisemal/nyheter-nye-destinasjoner-denne-sesongen/' );
-	$d['news']['label']     = 'Nyhet 2027';
+	$d['news']['label']     = 'Nyhet {år}';
 	$d['news']['trips']     = array(
 		cvfs_trip( 35210, 'Madeira rundt på sykkel' ),
 		cvfs_trip( 35098, 'Sykle på Lanzarote – vulkanenes øy' ),
@@ -363,6 +377,8 @@ function cvfs_all_labels() {
 			'guided_bike' => 'Guidad cykling',
 			'level'       => 'Nivå',
 			'days'        => 'dagar',
+			'guided'      => 'Guidad resa',
+			'next'        => 'Nästa avresa',
 		),
 		'nb' => array(
 			'from'        => 'fra',
@@ -372,6 +388,8 @@ function cvfs_all_labels() {
 			'guided_bike' => 'Guidet sykling',
 			'level'       => 'Nivå',
 			'days'        => 'dager',
+			'guided'      => 'Guidet reise',
+			'next'        => 'Neste avreise',
 		),
 		'da' => array(
 			'from'        => 'fra',
@@ -381,6 +399,8 @@ function cvfs_all_labels() {
 			'guided_bike' => 'Guidet cykling',
 			'level'       => 'Niveau',
 			'days'        => 'dage',
+			'guided'      => 'Guidet rejse',
+			'next'        => 'Næste afrejse',
 		),
 		'de' => array(
 			'from'        => 'ab',
@@ -390,6 +410,8 @@ function cvfs_all_labels() {
 			'guided_bike' => 'Geführte Radtour',
 			'level'       => 'Stufe',
 			'days'        => 'Tage',
+			'guided'      => 'Geführte Reise',
+			'next'        => 'Nächste Abreise',
 		),
 		'fi' => array(
 			'from'        => 'alk.',
@@ -399,6 +421,8 @@ function cvfs_all_labels() {
 			'guided_bike' => 'Opastettu pyöräily',
 			'level'       => 'Taso',
 			'days'        => 'päivää',
+			'guided'      => 'Opastettu matka',
+			'next'        => 'Seuraava lähtö',
 		),
 		'is' => array(
 			'from'        => 'frá',
@@ -408,6 +432,8 @@ function cvfs_all_labels() {
 			'guided_bike' => 'Leiðsögð hjólaferð',
 			'level'       => 'Erfiðleikastig',
 			'days'        => 'dagar',
+			'guided'      => 'Leiðsögð ferð',
+			'next'        => 'Næsta brottför',
 		),
 		'en' => array(
 			'from'        => 'from',
@@ -417,8 +443,24 @@ function cvfs_all_labels() {
 			'guided_bike' => 'Guided cycling',
 			'level'       => 'Level',
 			'days'        => 'days',
+			'guided'      => 'Guided tour',
+			'next'        => 'Next departure',
 		),
 	);
+}
+
+/**
+ * Säsongens år för nyheter: innevarande år till och med augusti, nästa år från 1 september.
+ * (Nov 2026 → 2027, jan–aug 2027 → 2027, sep 2027 → 2028.)
+ */
+function cvfs_season_year() {
+	$y = (int) current_time( 'Y' );
+	return (int) current_time( 'n' ) >= (int) apply_filters( 'cvfs_season_month', 9 ) ? $y + 1 : $y;
+}
+
+/** Byt {år} (eller {year}) mot säsongens år. */
+function cvfs_year_text( $text ) {
+	return str_replace( array( '{år}', '{ar}', '{year}' ), (string) cvfs_season_year(), (string) $text );
 }
 
 /** True om arrayen är en lista (0, 1, 2 …) och inte en associativ array. */
@@ -567,12 +609,16 @@ function cvfs_sanitize( $in, $lang ) {
 			'link_text' => cvfs_clean_text( $s['link_text'] ?? '' ),
 			'url'       => cvfs_clean_url( $s['url'] ?? '' ),
 			'auto_price' => empty( $s['auto_price'] ) ? 0 : 1,
+			'scroll_desktop' => empty( $s['scroll_desktop'] ) ? 0 : 1,
+			'scroll_mobile'  => empty( $s['scroll_mobile'] ) ? 0 : 1,
 			'trips'      => cvfs_clean_trips( $s['trips'] ?? array() ),
 		);
 	}
+	$out['guided']['mode'] = ( isset( $in['guided']['mode'] ) && 'manual' === $in['guided']['mode'] ) ? 'manual' : 'events';
 	$n                    = $in['news'] ?? array();
 	$out['news']['mode']  = ( isset( $n['mode'] ) && in_array( $n['mode'], array( 'auto', 'random' ), true ) ) ? $n['mode'] : 'manual';
 	$out['news']['tag']   = sanitize_title( wp_unslash( (string) ( $n['tag'] ?? '' ) ) );
+	$out['news']['tag_auto'] = empty( $n['tag_auto'] ) ? 0 : 1;
 	$out['news']['count'] = max( 1, min( 12, absint( $n['count'] ?? 4 ) ) );
 	$out['news']['label'] = cvfs_clean_text( $n['label'] ?? '' );
 

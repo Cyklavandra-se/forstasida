@@ -175,3 +175,37 @@
 
 /* Nyheter i slumpläge: kort som inte valts ut. */
 .cvfs .cvfs-card[hidden]{display:none!important}
+
+/*
+ * Rad i sidled (guidade, populära, nyheter). Klasserna cvfs-rail-d (dator) och cvfs-rail-m
+ * (mobil, ≤ 700 px) slås på per sektion i admin. Utan rad visas de första korten
+ * (övriga har cvfs-extra). "Se alla"-kortet (cvfs-morecard) visas bara i rad.
+ */
+.cvfs .cvfs-morecard{display:none;align-items:center;justify-content:center;text-align:center;padding:24px;background:#fff}
+.cvfs .cvfs-morecard a{font-size:17px;font-weight:600;color:#1F4D3A!important}
+@media(min-width:701px){
+	.cvfs-grid:not(.cvfs-rail-d)>.cvfs-extra{display:none!important}
+	.cvfs .cvfs-rail-d{display:flex!important;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;padding:6px 0 16px;margin:-6px 0 -16px}
+	.cvfs .cvfs-rail-d::-webkit-scrollbar{display:none}
+	.cvfs .cvfs-rail-d>.cvfs-card{flex:0 0 calc((100% - 80px)/5);scroll-snap-align:start}
+	.cvfs .cvfs-rail-d.cvfs-grid4>.cvfs-card{flex-basis:calc((100% - 60px)/4)}
+	.cvfs .cvfs-rail-d>.cvfs-morecard{display:flex}
+}
+@media(min-width:701px) and (max-width:999px){
+	.cvfs .cvfs-rail-d>.cvfs-card,.cvfs .cvfs-rail-d.cvfs-grid4>.cvfs-card{flex-basis:calc((100% - 40px)/3)}
+}
+@media(max-width:700px){
+	.cvfs-grid:not(.cvfs-rail-m)>.cvfs-extra{display:none!important}
+	.cvfs .cvfs-rail-m{display:flex!important;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:-6px -24px -16px;padding:6px 24px 16px;scroll-padding:0 24px}
+	.cvfs .cvfs-rail-m::-webkit-scrollbar{display:none}
+	.cvfs .cvfs-rail-m>.cvfs-card{flex:0 0 78%;scroll-snap-align:start}
+	.cvfs .cvfs-rail-m>.cvfs-morecard{display:flex}
+}
+
+/* Pilar ‹ › bredvid "Alla … →" (bara dator, när raden går att scrolla). */
+.cvfs .cvfs-headlink{display:flex;align-items:center;gap:16px}
+.cvfs .cvfs-arrows{display:none;gap:8px}
+@media(min-width:701px){.cvfs .cvfs-arrows.is-on{display:flex}}
+.cvfs .cvfs-arrow{width:38px;height:38px;min-height:0;border-radius:50%!important;border:1px solid #CFD8D2!important;background:#fff!important;color:#1F4D3A!important;font-size:22px!important;line-height:1!important;padding:0 0 3px!important;margin:0!important;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:none!important;font-family:inherit}
+.cvfs .cvfs-arrow:hover{background:#EEF3EF!important}
+.cvfs .cvfs-arrow:disabled{opacity:.35;cursor:default;background:#fff!important}
