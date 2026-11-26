@@ -54,6 +54,7 @@ function cvfs_view_data( $lang ) {
 			'news'    => cvfs_cards( $news_trips, $s, $lang, $s['news']['label'], ! empty( $s['news']['auto_price'] ) ),
 		),
 		'posts'   => ! empty( $s['blog']['show'] ) ? cvfs_blog_posts( $s, $lang ) : array(),
+		'map'     => ! empty( $s['band']['show_map'] ) && shortcode_exists( 'resekarta' ) ? do_shortcode( '[resekarta]' ) : '',
 	);
 }
 

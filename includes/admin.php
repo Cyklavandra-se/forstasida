@@ -502,9 +502,10 @@ function cvfs_admin_page() {
 			</table>
 			<?php cvfs_sec_close(); ?>
 
-			<?php cvfs_sec_open( 'band', '8. Band "Följ oss"', $s, $lang ); ?>
+			<?php cvfs_sec_open( 'band', '8. Band "Följ oss" och karta', $s, $lang ); ?>
 			<table class="form-table" role="presentation">
 				<?php
+				cvfs_f_check( 'cvfs[band][show_map]', $s['band']['show_map'], 'Karta', shortcode_exists( 'resekarta' ) ? 'Visa kartan över resorna ([resekarta]) under bandet' : 'Visa kartan över resorna ([resekarta]) under bandet – kortkoden finns inte just nu, så inget visas', true );
 				cvfs_f_text( 'cvfs[band][title]', $s['band']['title'], 'Rubrik', array( 'wide' => true ) );
 				cvfs_f_text( 'cvfs[band][text]', $s['band']['text'], 'Text', array( 'wide' => true ) );
 				foreach ( $s['band']['buttons'] as $i => $b ) :

@@ -67,6 +67,7 @@ function cvfs_effective( $lang ) {
 		$s['blog']['category'] = cvfs_translate_category( $m['blog']['category'], $lang );
 	}
 	if ( ! empty( $f['band'] ) ) {
+		$s['band']['show_map'] = $m['band']['show_map'];
 		foreach ( $s['band']['buttons'] as $i => $b ) {
 			$s['band']['buttons'][ $i ]['url']     = cvfs_translate_url( $m['band']['buttons'][ $i ]['url'] ?? '', $lang );
 			$s['band']['buttons'][ $i ]['new_tab'] = $m['band']['buttons'][ $i ]['new_tab'] ?? 0;

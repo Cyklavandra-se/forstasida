@@ -3,7 +3,7 @@
  * Mall för förstasidan. Samma HTML och klasser (cvfs-*) som prototypen.
  *
  * Tillgängligt: $lang, $s (inställningar), $guided (bool), $search (AI-sökets HTML),
- * $cards['guided'|'popular'|'news'], $posts (blogginlägg).
+ * $cards['guided'|'popular'|'news'], $posts (blogginlägg), $map (kartans HTML eller '').
  *
  * @package cyklavandra-forstasida
  */
@@ -47,7 +47,7 @@ $cvfs_card = function ( $c ) {
 $cvfs_images  = array_values( array_filter( array_map( 'esc_url_raw', (array) $s['hero']['images'] ) ) );
 $cvfs_mobile  = array_values( array_filter( array_map( 'esc_url_raw', (array) $s['hero']['images_mobile'] ) ) );
 ?>
-<div class="cvfs" lang="<?php echo esc_attr( $lang ); ?>">
+<div class="cvfs<?php echo $map ? ' cvfs-has-map' : ''; ?>" lang="<?php echo esc_attr( $lang ); ?>">
 
 	<?php /* 1. Hero med AI-sökning */ ?>
 	<div class="cvfs-hero">
@@ -187,5 +187,12 @@ $cvfs_mobile  = array_values( array_filter( array_map( 'esc_url_raw', (array) $s
 			</div>
 		</div>
 	</div>
+
+	<?php /* 9. Karta över resorna (pluginens [resekarta]) */ ?>
+	<?php if ( $map ) : ?>
+		<div class="cvfs-wrap cvfs-map">
+			<?php echo $map; // phpcs:ignore WordPress.Security.EscapeOutput -- HTML från [resekarta]. ?>
+		</div>
+	<?php endif; ?>
 
 </div>

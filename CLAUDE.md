@@ -148,7 +148,7 @@ Som AI-sök: pusha till `main` → GitHub Release med tagg `vX.Y.Z` → workflow
 `cyklavandra-forstasida.zip` → Pär installerar via Tillägg → Ladda upp → "Ersätt nuvarande".
 Påminn om att ladda ner pluginens zip, inte "Source code (zip)".
 
-## Läge (0.6.3)
+## Läge (0.7.0)
 
 Första uppgiften är gjord. Arkitektur:
 
@@ -224,6 +224,8 @@ Svenska som huvudsida (0.6.0), beslutat med Pär:
 0.6.3: norska resesidor använder både "Lengde" och "Varighet" i faktarutan; `$len_l` i `cvfs_trip_details()` har nu även varighet/varighed/duration.
 
 Nya förstasidan är i drift sedan 26 nov 2026: shortcoden ligger på de befintliga startsidorna "Hem" (sv id 118, no id 26619), inte på testsidorna.
+
+0.7.0: karta (`[resekarta]`, iframe `cvrk-karta` från en annan Cykla&Vandra-plugin, inslagen i `.cvai-dolj` så att AI-sök döljer den vid sökning) längst ner i `.cvfs-wrap.cvfs-map`. Inställning `band.show_map` (standard 1, struktur → följer svenskan). `.cvfs-has-map` på roten ger bandet 40 px marginal i stället för 72.
 
 Nästa steg: engelska m.fl. (utan guidade resor).
 

@@ -162,6 +162,8 @@ function cvfs_defaults( $lang = 'sv' ) {
 		),
 
 		'band'        => array(
+			// Kartan över resorna ([resekarta]) under bandet.
+			'show_map' => 1,
 			'title'   => 'Följ oss och få inspiration!',
 			'text'    => 'Bilder, tips och nyheter från våra resor.',
 			'buttons' => array(
@@ -551,6 +553,7 @@ function cvfs_sanitize( $in, $lang ) {
 
 	$bd          = $in['band'] ?? array();
 	$out['band'] = array(
+		'show_map' => empty( $bd['show_map'] ) ? 0 : 1,
 		'title'   => cvfs_clean_text( $bd['title'] ?? '' ),
 		'text'    => cvfs_clean_text( $bd['text'] ?? '' ),
 		'buttons' => array(),

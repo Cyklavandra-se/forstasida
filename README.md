@@ -7,7 +7,7 @@ ett per språk (WPML). Ersätter den handbyggda prototypen "Ny förstasida" (pag
 
 - **Shortcode `[cv_forstasida]`** renderar hela förstasidan för sidans WPML-språk:
   hero med AI-sökning, tre rutor, faktarad, aktuella guidade resor, populära resor på egen
-  hand, nyheter, senaste blogginläggen och bandet "Följ oss".
+  hand, nyheter, senaste blogginläggen, bandet "Följ oss" och kartan över resorna (`[resekarta]`).
 - **Cykla&Vandra → Förstasida**, en flik per aktivt språk. Svenska standardvärden =
   prototypens texter och resor.
 - **Språkregel:** guidade resor (rutan, sektionen) visas bara på svenska och norska.
@@ -78,6 +78,7 @@ Shortcode-attribut: `lang="sv"` visar ett visst språks inställningar (för tes
 
 ## Versioner
 
+- **0.7.0** – Kartan över resorna (`[resekarta]`) längst ner, under bandet "Följ oss", i samma bredd som övriga sektioner. Kryssrutan "Karta" under Band "Följ oss" och karta stänger av och på den. Den är på från början och följer svenskan på andra språk.
 - **0.6.3** – Antal dagar läses också när faktarutan säger "Varighet" (norska resesidor) i stället för "Lengde", liksom danska "Varighed" och engelska "Duration".
 - **0.6.2** – Mindre avstånd mellan metaraden (typ · dagar · nivå) och resans namn på resekorten: 8 px i stället för 34 px. Avada gav rubriken 28 px marginal ovanför.
 - **0.6.1** – Rättat: kortens typ och nivå läses från den svenska originalsidans taggar, eftersom översatta sidor ofta saknar hike/bike-taggarna. Tidigare blev resor utan nivåtagg "Cykling" eftersom domänen cyklavandra.se innehåller "/cykla". Länkar som följer svenskan hittas nu via sidans sökväg (till exempel /vandra/guidade/ på norska). Nyheter i automatiskt läge visar samma resor på alla språk som på svenska. Blogginlägg byggda med Avada får utdrag igen.
