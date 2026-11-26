@@ -78,6 +78,7 @@ Shortcode-attribut: `lang="sv"` visar ett visst språks inställningar (för tes
 
 ## Versioner
 
+- **0.6.3** – Antal dagar läses också när faktarutan säger "Varighet" (norska resesidor) i stället för "Lengde", liksom danska "Varighed" och engelska "Duration".
 - **0.6.2** – Mindre avstånd mellan metaraden (typ · dagar · nivå) och resans namn på resekorten: 8 px i stället för 34 px. Avada gav rubriken 28 px marginal ovanför.
 - **0.6.1** – Rättat: kortens typ och nivå läses från den svenska originalsidans taggar, eftersom översatta sidor ofta saknar hike/bike-taggarna. Tidigare blev resor utan nivåtagg "Cykling" eftersom domänen cyklavandra.se innehåller "/cykla". Länkar som följer svenskan hittas nu via sidans sökväg (till exempel /vandra/guidade/ på norska). Nyheter i automatiskt läge visar samma resor på alla språk som på svenska. Blogginlägg byggda med Avada får utdrag igen.
 - **0.6.0** – Svenska är huvudsidan: övriga språk följer svenskans resor, bilder och länkar (kryssrutan "Följ svenska" per sektion, länkar översätts via WPML). Ny knapp "Spara och översätt ändringarna till alla språk": Claude översätter ändrade texter, förslagen granskas innan de sparas, och handjusterade texter skrivs inte över.

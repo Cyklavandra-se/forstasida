@@ -121,7 +121,7 @@ function cvfs_trip_details( $post_id ) {
 		'days'  => 0,
 		'price' => '',
 	);
-	$len_l   = array( 'längd', 'lengde', 'længde', 'length', 'länge', 'dauer', 'lengte', 'durée', 'kesto' );
+	$len_l   = array( 'längd', 'lengde', 'længde', 'length', 'länge', 'dauer', 'lengte', 'durée', 'kesto', 'varighet', 'varighed', 'varaktighet', 'duration', 'reiselengde', 'reiselengd' );
 	$price_l = array( 'pris', 'price', 'preis', 'prijs', 'prix', 'hinta' );
 	$content = (string) get_post_field( 'post_content', $post_id );
 	if ( $content && preg_match_all( '#>\s*([^<>]{2,40}?)\s*</div>\s*<div[^>]*>\s*([^<>]{1,100}?)\s*</div>#u', $content, $m, PREG_SET_ORDER ) ) {
