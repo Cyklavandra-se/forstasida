@@ -120,7 +120,7 @@ function cvfs_text_fields( $lang ) {
 	}
 
 	// Orden i automatiska metarader finns inbyggda för några språk; övriga översätts.
-	if ( ! in_array( cvfs_norm_lang( $lang ), array( 'sv', 'nb', 'da', 'de', 'en' ), true ) ) {
+	if ( ! in_array( cvfs_norm_lang( $lang ), array_keys( cvfs_all_labels() ), true ) ) {
 		foreach ( $m['labels'] as $k => $v ) {
 			$add( "labels.$k", "Ord i metaraden: $v", $v );
 		}

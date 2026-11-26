@@ -221,6 +221,19 @@ function cvfs_defaults( $lang = 'sv' ) {
 		$d = cvfs_defaults_nb( $d );
 	}
 
+	// Datum i blogglistan enligt språkets skrivsätt (23 november 2026 / 23. november 2026 / 23.11.2026).
+	$dates = array(
+		'nb' => 'j. F Y',
+		'da' => 'j. F Y',
+		'de' => 'j. F Y',
+		'is' => 'j. F Y',
+		'fi' => 'j.n.Y',
+		'en' => 'j F Y',
+	);
+	if ( isset( $dates[ cvfs_norm_lang( $lang ) ] ) ) {
+		$d['blog']['date_format'] = $dates[ cvfs_norm_lang( $lang ) ];
+	}
+
 	// Språkregeln: guidade resor bara på svenska och norska (guidningen sker på svenska).
 	$d['show_guided'] = in_array( cvfs_norm_lang( $lang ), array( 'sv', 'nb' ), true ) ? 1 : 0;
 
@@ -333,7 +346,14 @@ function cvfs_defaults_nb( $d ) {
 
 /** Ord i automatiska metarader, per språk. */
 function cvfs_default_labels( $lang ) {
-	$all = array(
+	$all = cvfs_all_labels();
+	$l   = cvfs_norm_lang( $lang );
+	return $all[ $l ] ?? $all['en'];
+}
+
+/** Inbyggda ord för automatiska metarader. Språk som saknas här översätts med knappen. */
+function cvfs_all_labels() {
+	return array(
 		'sv' => array(
 			'from'        => 'från',
 			'hike'        => 'Vandring',
@@ -370,6 +390,24 @@ function cvfs_default_labels( $lang ) {
 			'level'       => 'Stufe',
 			'days'        => 'Tage',
 		),
+		'fi' => array(
+			'from'        => 'alk.',
+			'hike'        => 'Vaellus',
+			'bike'        => 'Pyöräily',
+			'guided_hike' => 'Opastettu vaellus',
+			'guided_bike' => 'Opastettu pyöräily',
+			'level'       => 'Taso',
+			'days'        => 'päivää',
+		),
+		'is' => array(
+			'from'        => 'frá',
+			'hike'        => 'Gönguferð',
+			'bike'        => 'Hjólaferð',
+			'guided_hike' => 'Leiðsögð gönguferð',
+			'guided_bike' => 'Leiðsögð hjólaferð',
+			'level'       => 'Erfiðleikastig',
+			'days'        => 'dagar',
+		),
 		'en' => array(
 			'from'        => 'from',
 			'hike'        => 'Walking',
@@ -380,8 +418,6 @@ function cvfs_default_labels( $lang ) {
 			'days'        => 'days',
 		),
 	);
-	$l = cvfs_norm_lang( $lang );
-	return $all[ $l ] ?? $all['en'];
 }
 
 /** True om arrayen är en lista (0, 1, 2 …) och inte en associativ array. */

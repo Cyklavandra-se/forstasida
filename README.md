@@ -78,6 +78,7 @@ Shortcode-attribut: `lang="sv"` visar ett visst språks inställningar (för tes
 
 ## Versioner
 
+- **0.7.2** – Förberett för engelska, danska, finska och isländska. Inbyggda ord för metaraderna finns på finska och isländska ("Vaellus", "Gönguferð" …). Datumformat per språk (danska och isländska `j. F Y`, finska `j.n.Y`). Faktarutan läses också på isländska och finska (Lengd, Tímalengd, Verð, frá, alk.).
 - **0.7.1** – Kartan på förstasidan döljs inte längre när kunden gör en AI-sökning. På andra sidor döljs den som förut.
 - **0.7.0** – Kartan över resorna (`[resekarta]`) längst ner, under bandet "Följ oss", i samma bredd som övriga sektioner. Kryssrutan "Karta" under Band "Följ oss" och karta stänger av och på den. Den är på från början och följer svenskan på andra språk.
 - **0.6.3** – Antal dagar läses också när faktarutan säger "Varighet" (norska resesidor) i stället för "Lengde", liksom danska "Varighed" och engelska "Duration".

@@ -121,18 +121,18 @@ function cvfs_trip_details( $post_id ) {
 		'days'  => 0,
 		'price' => '',
 	);
-	$len_l   = array( 'längd', 'lengde', 'længde', 'length', 'länge', 'dauer', 'lengte', 'durée', 'kesto', 'varighet', 'varighed', 'varaktighet', 'duration', 'reiselengde', 'reiselengd' );
-	$price_l = array( 'pris', 'price', 'preis', 'prijs', 'prix', 'hinta' );
+	$len_l   = array( 'längd', 'lengde', 'længde', 'length', 'länge', 'dauer', 'lengte', 'durée', 'kesto', 'varighet', 'varighed', 'varaktighet', 'duration', 'reiselengde', 'reiselengd', 'lengd', 'tímalengd', 'lengd ferðar', 'matkan kesto' );
+	$price_l = array( 'pris', 'price', 'preis', 'prijs', 'prix', 'hinta', 'verð' );
 	$content = (string) get_post_field( 'post_content', $post_id );
 	if ( $content && preg_match_all( '#>\s*([^<>]{2,40}?)\s*</div>\s*<div[^>]*>\s*([^<>]{1,100}?)\s*</div>#u', $content, $m, PREG_SET_ORDER ) ) {
 		foreach ( $m as $x ) {
 			$label = mb_strtolower( trim( html_entity_decode( $x[1], ENT_QUOTES, 'UTF-8' ) ) );
 			$value = trim( preg_replace( '/\s+/u', ' ', html_entity_decode( $x[2], ENT_QUOTES, 'UTF-8' ) ) );
-			if ( ! $out['days'] && in_array( $label, $len_l, true ) && preg_match( '/(\d+)\s*(dagar|dager|dage|days?|tage?|dagen|jours?|päivää)/iu', $value, $d ) ) {
+			if ( ! $out['days'] && in_array( $label, $len_l, true ) && preg_match( '/(\d+)\s*(dagar|dager|dage|days?|tage?|dagen|jours?|päivää|pv|dagur)/iu', $value, $d ) ) {
 				$out['days'] = (int) $d[1];
 			}
 			if ( '' === $out['price'] && in_array( $label, $price_l, true ) && preg_match( '/\d/', $value ) ) {
-				$out['price'] = trim( preg_replace( '/^(från|fra|from|ab|vanaf|à partir de|alkaen)\s+/iu', '', $value ) );
+				$out['price'] = trim( preg_replace( '/^(från|fra|from|ab|vanaf|à partir de|alkaen|alk\.|frá)\s+/iu', '', $value ) );
 			}
 		}
 	}
