@@ -148,7 +148,7 @@ Som AI-sök: pusha till `main` → GitHub Release med tagg `vX.Y.Z` → workflow
 `cyklavandra-forstasida.zip` → Pär installerar via Tillägg → Ladda upp → "Ersätt nuvarande".
 Påminn om att ladda ner pluginens zip, inte "Source code (zip)".
 
-## Läge (0.9.1)
+## Läge (0.9.2)
 
 Första uppgiften är gjord. Arkitektur:
 
@@ -235,7 +235,7 @@ Nya förstasidan är i drift sedan 26 nov 2026: shortcoden ligger på de befintl
 - Guidade `mode` = events (standard) | manual. `includes/events.php`: avgångar (`tribe_get_events`, annars WP_Query på `tribe_events`/`_EventStartDate`) → resesida via `_EventURL` (`cvfs_url_to_page_id`), en per resa, datumordning, högst 40, transient per timme. Fågel-/naturresor under `/ovrigt/` ingår (Pär: ja), typ utan hike/bike-tagg = `labels.guided` ("Guidad resa"). Metarad + " · Nästa avresa j M" (år om > 300 dagar bort); pris: kortets → `_EventCost` (`cvfs_format_cost`) → faktaruta. Guidade.trips = egna texter per resa-id. Avgångar utan resesida visas bara där avgången finns på språket.
 - Nyheter: `tag_auto` (standard 1) → `cvfs_season_year()` (år+1 från 1 september, filter `cvfs_season_month`); `{år}` i title/label/link_text via `cvfs_year_text()`. Auto-läget hämtar alltid upp till 40.
 
-0.9.1: bloggen har också rad i sidled (`blog.scroll_desktop`/`scroll_mobile`, `rail_count` 12 hämtas när raden är på, `count` = antal utan rad), egen markup i mallen med samma klasser. Rutorna `.cvfs-path` får `transform:scale(1.03)` vid hover, bara i `@media(hover:hover) and (pointer:fine)`.
+0.9.1: bloggen har också rad i sidled (`blog.scroll_desktop`/`scroll_mobile`, `rail_count` 12 hämtas när raden är på, `count` = antal utan rad), egen markup i mallen med samma klasser. Rutorna `.cvfs-path` får `transform:scale(1.03)` vid hover, bara i `@media(hover:hover) and (pointer:fine)`. 0.9.2: i samma media query lyfts `.cvfs-card` 4 px (translateY, starkare skugga) och `.cvfs-img img` skalas 1.05 inom `overflow:hidden`; `.cvfs-morecard` får bara skugga. Ingen skalning av hela kortet – den skulle klippas i raderna i sidled.
 
 Nästa steg: Pär kör "Spara och översätt" för en/da/fi/is, kontrollerar flikarna och gör startsidan per språk (WPML-översättning av "Hem" med `[cv_forstasida]`).
 

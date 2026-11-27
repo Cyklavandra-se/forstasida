@@ -79,6 +79,7 @@ Shortcode-attribut: `lang="sv"` visar ett visst språks inställningar (för tes
 
 ## Versioner
 
+- **0.9.2** – Hovereffekt på rese- och bloggkorten: kortet lyfts 4 px med tydligare skugga och bilden zoomar in lite (5 %). "Se alla"-korten får bara skuggan. Ingen effekt på mobil eller pekskärm.
 - **0.9.1** – Blogginläggen kan också visas i rad i sidled (av/på för dator och mobil; upp till 12 inlägg, inställbart). De tre rutorna (Guidade resor, Cykla, Vandra) växer lite när muspekaren är över dem. På mobil och surfplatta med pekskärm händer inget.
 - **0.9.0** – Rad i sidled för guidade, populära och nyheter, med av/på per sektion för dator (pilar ‹ ›) och mobil (svep). Raden har ett "Se alla"-kort sist. När raden är av visas högst 5 kort (för nyheter det angivna antalet). Guidade resor fylls automatiskt från The Events Calendar: alla resor med kommande avgång, sorterade efter nästa avresa, med "Nästa avresa …" i metaraden och pris från avgångens "Kostnad". Nyheternas tagg kan vara "nästa säsong" automatiskt (byts 1 september), och `{år}` i rubrik och etikett byts mot säsongens år.
 - **0.8.0** – Nyheter kan visas i slumpmässig ordning: "Automatiskt: … slumpmässig ordning". Webbläsaren väljer vid varje besök ut antalet kort (standard 4) bland alla resor med taggen, så det fungerar även med sidcache. Övriga språk följer. Samma resa kan aldrig visas två gånger i en sektion.
