@@ -47,7 +47,9 @@ function cvfs_text_fields( $lang ) {
 	$m   = cvfs_get( cvfs_default_lang() );
 	$s   = cvfs_get( $lang );
 	$f   = (array) ( $s['follow'] ?? array() );
-	$gd  = ! empty( $s['show_guided'] );
+	$gm  = cvfs_guided_mode( $s );
+	$gd  = 'hidden' !== $gm; // Rutan visas (fullt eller som referens).
+	$gs  = 'full' === $gm;   // Sektionen med guidade resor visas.
 	$out = array();
 	$add = function ( $path, $label, $src ) use ( &$out ) {
 		$out[ $path ] = array(
@@ -87,7 +89,7 @@ function cvfs_text_fields( $lang ) {
 		'news'    => 'Nyheter',
 	);
 	foreach ( $snames as $sec => $name ) {
-		if ( 'guided' === $sec && ! $gd ) {
+		if ( 'guided' === $sec && ! $gs ) {
 			continue;
 		}
 		$add( "$sec.title", "$name: rubrik", $m[ $sec ]['title'] );

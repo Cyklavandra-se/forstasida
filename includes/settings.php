@@ -262,6 +262,9 @@ function cvfs_defaults( $lang = 'sv' ) {
 
 	// Språkregeln: guidade resor bara på svenska och norska (guidningen sker på svenska).
 	$d['show_guided'] = in_array( cvfs_norm_lang( $lang ), array( 'sv', 'nb' ), true ) ? 1 : 0;
+	// full = som på svenska; reference = bara rutan, sist, med svensk flagga och "Guidning på
+	// svenska", länk till den svenska översikten; hidden = inget om guidade resor.
+	$d['guided_mode'] = $d['show_guided'] ? 'full' : 'reference';
 
 	// Andra språk följer standardspråkets resor, bilder och länkar (se includes/follow.php).
 	$d['follow'] = array_fill_keys( cvfs_follow_sections(), 1 );
@@ -390,6 +393,7 @@ function cvfs_all_labels() {
 			'days'        => 'dagar',
 			'guided'      => 'Guidad resa',
 			'next'        => 'Nästa avresa',
+			'swedish'     => 'Guidning på svenska',
 		),
 		'nb' => array(
 			'from'        => 'fra',
@@ -401,6 +405,7 @@ function cvfs_all_labels() {
 			'days'        => 'dager',
 			'guided'      => 'Guidet reise',
 			'next'        => 'Neste avreise',
+			'swedish'     => 'Guidet på svensk',
 		),
 		'da' => array(
 			'from'        => 'fra',
@@ -412,6 +417,7 @@ function cvfs_all_labels() {
 			'days'        => 'dage',
 			'guided'      => 'Guidet rejse',
 			'next'        => 'Næste afrejse',
+			'swedish'     => 'Guidet på svensk',
 		),
 		'de' => array(
 			'from'        => 'ab',
@@ -423,6 +429,7 @@ function cvfs_all_labels() {
 			'days'        => 'Tage',
 			'guided'      => 'Geführte Reise',
 			'next'        => 'Nächste Abreise',
+			'swedish'     => 'Führung auf Schwedisch',
 		),
 		'fi' => array(
 			'from'        => 'alk.',
@@ -434,6 +441,7 @@ function cvfs_all_labels() {
 			'days'        => 'päivää',
 			'guided'      => 'Opastettu matka',
 			'next'        => 'Seuraava lähtö',
+			'swedish'     => 'Opastus ruotsiksi',
 		),
 		'is' => array(
 			'from'        => 'frá',
@@ -445,6 +453,7 @@ function cvfs_all_labels() {
 			'days'        => 'dagar',
 			'guided'      => 'Leiðsögð ferð',
 			'next'        => 'Næsta brottför',
+			'swedish'     => 'Leiðsögn á sænsku',
 		),
 		'en' => array(
 			'from'        => 'from',
@@ -456,6 +465,7 @@ function cvfs_all_labels() {
 			'days'        => 'days',
 			'guided'      => 'Guided tour',
 			'next'        => 'Next departure',
+			'swedish'     => 'Guided in Swedish',
 		),
 	);
 }
@@ -467,6 +477,12 @@ function cvfs_all_labels() {
 function cvfs_season_year() {
 	$y = (int) current_time( 'Y' );
 	return (int) current_time( 'n' ) >= (int) apply_filters( 'cvfs_season_month', 9 ) ? $y + 1 : $y;
+}
+
+/** Läge för guidade resor på ett språk: full | reference | hidden. */
+function cvfs_guided_mode( $s ) {
+	$m = (string) ( $s['guided_mode'] ?? '' );
+	return in_array( $m, array( 'full', 'reference', 'hidden' ), true ) ? $m : ( empty( $s['show_guided'] ) ? 'hidden' : 'full' );
 }
 
 /** Byt {år} (eller {year}) mot säsongens år. */
@@ -576,7 +592,8 @@ function cvfs_sanitize( $in, $lang ) {
 	$in  = is_array( $in ) ? $in : array();
 	$out = array();
 
-	$out['show_guided'] = empty( $in['show_guided'] ) ? 0 : 1;
+	$out['guided_mode'] = ( isset( $in['guided_mode'] ) && in_array( $in['guided_mode'], array( 'full', 'reference', 'hidden' ), true ) ) ? $in['guided_mode'] : 'full';
+	$out['show_guided'] = 'hidden' === $out['guided_mode'] ? 0 : 1;
 
 	$out['paths_scroll'] = array(
 		'desktop' => empty( $in['paths_scroll']['desktop'] ) ? 0 : 1,

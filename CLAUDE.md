@@ -28,9 +28,11 @@ release-flöde som där.
 ## Språkregel (viktig)
 
 - **Svenska och norska**: identiska upplägg, guidade resor visas.
-- **Alla andra språk**: guidade resor visas **inte alls** – inte rutan "Guidade resor",
-  inte sektionen "Aktuella guidade resor", inte i faktaraden. (Guidningen sker på svenska.)
-  Styrs av en inställning per språk ("Visa guidade resor": på för sv/nb, av för övriga).
+- **Alla andra språk** (ändrat 0.10.0, Pärs beslut): guidade resor visas **som referens** –
+  bara rutan "Guidade resor", **sist** i raden, med svensk flagga + `labels.swedish`
+  ("Guided in Swedish" …), länk till **den svenska översikten**; **ingen** sektion
+  "Aktuella guidade resor". (Guidningen sker på svenska; rutan visar att företaget är seriöst.)
+  Inställning `guided_mode` per språk: full (sv/nb) | reference (övriga) | hidden.
 
 ## Prototypen (förlaga för design)
 
@@ -148,7 +150,7 @@ Som AI-sök: pusha till `main` → GitHub Release med tagg `vX.Y.Z` → workflow
 `cyklavandra-forstasida.zip` → Pär installerar via Tillägg → Ladda upp → "Ersätt nuvarande".
 Påminn om att ladda ner pluginens zip, inte "Source code (zip)".
 
-## Läge (0.9.3)
+## Läge (0.10.0)
 
 Första uppgiften är gjord. Arkitektur:
 
@@ -238,6 +240,8 @@ Nya förstasidan är i drift sedan 26 nov 2026: shortcoden ligger på de befintl
 0.9.1: bloggen har också rad i sidled (`blog.scroll_desktop`/`scroll_mobile`, `rail_count` 12 hämtas när raden är på, `count` = antal utan rad), egen markup i mallen med samma klasser. Rutorna `.cvfs-path` får `transform:scale(1.03)` vid hover, bara i `@media(hover:hover) and (pointer:fine)`. 0.9.2: i samma media query lyfts `.cvfs-card` 4 px (translateY, starkare skugga) och `.cvfs-img img` skalas 1.05 inom `overflow:hidden`; `.cvfs-morecard` får bara skugga. Ingen skalning av hela kortet – den skulle klippas i raderna i sidled.
 
 0.9.3: rutorna `.cvfs-paths` kan också vara rad i sidled: toppnivå-inställningen `paths_scroll` = {desktop: 0, mobile: 1} (följer svenskan via sektionen `paths`). Egen CSS: dator `margin:68px -8px 0; padding:16px 8px` (68 kollapsar med heronas 20 → samma 84 px som utan rad; 8 px sidluft så att hover-skalningen inte klipps), mobil `padding:64px 24px 16px; margin:0 -24px`, rutor 82 %.
+
+0.10.0: `guided_mode` ersätter `show_guided` (som finns kvar, härledd: hidden → 0). `cvfs_guided_mode($s)`. I reference: mallen lägger guided-rutan sist och skriver ut `.cvfs-se` (SVG-flagga – inte emoji, Windows visar "SE"), `cvfs_view_data` sätter rutans URL till standardspråkets (oöversatta) URL, guidade kort/sektion renderas inte. Översättningen tar med rutans texter (`$gd`) men inte sektionens (`$gs`). Badge-text i `cvfs_all_labels()['swedish']` per språk.
 
 Nästa steg: Pär kör "Spara och översätt" för en/da/fi/is, kontrollerar flikarna och gör startsidan per språk (WPML-översättning av "Hem" med `[cv_forstasida]`).
 

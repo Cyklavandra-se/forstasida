@@ -2,7 +2,7 @@
 /**
  * Mall för förstasidan. Samma HTML och klasser (cvfs-*) som prototypen.
  *
- * Tillgängligt: $lang, $s (inställningar), $guided (bool), $search (AI-sökets HTML),
+ * Tillgängligt: $lang, $s (inställningar), $guided (bool, rutan visas), $guided_mode (full|reference|hidden), $search (AI-sökets HTML),
  * $cards['guided'|'popular'|'news'], $posts (blogginlägg), $map (kartans HTML eller ''),
  * $news_random (antal nyheter att visa i slumpläge, annars 0),
  * $rail[sektion] = { d: rad i sidled på dator, m: på mobil, n: antal kort när raden är av }.
@@ -101,6 +101,14 @@ $cvfs_mobile  = array_values( array_filter( array_map( 'esc_url_raw', (array) $s
 				'bike'   => 'cvfs-s',
 				'hike'   => 'cvfs-v',
 			);
+			if ( 'reference' === $guided_mode ) {
+				// Som referens: rutan sist (längst till höger).
+				$cvfs_paths = array(
+					'bike'   => 'cvfs-s',
+					'hike'   => 'cvfs-v',
+					'guided' => 'cvfs-g',
+				);
+			}
 			foreach ( $cvfs_paths as $cvfs_key => $cvfs_class ) :
 				if ( 'guided' === $cvfs_key && ! $guided ) {
 					continue;
@@ -108,6 +116,9 @@ $cvfs_mobile  = array_values( array_filter( array_map( 'esc_url_raw', (array) $s
 				$cvfs_p = $s['paths'][ $cvfs_key ];
 				?>
 				<div class="cvfs-path <?php echo esc_attr( $cvfs_class ); ?>">
+					<?php if ( 'guided' === $cvfs_key && 'reference' === $guided_mode && '' !== (string) ( $s['labels']['swedish'] ?? '' ) ) : ?>
+						<span class="cvfs-se"><svg viewBox="0 0 16 10" width="18" height="12" aria-hidden="true"><rect width="16" height="10" fill="#006AA7"/><rect x="5" width="2" height="10" fill="#FECC02"/><rect y="4" width="16" height="2" fill="#FECC02"/></svg><?php echo esc_html( $s['labels']['swedish'] ); ?></span>
+					<?php endif; ?>
 					<h2><a class="cvfs-stretch" href="<?php echo esc_url( $cvfs_p['url'] ); ?>"><?php echo esc_html( $cvfs_p['title'] ); ?></a></h2>
 					<p><?php echo esc_html( $cvfs_p['text'] ); ?></p>
 					<div class="cvfs-more"><?php echo esc_html( $cvfs_p['link_text'] ); ?></div>
@@ -130,7 +141,7 @@ $cvfs_mobile  = array_values( array_filter( array_map( 'esc_url_raw', (array) $s
 	</div>
 
 	<?php /* 4. Aktuella guidade resor (bara när guidade resor visas) */ ?>
-	<?php if ( $guided && $cards['guided'] ) : ?>
+	<?php if ( 'full' === $guided_mode && $cards['guided'] ) : ?>
 		<div class="cvfs-band">
 			<div class="cvfs-wrap cvfs-sec">
 				<?php $cvfs_head( $s['guided']['title'], $s['guided']['link_text'], $s['guided']['url'] ); ?>

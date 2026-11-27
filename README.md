@@ -10,8 +10,9 @@ ett per språk (WPML). Ersätter den handbyggda prototypen "Ny förstasida" (pag
   hand, nyheter, senaste blogginläggen, kartan över resorna (`[resekarta]`) och bandet "Följ oss".
 - **Cykla&Vandra → Förstasida**, en flik per aktivt språk. Svenska standardvärden =
   prototypens texter och resor.
-- **Språkregel:** guidade resor (rutan, sektionen) visas bara på svenska och norska.
-  Styrs av "Visa guidade resor" per språk.
+- **Språkregel:** guidade resor visas fullt på svenska och norska. Övriga språk visar dem
+  "som referens": bara rutan, sist, med svensk flagga och "Guidning på svenska" på språket,
+  länk till den svenska översikten. Kan också döljas helt. Väljs per språk under Allmänt.
 - **Resekort:** välj resor bland sidor taggade `guidad` / `självguidad`, dra för att sortera.
   Titel, utvald bild och länk hämtas från sidan (i andra språk via WPML). Kortrubrik,
   metarad, pris och bild kan skrivas över per kort. Saknas en översättning visas inte kortet
@@ -79,6 +80,7 @@ Shortcode-attribut: `lang="sv"` visar ett visst språks inställningar (för tes
 
 ## Versioner
 
+- **0.10.0** – Guidade resor har tre lägen per språk: Fullt (svenska och norska), Som referens (standard för övriga språk: bara rutan, sist i raden, med svensk flagga och "Guided in Swedish" o.s.v., länk till den svenska översikten) och Dold. Ersätter kryssrutan "Visa guidade resor".
 - **0.9.3** – De tre rutorna (Guidade resor, Cykla, Vandra) kan också ligga i en rad i sidled, med av/på för dator och mobil under "2. Tre rutor". Standard: av på dator (alla får plats) och på på mobil (svep).
 - **0.9.2** – Hovereffekt på rese- och bloggkorten: kortet lyfts 4 px med tydligare skugga och bilden zoomar in lite (5 %). "Se alla"-korten får bara skuggan. Ingen effekt på mobil eller pekskärm.
 - **0.9.1** – Blogginläggen kan också visas i rad i sidled (av/på för dator och mobil; upp till 12 inlägg, inställbart). De tre rutorna (Guidade resor, Cykla, Vandra) växer lite när muspekaren är över dem. På mobil och surfplatta med pekskärm händer inget.

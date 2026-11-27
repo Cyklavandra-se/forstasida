@@ -242,3 +242,7 @@
 	.cvfs .cvfs-paths.cvfs-rail-m>.cvfs-path{flex:0 0 82%;scroll-snap-align:start}
 }
 
+/* Etikett med svensk flagga på rutan Guidade resor (läget "som referens", andra språk). */
+.cvfs .cvfs-se{display:inline-flex;align-items:center;gap:7px;align-self:flex-start;background:#fff;color:#1F4D3A;font-size:13px;font-weight:600;line-height:1.2;border-radius:999px;padding:5px 11px 5px 8px;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.cvfs .cvfs-se svg{display:block;border-radius:2px;flex:none}
+

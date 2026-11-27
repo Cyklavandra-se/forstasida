@@ -381,7 +381,16 @@ function cvfs_admin_page() {
 
 			<h2>Allmänt</h2>
 			<table class="form-table" role="presentation">
-				<?php cvfs_f_check( 'cvfs[show_guided]', $s['show_guided'], 'Visa guidade resor', 'Rutan "Guidade resor", sektionen med aktuella guidade resor. Standard: på för svenska och norska, av för övriga språk (guidningen sker på svenska).' ); ?>
+				<?php $gm = cvfs_guided_mode( $s ); ?>
+				<tr>
+					<th scope="row">Guidade resor</th>
+					<td>
+						<label><input type="radio" name="cvfs[guided_mode]" value="full" <?php checked( $gm, 'full' ); ?> /> Fullt – rutan och sektionen "Aktuella guidade resor", som på svenska</label><br />
+						<label><input type="radio" name="cvfs[guided_mode]" value="reference" <?php checked( $gm, 'reference' ); ?> /> Som referens – bara rutan, sist i raden, med svensk flagga och "<?php echo esc_html( $s['labels']['swedish'] ?? '' ); ?>"; länken går till den svenska översikten</label><br />
+						<label><input type="radio" name="cvfs[guided_mode]" value="hidden" <?php checked( $gm, 'hidden' ); ?> /> Dold – inget om guidade resor</label>
+						<p class="description">Guidningen sker på svenska. Standard: fullt för svenska och norska, som referens för övriga språk. Etiketten ändras under "Ord i automatiska metarader".</p>
+					</td>
+				</tr>
 			</table>
 
 			<?php cvfs_sec_open( 'hero', '1. Hero', $s, $lang ); ?>
@@ -610,6 +619,7 @@ function cvfs_admin_page() {
 					'days'        => 'Dagar ("5 dagar")',
 					'guided'      => 'Guidad resa (typ okänd)',
 					'next'        => 'Nästa avresa',
+					'swedish'     => 'Etikett "Guidning på svenska"',
 				);
 				foreach ( $names as $k => $name ) {
 					cvfs_f_text( "cvfs[labels][$k]", $l[ $k ], $name );

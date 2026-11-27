@@ -45,6 +45,11 @@ function cvfs_view_data( $lang ) {
 	foreach ( array( 'title', 'label', 'link_text' ) as $k ) {
 		$s['news'][ $k ] = cvfs_year_text( $s['news'][ $k ] );
 	}
+	// Guidade resor: fullt, som referens (bara rutan, sist, länk till svenska översikten) eller dolt.
+	$gmode = cvfs_guided_mode( $s );
+	if ( 'reference' === $gmode ) {
+		$s['paths']['guided']['url'] = cvfs_get( cvfs_default_lang() )['paths']['guided']['url'];
+	}
 	$news_auto  = in_array( $s['news']['mode'], array( 'auto', 'random' ), true );
 	$news_trips = $news_auto ? cvfs_auto_news( $s, $lang ) : $s['news']['trips'];
 	// Slumpläge: alla kort skrivs ut, webbläsaren visar `count` av dem i slumpmässig ordning.
@@ -53,10 +58,11 @@ function cvfs_view_data( $lang ) {
 	return array(
 		'lang'    => $lang,
 		's'       => $s,
-		'guided'  => ! empty( $s['show_guided'] ),
+		'guided'  => 'hidden' !== $gmode,
+		'guided_mode' => $gmode,
 		'search'  => cvfs_search_box( $s ),
 		'cards'   => array(
-			'guided'  => ! empty( $s['show_guided'] ) ? ( 'events' === $s['guided']['mode'] ? cvfs_event_cards( $s, $lang ) : cvfs_cards( $s['guided']['trips'], $s, $lang, '', ! empty( $s['guided']['auto_price'] ) ) ) : array(),
+			'guided'  => 'full' === $gmode ? ( 'events' === $s['guided']['mode'] ? cvfs_event_cards( $s, $lang ) : cvfs_cards( $s['guided']['trips'], $s, $lang, '', ! empty( $s['guided']['auto_price'] ) ) ) : array(),
 			'popular' => cvfs_cards( $s['popular']['trips'], $s, $lang, '', ! empty( $s['popular']['auto_price'] ) ),
 			'news'    => cvfs_cards( $news_trips, $s, $lang, $s['news']['label'], ! empty( $s['news']['auto_price'] ) ),
 		),
