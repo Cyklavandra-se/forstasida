@@ -171,7 +171,12 @@ function cvfs_defaults( $lang = 'sv' ) {
 			'link_text'   => 'Alla inlägg →',
 			'url'         => cvfs_u( '/category/nyheter/' ),
 			'category'    => 'nyheter',
+			// Antal inlägg när raden i sidled är av.
 			'count'       => 3,
+			// Rad i sidled (dator/mobil) och antal inlägg i raden.
+			'scroll_desktop' => 1,
+			'scroll_mobile'  => 1,
+			'rail_count'     => 12,
 			'words'       => 17,
 			'date_format' => 'j F Y',
 		),
@@ -630,6 +635,9 @@ function cvfs_sanitize( $in, $lang ) {
 		'url'         => cvfs_clean_url( $b['url'] ?? '' ),
 		'category'    => sanitize_title( wp_unslash( (string) ( $b['category'] ?? '' ) ) ),
 		'count'       => max( 1, min( 12, absint( $b['count'] ?? 3 ) ) ),
+		'scroll_desktop' => empty( $b['scroll_desktop'] ) ? 0 : 1,
+		'scroll_mobile'  => empty( $b['scroll_mobile'] ) ? 0 : 1,
+		'rail_count'     => max( 3, min( 24, absint( $b['rail_count'] ?? 12 ) ) ),
 		'words'       => max( 5, min( 100, absint( $b['words'] ?? 17 ) ) ),
 		'date_format' => cvfs_clean_text( $b['date_format'] ?? 'j F Y' ),
 	);

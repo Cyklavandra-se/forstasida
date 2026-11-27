@@ -68,6 +68,7 @@ function cvfs_view_data( $lang ) {
 			'guided'  => array( 'd' => ! empty( $s['guided']['scroll_desktop'] ), 'm' => ! empty( $s['guided']['scroll_mobile'] ), 'n' => 5 ),
 			'popular' => array( 'd' => ! empty( $s['popular']['scroll_desktop'] ), 'm' => ! empty( $s['popular']['scroll_mobile'] ), 'n' => 5 ),
 			'news'    => array( 'd' => ! empty( $s['news']['scroll_desktop'] ), 'm' => ! empty( $s['news']['scroll_mobile'] ), 'n' => max( 1, (int) $s['news']['count'] ) ),
+			'blog'    => array( 'd' => ! empty( $s['blog']['scroll_desktop'] ), 'm' => ! empty( $s['blog']['scroll_mobile'] ), 'n' => max( 1, (int) $s['blog']['count'] ) ),
 		),
 	);
 }
@@ -113,7 +114,8 @@ function cvfs_blog_posts( $s, $lang ) {
 					'post_type'           => 'post',
 					'post_status'         => 'publish',
 					'category_name'       => $b['category'],
-					'posts_per_page'      => (int) $b['count'],
+					// I rad i sidled hämtas fler inlägg; utan rad visas de första `count`.
+					'posts_per_page'      => ( ! empty( $b['scroll_desktop'] ) || ! empty( $b['scroll_mobile'] ) ) ? max( (int) $b['count'], (int) $b['rail_count'] ) : (int) $b['count'],
 					'ignore_sticky_posts' => true,
 					'no_found_rows'       => true,
 					'suppress_filters'    => false,

@@ -67,7 +67,7 @@ function cvfs_effective( $lang ) {
 		$s[ $sec ]['trips'] = cvfs_follow_trips( $master_trips, $s[ $sec ]['trips'] );
 	}
 	if ( ! empty( $f['blog'] ) ) {
-		foreach ( array( 'show', 'count', 'words' ) as $k ) {
+		foreach ( array( 'show', 'count', 'words', 'scroll_desktop', 'scroll_mobile', 'rail_count' ) as $k ) {
 			$s['blog'][ $k ] = $m['blog'][ $k ];
 		}
 		$s['blog']['url']      = cvfs_translate_url( $m['blog']['url'], $lang );

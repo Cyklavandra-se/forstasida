@@ -209,3 +209,13 @@
 .cvfs .cvfs-arrow{width:38px;height:38px;min-height:0;border-radius:50%!important;border:1px solid #CFD8D2!important;background:#fff!important;color:#1F4D3A!important;font-size:22px!important;line-height:1!important;padding:0 0 3px!important;margin:0!important;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:none!important;font-family:inherit}
 .cvfs .cvfs-arrow:hover{background:#EEF3EF!important}
 .cvfs .cvfs-arrow:disabled{opacity:.35;cursor:default;background:#fff!important}
+
+/* Blogginläggen i rad i sidled: tre i bredd på dator, två på surfplatta. */
+@media(min-width:701px){.cvfs .cvfs-rail-d.cvfs-grid3>.cvfs-card{flex-basis:calc((100% - 40px)/3)}}
+@media(min-width:701px) and (max-width:999px){.cvfs .cvfs-rail-d.cvfs-grid3>.cvfs-card{flex-basis:calc((100% - 20px)/2)}}
+
+/* De tre rutorna växer lite när muspekaren är över dem (bara enheter med mus). */
+@media(hover:hover) and (pointer:fine){
+	.cvfs .cvfs-path{transition:transform .25s ease,box-shadow .25s ease}
+	.cvfs .cvfs-path:hover{transform:scale(1.03);z-index:2}
+}

@@ -195,7 +195,7 @@ function cvfs_f_head( $key, $sec ) {
 				<label><input type="checkbox" name="cvfs[<?php echo esc_attr( $key ); ?>][scroll_desktop]" value="1" <?php checked( (int) $sec['scroll_desktop'], 1 ); ?> /> På dator (pilar ‹ ›)</label>
 				&nbsp;&nbsp;
 				<label><input type="checkbox" name="cvfs[<?php echo esc_attr( $key ); ?>][scroll_mobile]" value="1" <?php checked( (int) $sec['scroll_mobile'], 1 ); ?> /> På mobil (svep)</label>
-				<p class="description">På: alla resor i en rad som går att scrolla åt höger, med ett "Se alla"-kort sist. Av: högst <?php echo 'news' === $key ? 'det antal som anges nedan' : '5'; ?> resor (rutnät på dator, lista på mobil).</p>
+				<p class="description">På: alla resor i en rad som går att scrolla åt höger, med ett "Se alla"-kort sist. Av: högst <?php echo in_array( $key, array( 'news', 'blog' ), true ) ? 'det antal som anges nedan' : '5'; ?> <?php echo 'blog' === $key ? 'inlägg' : 'resor'; ?> (rutnät på dator, lista på mobil).</p>
 			</td>
 		</tr>
 		<?php
@@ -517,9 +517,18 @@ function cvfs_admin_page() {
 				cvfs_f_head( 'blog', $s['blog'] );
 				cvfs_f_text( 'cvfs[blog][category]', $s['blog']['category'], 'Kategori (slug)', array( 'struct' => true ) );
 				cvfs_f_text(
+					'cvfs[blog][rail_count]',
+					$s['blog']['rail_count'],
+					'Antal inlägg i rad i sidled',
+					array(
+						'type'   => 'number',
+						'struct' => true,
+					)
+				);
+				cvfs_f_text(
 					'cvfs[blog][count]',
 					$s['blog']['count'],
-					'Antal inlägg',
+					'Antal inlägg (utan rad i sidled)',
 					array(
 						'type'   => 'number',
 						'struct' => true,

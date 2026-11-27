@@ -161,9 +161,10 @@ $cvfs_mobile  = array_values( array_filter( array_map( 'esc_url_raw', (array) $s
 	<?php if ( $posts ) : ?>
 		<div class="cvfs-wrap cvfs-sec cvfs-blogsec">
 			<?php $cvfs_head( $s['blog']['title'], $s['blog']['link_text'], $s['blog']['url'] ); ?>
-			<div class="cvfs-grid cvfs-grid3">
-				<?php foreach ( $posts as $cvfs_post ) : ?>
-					<div class="cvfs-card">
+			<?php $cvfs_rb = $rail['blog']; ?>
+			<div class="<?php echo esc_attr( 'cvfs-grid cvfs-grid3' . ( $cvfs_rb['d'] ? ' cvfs-rail-d' : '' ) . ( $cvfs_rb['m'] ? ' cvfs-rail-m' : '' ) ); ?>">
+				<?php foreach ( array_values( $posts ) as $cvfs_pi => $cvfs_post ) : ?>
+					<div class="cvfs-card<?php echo $cvfs_pi >= $cvfs_rb['n'] ? ' cvfs-extra' : ''; ?>">
 						<?php if ( $cvfs_post['image'] ) : ?>
 							<div class="cvfs-img"><img src="<?php echo esc_url( $cvfs_post['image'] ); ?>" alt="" loading="lazy" decoding="async" /></div>
 						<?php endif; ?>
@@ -176,6 +177,9 @@ $cvfs_mobile  = array_values( array_filter( array_map( 'esc_url_raw', (array) $s
 						</div>
 					</div>
 				<?php endforeach; ?>
+				<?php if ( ( $cvfs_rb['d'] || $cvfs_rb['m'] ) && $s['blog']['link_text'] && $s['blog']['url'] ) : ?>
+					<div class="cvfs-card cvfs-morecard"><a class="cvfs-stretch" href="<?php echo esc_url( $s['blog']['url'] ); ?>"><?php echo esc_html( $s['blog']['link_text'] ); ?></a></div>
+				<?php endif; ?>
 			</div>
 		</div>
 	<?php endif; ?>
