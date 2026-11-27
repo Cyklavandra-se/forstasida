@@ -94,7 +94,7 @@ $cvfs_mobile  = array_values( array_filter( array_map( 'esc_url_raw', (array) $s
 
 	<?php /* 2. Tre rutor + 3. faktarad */ ?>
 	<div class="cvfs-wrap">
-		<div class="cvfs-paths">
+		<div class="<?php echo esc_attr( 'cvfs-paths' . ( ! empty( $s['paths_scroll']['desktop'] ) ? ' cvfs-rail-d' : '' ) . ( ! empty( $s['paths_scroll']['mobile'] ) ? ' cvfs-rail-m' : '' ) ); ?>">
 			<?php
 			$cvfs_paths = array(
 				'guided' => 'cvfs-g',

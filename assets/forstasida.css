@@ -228,3 +228,17 @@
 	.cvfs .cvfs-card .cvfs-img img{transition:transform .5s ease}
 	.cvfs .cvfs-card:hover .cvfs-img img{transform:scale(1.05)}
 }
+
+/*
+ * De tre rutorna i rad i sidled (paths_scroll). Lite luft runt raden så att rutorna inte
+ * klipps när de växer vid hover.
+ */
+@media(min-width:701px){
+	.cvfs .cvfs-paths.cvfs-rail-d{gap:24px;padding:16px 8px 16px;margin:68px -8px 0;scroll-padding:0 8px}
+	.cvfs .cvfs-paths.cvfs-rail-d>.cvfs-path{flex:0 0 calc((100% - 48px)/3);scroll-snap-align:start}
+}
+@media(max-width:700px){
+	.cvfs .cvfs-paths.cvfs-rail-m{gap:16px;padding:64px 24px 16px;margin:0 -24px;scroll-padding:0 24px}
+	.cvfs .cvfs-paths.cvfs-rail-m>.cvfs-path{flex:0 0 82%;scroll-snap-align:start}
+}
+

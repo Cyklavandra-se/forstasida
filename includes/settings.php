@@ -43,6 +43,12 @@ function cvfs_defaults( $lang = 'sv' ) {
 	$d = array(
 		'show_guided' => 1,
 
+		// De tre rutorna i rad i sidled: dator (alla får plats, därför av) och mobil (svep).
+		'paths_scroll' => array(
+			'desktop' => 0,
+			'mobile'  => 1,
+		),
+
 		'hero'        => array(
 			'title'       => 'Var vill du cykla eller vandra?',
 			'lead'        => 'Beskriv din drömresa med egna ord – vi hittar resorna som passar.',
@@ -571,6 +577,11 @@ function cvfs_sanitize( $in, $lang ) {
 	$out = array();
 
 	$out['show_guided'] = empty( $in['show_guided'] ) ? 0 : 1;
+
+	$out['paths_scroll'] = array(
+		'desktop' => empty( $in['paths_scroll']['desktop'] ) ? 0 : 1,
+		'mobile'  => empty( $in['paths_scroll']['mobile'] ) ? 0 : 1,
+	);
 
 	$out['follow'] = array();
 	foreach ( cvfs_follow_sections() as $k ) {

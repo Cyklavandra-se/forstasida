@@ -403,6 +403,19 @@ function cvfs_admin_page() {
 
 			<?php
 			cvfs_sec_open( 'paths', '2. Tre rutor', $s, $lang );
+			?>
+			<table class="form-table" role="presentation">
+				<tr class="cvfs-struct">
+					<th scope="row">Rad i sidled</th>
+					<td>
+						<label><input type="checkbox" name="cvfs[paths_scroll][desktop]" value="1" <?php checked( (int) $s['paths_scroll']['desktop'], 1 ); ?> /> På dator</label>
+						&nbsp;&nbsp;
+						<label><input type="checkbox" name="cvfs[paths_scroll][mobile]" value="1" <?php checked( (int) $s['paths_scroll']['mobile'], 1 ); ?> /> På mobil (svep)</label>
+						<p class="description">På: rutorna ligger i en rad som går att svepa/scrolla i sidled. Av: rutnät på dator och rutorna under varandra på mobil. På dator får alla tre rutor plats, så där märks raden bara på smala skärmar.</p>
+					</td>
+				</tr>
+			</table>
+			<?php
 			$paths = array(
 				'guided' => 'Guidade resor (visas bara när guidade resor är på)',
 				'bike'   => 'Cykla på egen hand',

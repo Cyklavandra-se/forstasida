@@ -41,6 +41,7 @@ function cvfs_effective( $lang ) {
 		$s['hero']['images_mobile'] = $m['hero']['images_mobile'];
 	}
 	if ( ! empty( $f['paths'] ) ) {
+		$s['paths_scroll'] = $m['paths_scroll'];
 		foreach ( $s['paths'] as $k => $p ) {
 			$s['paths'][ $k ]['url'] = cvfs_translate_url( $m['paths'][ $k ]['url'] ?? '', $lang );
 		}
